@@ -2,11 +2,11 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment>KhanzaHMS</comment> 
-    <entry key="HOST">localhost</entry>
-    <entry key="DATABASE">rsifc_db</entry>
-    <entry key="PORT">3306</entry>
-    <entry key="USER">root</entry>
-    <entry key="PAS">admin</entry>
+    <entry key="HOST">5k7+C7EnUw9nUv2Nix+DBA==</entry>
+    <entry key="DATABASE">AZHNccBwSmSho84f+X8GyQ==</entry>
+    <entry key="PORT">nioxtijcpDaKSUiUiP5FAg==</entry>
+    <entry key="USER">kMR3WfAwUK6MbhCyydxa0g==</entry>
+    <entry key="PAS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
     <entry key="CARICEPAT">nonaktif</entry>
     <entry key="HOSTHYBRIDWEB">5k7+C7EnUw9nUv2Nix+DBA==</entry>
     <entry key="HYBRIDWEB">webapps</entry>
@@ -44,7 +44,7 @@
     <entry key="PASSSITT">gILNCSeqFSr4Hvjwkpqrow==</entry>
     <entry key="URLAPICORONA">http://sirs.yankes.kemkes.go.id/fo/index.php</entry>
     <entry key="IDCORONA">EXbXbvGwMp9CpQ1s9K748A==</entry>
-    <entry key="PASSCORONA">wesRGhsjqnfiOoXWuqoTjw==</entry>
+    <entry key="PASSCORONA">gILNCSeqFSr4Hvjwkpqrow==</entry>
     <entry key="KABUPATENSITT">12345</entry>
     <entry key="KAMARAKTIFRANAP"></entry>
     <entry key="DOKTERAKTIFKASIRRALAN"></entry>
