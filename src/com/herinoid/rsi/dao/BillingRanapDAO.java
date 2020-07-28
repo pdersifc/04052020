@@ -154,7 +154,7 @@ public class BillingRanapDAO {
         BillingRanap biling = new BillingRanap();
         try {
             ps = koneksi.prepareStatement("SELECT kamar_inap.tgl_masuk,kamar_inap.tgl_keluar,kamar_inap.jam_masuk,kamar_inap.jam_keluar,reg_periksa.`no_rawat`,pasien.`no_rkm_medis`,pasien.`nm_pasien`,pasien.`alamat`,kamar.`kelas`,bangsal.`nm_bangsal`,reg_periksa.kd_pj,nota_inap.no_nota FROM reg_periksa JOIN pasien ON reg_periksa.`no_rkm_medis`=pasien.`no_rkm_medis` "
-                    + "JOIN kamar_inap ON reg_periksa.`no_rawat`= kamar_inap.`no_rawat` JOIN kamar ON kamar_inap.`kd_kamar`=kamar.`kd_kamar` JOIN bangsal ON kamar.`kd_bangsal`=bangsal.`kd_bangsal` JOIN nota_inap on nota_inap.`no_rawat`= reg_periksa.`no_rawat` "
+                    + "JOIN kamar_inap ON reg_periksa.`no_rawat`= kamar_inap.`no_rawat` JOIN kamar ON kamar_inap.`kd_kamar`=kamar.`kd_kamar` JOIN bangsal ON kamar.`kd_bangsal`=bangsal.`kd_bangsal` LeFT JOIN nota_inap on nota_inap.`no_rawat`= reg_periksa.`no_rawat` "
                     + "WHERE reg_periksa.no_rawat= ?");
             ps.setString(1, norawat);
             rs = ps.executeQuery();
@@ -167,7 +167,9 @@ public class BillingRanapDAO {
                 biling.setNamaBangsal(rs.getString("nm_bangsal"));
                 biling.setKdPj(rs.getString("kd_pj"));
                 biling.setNoNota(rs.getString("no_nota"));
-                biling.setTglPerawatan(Utils.formatTanggal(rs.getDate("tgl_masuk")) + " " + rs.getString("jam_masuk") + " s/d " + Utils.formatTanggal(rs.getDate("tgl_keluar")) + " " + rs.getString("jam_keluar"));
+                String tglKeluar = rs.getString("tgl_keluar")==null?"":Utils.formatTanggal(rs.getDate("tgl_keluar"));
+                String jamKeluar = rs.getString("jam_keluar")==null?"":rs.getString("jam_keluar");
+                biling.setTglPerawatan(Utils.formatTanggal(rs.getDate("tgl_masuk")) + " " + rs.getString("jam_masuk") + " s/d " + tglKeluar + " " + jamKeluar);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
