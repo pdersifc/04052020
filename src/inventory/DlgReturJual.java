@@ -1,4 +1,5 @@
 package inventory;
+import com.herinoid.rsi.util.Utils;
 import fungsi.WarnaTable;
 import fungsi.batasInput;
 import fungsi.koneksiDB;
@@ -1441,10 +1442,9 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     
     private void isHitung(){
         if((!Jmlretur.getText().equals(""))&&(!Hargaretur.getText().equals(""))){
-            Subtotal.setText(Double.toString(
-                    Double.parseDouble(Jmlretur.getText())* (Double.parseDouble(Hargaretur.getText()) - (Double.parseDouble(txtPengurang.getText())*Double.parseDouble(Hargaretur.getText())/100)))
+            Subtotal.setText(Utils.format(Double.parseDouble(Jmlretur.getText())* (Double.parseDouble(Hargaretur.getText()) - (Double.parseDouble(txtPengurang.getText())*Double.parseDouble(Hargaretur.getText())/100)),0));
                     
-            );
+            
         }else{
             Subtotal.setText("0");
         }            
