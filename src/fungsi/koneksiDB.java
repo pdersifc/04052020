@@ -27,9 +27,9 @@ public class koneksiDB {
         if(connection == null){
             try{
                 prop.loadFromXML(new FileInputStream("setting/database.xml"));
-                dataSource.setURL("jdbc:mysql://"+prop.getProperty("HOST")+":"+prop.getProperty("PORT")+"/"+prop.getProperty("DATABASE")+"?zeroDateTimeBehavior=convertToNull");
-                dataSource.setUser(prop.getProperty("USER"));
-                dataSource.setPassword(prop.getProperty("PAS"));
+                dataSource.setURL("jdbc:mysql://"+EnkripsiAES.decrypt(prop.getProperty("HOST"))+":"+EnkripsiAES.decrypt(prop.getProperty("PORT"))+"/"+EnkripsiAES.decrypt(prop.getProperty("DATABASE"))+"?zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true");
+                dataSource.setUser(EnkripsiAES.decrypt(prop.getProperty("USER")));
+                dataSource.setPassword(EnkripsiAES.decrypt(prop.getProperty("PAS")));
                 connection=dataSource.getConnection();       
                 System.out.println("  Koneksi Berhasil. Sorry bro loading, silahkan baca dulu.... \n\n"+
                         "	Software ini adalah Software Menejemen Rumah Sakit/Klinik/\n" +
@@ -55,7 +55,18 @@ public class koneksiDB {
                         "  Informasi dan panduan bisa dicek di halaman https://github.com/mas-elkhanza/SIMRS-Khanza/wiki \n"+
                         "                                                                           ");
             }catch(Exception e){
-                JOptionPane.showMessageDialog(null,"Koneksi Putus : "+e);
+                System.out.println("Notif : "+e);
+                try {
+                    if(connection.isClosed()){
+                        prop.loadFromXML(new FileInputStream("setting/database.xml"));
+                        dataSource.setURL("jdbc:mysql://"+EnkripsiAES.decrypt(prop.getProperty("HOST"))+":"+EnkripsiAES.decrypt(prop.getProperty("PORT"))+"/"+EnkripsiAES.decrypt(prop.getProperty("DATABASE"))+"?zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true");
+                        dataSource.setUser(EnkripsiAES.decrypt(prop.getProperty("USER")));
+                        dataSource.setPassword(EnkripsiAES.decrypt(prop.getProperty("PAS")));
+                        connection=dataSource.getConnection();  
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,"Koneksi Putus : "+e);
+                }
             }
         }
         return connection;        
@@ -421,6 +432,36 @@ public class koneksiDB {
         return var;
     }
     
+    public static String URLAPICORONA(){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=prop.getProperty("URLAPICORONA");
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
+    
+    public static String IDCORONA(){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=EnkripsiAES.decrypt(prop.getProperty("IDCORONA"));
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
+    
+    public static String PASSCORONA(){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=EnkripsiAES.decrypt(prop.getProperty("PASSCORONA"));
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
+    
     public static String URLAPISITT(){
         try{
             prop.loadFromXML(new FileInputStream("setting/database.xml"));
@@ -715,36 +756,6 @@ public class koneksiDB {
         try{
             prop.loadFromXML(new FileInputStream("setting/database.xml"));
             var=EnkripsiAES.decrypt(prop.getProperty("KEYWSLICA"));
-        }catch(Exception e){
-            var=""; 
-        }
-        return var;
-    }
-    
-    public static String URLAPICORONA(){
-        try{
-            prop.loadFromXML(new FileInputStream("setting/database.xml"));
-            var=prop.getProperty("URLAPICORONA");
-        }catch(Exception e){
-            var=""; 
-        }
-        return var;
-    }
-    
-    public static String IDCORONA(){
-        try{
-            prop.loadFromXML(new FileInputStream("setting/database.xml"));
-            var=EnkripsiAES.decrypt(prop.getProperty("IDCORONA"));
-        }catch(Exception e){
-            var=""; 
-        }
-        return var;
-    }
-    
-    public static String PASSCORONA(){
-        try{
-            prop.loadFromXML(new FileInputStream("setting/database.xml"));
-            var=EnkripsiAES.decrypt(prop.getProperty("PASSCORONA"));
         }catch(Exception e){
             var=""; 
         }
