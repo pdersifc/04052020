@@ -465,6 +465,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         MnPermintaanLab = new javax.swing.JMenuItem();
         MnPermintaanRadiologi = new javax.swing.JMenuItem();
         MnKamarInap = new javax.swing.JMenuItem();
+        MnEResep = new javax.swing.JMenuItem();
         MnTindakanRalan = new javax.swing.JMenu();
         MnDataRalan = new javax.swing.JMenuItem();
         MnPeriksaLab = new javax.swing.JMenuItem();
@@ -602,7 +603,6 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         MnHapusReturObat = new javax.swing.JMenuItem();
         MnHapusStokObatRanap = new javax.swing.JMenuItem();
         MnHapusSemua = new javax.swing.JMenuItem();
-        MnEResep = new javax.swing.JMenuItem();
         TNoRw = new widget.TextBox();
         WindowObatBhp = new javax.swing.JDialog();
         internalFrame2 = new widget.InternalFrame();
@@ -1018,6 +1018,18 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             }
         });
         jPopupMenu1.add(MnKamarInap);
+
+        MnEResep.setBackground(new java.awt.Color(255, 255, 255));
+        MnEResep.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnEResep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnEResep.setText("E-Resep Dokter");
+        MnEResep.setName("MnEResep"); // NOI18N
+        MnEResep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnEResepActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(MnEResep);
 
         MnTindakanRalan.setBackground(new java.awt.Color(250, 255, 245));
         MnTindakanRalan.setForeground(new java.awt.Color(50, 50, 50));
@@ -3126,18 +3138,6 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         MnHapusData.add(MnHapusSemua);
 
         jPopupMenu1.add(MnHapusData);
-
-        MnEResep.setBackground(new java.awt.Color(255, 255, 255));
-        MnEResep.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        MnEResep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
-        MnEResep.setText("E-Resep Dokter");
-        MnEResep.setName("MnEResep"); // NOI18N
-        MnEResep.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MnEResepActionPerformed(evt);
-            }
-        });
-        jPopupMenu1.add(MnEResep);
 
         TNoRw.setHighlighter(null);
         TNoRw.setName("TNoRw"); // NOI18N
