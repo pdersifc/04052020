@@ -11,13 +11,15 @@ CREATE TABLE `e_resep_rsifc` (
   `jam_resep` time DEFAULT NULL,
   `no_rawat` varchar(17) NOT NULL DEFAULT '',
   `kd_dokter_peresep` varchar(20) DEFAULT NULL,
+  `validasi` datetime DEFAULT NULL,
+  `sampai_pasien` datetime DEFAULT NULL,
   `status` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`no_resep`),
   KEY `no_rawat` (`no_rawat`),
   KEY `kd_dokter_peresep` (`kd_dokter_peresep`),
   CONSTRAINT `e_resep_rsifc_ibfk_3` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON UPDATE CASCADE,
   CONSTRAINT `e_resep_rsifc_ibfk_4` FOREIGN KEY (`kd_dokter_peresep`) REFERENCES `dokter` (`kd_dokter`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
 -------------------------------------------
 
@@ -34,18 +36,21 @@ CREATE TABLE `e_resep_rsifc_detail` (
 
 -------------------------------------------------
 CREATE TABLE `e_resep_racikan_rsifc` (
-  `no_resep` VARCHAR(20) NOT NULL DEFAULT '',
-  `tgl_resep` DATE DEFAULT NULL ,
-  `jam_resep` TIME DEFAULT NULL,
-  `no_rawat` VARCHAR(17) NOT NULL DEFAULT '',  
-  `kd_dokter_peresep` VARCHAR(20) DEFAULT NULL,
-  `status` VARCHAR(20) DEFAULT NULL,
+  `no_resep` varchar(20) NOT NULL DEFAULT '',
+  `tgl_resep` date DEFAULT NULL,
+  `jam_resep` time DEFAULT NULL,
+  `no_rawat` varchar(17) NOT NULL DEFAULT '',
+  `kd_dokter_peresep` varchar(20) DEFAULT NULL,
+  `validasi` datetime DEFAULT NULL,
+  `sampai_pasien` datetime DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`no_resep`),
   KEY `no_rawat` (`no_rawat`),
   KEY `kd_dokter_peresep` (`kd_dokter_peresep`),
   CONSTRAINT `e_resep_racikan_rsifc_ibfk_1` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON UPDATE CASCADE,
   CONSTRAINT `e_resep_racikan_rsifc_ibfk_2` FOREIGN KEY (`kd_dokter_peresep`) REFERENCES `dokter` (`kd_dokter`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=INNODB DEFAULT CHARSET=latin1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
 
 CREATE TABLE `e_resep_racikan_rsifc_detail` (
   `no_resep` VARCHAR(20) NOT NULL DEFAULT '',
