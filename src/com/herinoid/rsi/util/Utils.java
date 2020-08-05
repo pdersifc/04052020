@@ -6,11 +6,15 @@
  */
 package com.herinoid.rsi.util;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -116,5 +120,27 @@ public class Utils {
      public static boolean isBlank(String str) {
         return str == null || str.trim().length() == 0;
     }
+     
+     public static Date convertToDate(String strDate, String style) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(style);
+            return sdf.parse(strDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+     
+     public static Date getDateOnly(Date date){
+        try {
+            Date today = new Date();
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date todayWithZeroTime = formatter.parse(formatter.format(today));
+            return todayWithZeroTime;
+        } catch (ParseException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }        
+     }
 
 }

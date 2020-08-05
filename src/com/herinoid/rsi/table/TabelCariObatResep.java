@@ -65,6 +65,10 @@ public class TabelCariObatResep extends AbstractTableModel {
     public synchronized Obat get(int index) {
         return row.get(index);
     }
+    
+    public synchronized List<Obat> getAll() {
+        return row;
+    }
 
     public synchronized boolean add(Obat e) {
         int index = row.size();

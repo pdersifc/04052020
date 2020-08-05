@@ -10,6 +10,7 @@ package com.herinoid.rsi.model;
  * @author Hewrei
  */
 public class Obat {
+    public static final String OBAT_RACIKAN = "Racikan";
     private String kodeObat;
     private String namaObat;
     private String satuan;

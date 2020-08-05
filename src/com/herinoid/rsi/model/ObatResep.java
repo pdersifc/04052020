@@ -21,7 +21,13 @@ public class ObatResep {
     private String kategori;
     private double hargaBeli;
     private double stok;
+    private String metodeRacikKode;
+    private String metodeRacik;
+    private String racikan;
     private boolean flag;
+    private boolean parent;
+    private String kodeRacikan;
+    private int nomorRacik;
     
     public ObatResep(){}
     public ObatResep(String kodeObat,String namaObat,String satuan,String kategori,String jenisObat,double stok){
@@ -199,6 +205,90 @@ public class ObatResep {
      */
     public void setFlag(boolean flag) {
         this.flag = flag;
+    }
+
+    /**
+     * @return the metodeRacik
+     */
+    public String getMetodeRacik() {
+        return metodeRacik;
+    }
+
+    /**
+     * @param metodeRacik the metodeRacik to set
+     */
+    public void setMetodeRacik(String metodeRacik) {
+        this.metodeRacik = metodeRacik;
+    }
+
+    /**
+     * @return the metodeRacikKode
+     */
+    public String getMetodeRacikKode() {
+        return metodeRacikKode;
+    }
+
+    /**
+     * @param metodeRacikKode the metodeRacikKode to set
+     */
+    public void setMetodeRacikKode(String metodeRacikKode) {
+        this.metodeRacikKode = metodeRacikKode;
+    }
+
+    /**
+     * @return the racikan
+     */
+    public String getRacikan() {
+        return racikan;
+    }
+
+    /**
+     * @param racikan the racikan to set
+     */
+    public void setRacikan(String racikan) {
+        this.racikan = racikan;
+    }
+
+    /**
+     * @return the parent
+     */
+    public boolean isParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(boolean parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * @return the kodeRacikan
+     */
+    public String getKodeRacikan() {
+        return kodeRacikan;
+    }
+
+    /**
+     * @param kodeRacikan the kodeRacikan to set
+     */
+    public void setKodeRacikan(String kodeRacikan) {
+        this.kodeRacikan = kodeRacikan;
+    }
+
+    /**
+     * @return the nomorRacik
+     */
+    public int getNomorRacik() {
+        return nomorRacik;
+    }
+
+    /**
+     * @param nomorRacik the nomorRacik to set
+     */
+    public void setNomorRacik(int nomorRacik) {
+        this.nomorRacik = nomorRacik;
     }
     
     

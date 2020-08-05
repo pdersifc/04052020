@@ -5,6 +5,7 @@
 package com.herinoid.rsi.table;
 
 
+import com.herinoid.rsi.model.Obat;
 import com.herinoid.rsi.model.ObatResep;
 import java.util.List;
 import java.util.Set;
@@ -28,8 +29,8 @@ public class TabelObatResepPilihan extends AbstractTableModel {
     public TabelObatResepPilihan() {
         super();
         column = new Vector<String>();
-        column.add("Kode Obat");
-        column.add("Nama Obat");        
+        column.add("Racikan");
+        column.add("Nama Obat");         
         column.add("Jumlah");
         column.add("Satuan");
         column.add("Jenis Obat");
@@ -61,6 +62,10 @@ public class TabelObatResepPilihan extends AbstractTableModel {
         fireTableRowsDeleted(index, index);
         return o;
     }
+    
+    public synchronized List<ObatResep> getAll() {
+        return row;
+    }
 
     public synchronized ObatResep get(int index) {
         return row.get(index);
@@ -91,7 +96,7 @@ public class TabelObatResepPilihan extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (columnIndex == 0) {
-            return row.get(rowIndex).getKodeObat();
+            return row.get(rowIndex).getRacikan();
         } else if (columnIndex == 1) {
             return row.get(rowIndex).getNamaObat();
         } else if (columnIndex == 2) {

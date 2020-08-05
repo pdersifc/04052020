@@ -27,10 +27,10 @@ public class koneksiDB {
         if(connection == null){
             try{
                 prop.loadFromXML(new FileInputStream("setting/database.xml"));
-                dataSource.setURL("jdbc:mysql://"+EnkripsiAES.decrypt(prop.getProperty("HOST"))+":"+EnkripsiAES.decrypt(prop.getProperty("PORT"))+"/"+EnkripsiAES.decrypt(prop.getProperty("DATABASE"))+"?zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true");
-                dataSource.setUser(EnkripsiAES.decrypt(prop.getProperty("USER")));
-                dataSource.setPassword(EnkripsiAES.decrypt(prop.getProperty("PAS")));
-                connection=dataSource.getConnection();       
+                dataSource.setURL("jdbc:mysql://"+prop.getProperty("HOST")+":"+prop.getProperty("PORT")+"/"+prop.getProperty("DATABASE")+"?zeroDateTimeBehavior=convertToNull");
+                dataSource.setUser(prop.getProperty("USER"));
+                dataSource.setPassword(prop.getProperty("PAS"));
+                connection=dataSource.getConnection();         
                 System.out.println("  Koneksi Berhasil. Sorry bro loading, silahkan baca dulu.... \n\n"+
                         "	Software ini adalah Software Menejemen Rumah Sakit/Klinik/\n" +
                         "  Puskesmas yang  gratis dan boleh digunakan siapa saja tanpa dikenai \n" +

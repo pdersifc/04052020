@@ -69,6 +69,7 @@ public class ObatDao {
                 }else if (jenisPasien.equals(Konstan.PASIEN_KELAS3)) {
                     harga = rs.getDouble("kelas3");
                 }
+//                System.out.println("letak barang = "+rs.getString("letak_barang"));
                 obat.setHarga(harga);
                 obatList.add(obat);
             }
