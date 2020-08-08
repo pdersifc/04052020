@@ -241,6 +241,8 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         obatResep.setJumlah(Integer.parseInt(txtJumlah.getText()));
         obatResep.setAturanPakai(txtAturanPakai.getText());
         obatResep.setFlag(true);
+        obatResep.setEmbalase(0);
+        obatResep.setTuslah(0);
         if (cekRacikan.isSelected()) {
             if (racikanList.size() == 1) {;
                 ObatResep obatRacik = (ObatResep) cmbRacikan.getSelectedItem();

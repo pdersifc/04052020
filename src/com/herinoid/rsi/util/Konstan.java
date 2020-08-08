@@ -17,6 +17,9 @@ public class Konstan {
     public static final String PASIEN_KELAS1="KELAS SATU";
     public static final String PASIEN_KELAS2="KELAS_DUA";
     public static final String PASIEN_KELAS3="KELAS_TIGA";
+    public static final String PASIEN_BELILUAR="BELILUAR";
+    
+    public static final String PASIEN_BPJS_KESEHATAN="BPJS KESEHATAN";
     
    
 }

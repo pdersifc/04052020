@@ -240,6 +240,8 @@ public class DialogRacikanResep extends javax.swing.JDialog {
         obatResep.setRacikan(txtNamaRacikan.getText());
         obatResep.setJumlah(Integer.parseInt(txtJumlah.getText()));
         obatResep.setAturanPakai(txtAturanPakai.getText());
+        obatResep.setEmbalase(0);
+        obatResep.setTuslah(0);
         obatResep.setParent(true);
         obatResep.setFlag(true);
         clean();

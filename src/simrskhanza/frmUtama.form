@@ -473,7 +473,7 @@
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="1">
-            <StringItem index="0" value="08/07/2020"/>
+            <StringItem index="0" value="05/08/2020"/>
           </StringArray>
         </Property>
         <Property name="displayFormat" type="java.lang.String" value="dd/MM/yyyy"/>
@@ -7815,6 +7815,12 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="buttonBig1"/>
         <Property name="name" type="java.lang.String" value="btnRekapObatPerPasien" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="widget.ButtonBig" name="btnDataEresep">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="E-Resep"/>
+        <Property name="name" type="java.lang.String" value="btnDataEresep" noResource="true"/>
       </Properties>
     </Component>
     <Menu class="widget.MenuBar" name="MenuBar">

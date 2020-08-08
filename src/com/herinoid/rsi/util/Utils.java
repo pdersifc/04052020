@@ -26,6 +26,7 @@ public class Utils {
     public final static String DATE_FORMAT = "dd/MM/yyyy";
     public final static String DATE_FORMAT2 = "dd-MM-yyyy";
     public final static String DATE_FORMAT_DB = "yyyy-MM-dd";
+    public final static String DATE_FORMAT_DB_TIME = "yyyy-MM-dd HH:mm:ss";
     public final static String TIMESTAMP_FORMAT = "dd/MM/yyyy HH:mm:ss";
     public static String[] hariName = {"Ahad","Senin","Selasa","Rabu","Kamis","Jum'at","Sabtu"};
 
@@ -53,6 +54,11 @@ public class Utils {
         int day = cal.get(Calendar.DAY_OF_WEEK);
         return hariName[day-1]+", "+ convertDate(utilDate, DATE_FORMAT2);
     }
+    
+    public static String formatDateSql(java.sql.Date sqlDate){
+        java.util.Date utilDate = new java.util.Date(sqlDate.getTime());        
+        return convertDate(utilDate, DATE_FORMAT2);
+    }
 
     public static String convertDate(Date date, String style) {
         SimpleDateFormat sdf = new SimpleDateFormat(style);
@@ -65,6 +71,10 @@ public class Utils {
 
     public static String formatDb(Date date) {
         return convertDate(date, DATE_FORMAT_DB);
+    }
+    
+    public static String formatDateTimeDb(Date date) {
+        return convertDate(date, DATE_FORMAT_DB_TIME);
     }
     
     public static Date getFirstDayInMonth(Date date) {

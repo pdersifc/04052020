@@ -16,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Herinoid deSanto
  */
-public class TabelObatResepPilihan extends AbstractTableModel {
+public class TabelObatResepEditor extends AbstractTableModel {
 
     /*
      * Serial version UID
@@ -26,7 +26,7 @@ public class TabelObatResepPilihan extends AbstractTableModel {
 //    private Vector<DataPasien> row;
     private List<ObatResep> row;
 
-    public TabelObatResepPilihan() {
+    public TabelObatResepEditor() {
         super();
         column = new Vector<String>();
         column.add("Racikan");
@@ -34,12 +34,15 @@ public class TabelObatResepPilihan extends AbstractTableModel {
         column.add("Jumlah");
         column.add("Satuan");
         column.add("Jenis Obat");
+        column.add("Harga");
+        column.add("Embalase");
+        column.add("Tuslah");
+        column.add("Stock");
         column.add("Kategori");
-        column.add("Aturan Pakai");
         row = new Vector<ObatResep>();
     }
 
-    public synchronized void add(Set<ObatResep> list) {
+    public synchronized void add(List<ObatResep> list) {
         for (ObatResep o : list) {
             row.add(o);
         }
@@ -111,11 +114,43 @@ public class TabelObatResepPilihan extends AbstractTableModel {
         }else if (columnIndex == 4) {
             return row.get(rowIndex).getJenisObat();
         }else if (columnIndex == 5) {
-            return row.get(rowIndex).getKategori();
+            return row.get(rowIndex).getHarga();
         }else if (columnIndex == 6) {
-            return row.get(rowIndex).getAturanPakai();
-        } 
+            return row.get(rowIndex).getEmbalase();
+        }else if (columnIndex == 7) {
+            return row.get(rowIndex).getTuslah();
+        }else if (columnIndex == 8) {
+            return row.get(rowIndex).getStok();
+        }else if (columnIndex == 9) {
+            return row.get(rowIndex).getKategori();
+        }  
         return null;
+    }
+    
+     @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex)
+    {
+        return true;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex)
+    {   
+        ObatResep i = row.get(rowIndex);
+        switch (columnIndex) {
+            case 2:
+                i.setJumlah(Integer.parseInt(aValue.toString()));
+                break;
+            case 6:
+                i.setEmbalase(Double.parseDouble(aValue.toString()));
+                break;
+            case 7:
+                i.setTuslah(Double.parseDouble(aValue.toString()));
+                break;
+            default:
+                break;
+        }
+        
     }
 
 }

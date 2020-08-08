@@ -15,7 +15,7 @@ import java.util.List;
 public class Resep {
     public static final String STATUS_BELUM_VERIFIKASI = "BELUM VERIFIKASI";
     public static final String STATUS_SUDAH_VERIFIKASI = "TERVERIFIKASI";
-    public static final String STATUS_SAMPAI_PASIEN = "DITERIMA PASIEN";
+    public static final String STATUS_SAMPAI_PASIEN = "SUDAH DITERIMA";
     private String noResep;
     private Date tglResep;
     private String jamResep;

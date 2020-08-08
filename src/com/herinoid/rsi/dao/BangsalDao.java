@@ -91,7 +91,7 @@ public class BangsalDao {
     public static Bangsal get(String kode) {
         Bangsal bangsal = null;
         try {
-            ps = koneksi.prepareStatement("SELECT * FROM bangsal where kd_bangsal = ? ");
+            ps = koneksi.prepareStatement("SELECT * FROM bangsal where kd_bangsal = ?");
             ps.setString(1, kode);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -100,7 +100,8 @@ public class BangsalDao {
                 bangsal.setNama(rs.getString("nm_bangsal"));
             }
         } catch (Exception ex) {
-            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            Logger.getLogger(BangsalDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {

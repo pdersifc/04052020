@@ -28,6 +28,9 @@ public class ObatResep {
     private boolean parent;
     private String kodeRacikan;
     private int nomorRacik;
+    private double embalase;
+    private double tuslah;
+    
     
     public ObatResep(){}
     public ObatResep(String kodeObat,String namaObat,String satuan,String kategori,String jenisObat,double stok){
@@ -289,6 +292,34 @@ public class ObatResep {
      */
     public void setNomorRacik(int nomorRacik) {
         this.nomorRacik = nomorRacik;
+    }
+
+    /**
+     * @return the embalase
+     */
+    public double getEmbalase() {
+        return embalase;
+    }
+
+    /**
+     * @param embalase the embalase to set
+     */
+    public void setEmbalase(double embalase) {
+        this.embalase = embalase;
+    }
+
+    /**
+     * @return the tuslah
+     */
+    public double getTuslah() {
+        return tuslah;
+    }
+
+    /**
+     * @param tuslah the tuslah to set
+     */
+    public void setTuslah(double tuslah) {
+        this.tuslah = tuslah;
     }
     
     

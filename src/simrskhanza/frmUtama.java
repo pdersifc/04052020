@@ -430,6 +430,7 @@ import bridging.InhealthTindakanRanap;
 import bridging.CoronaPasien;
 import bridging.INACBGPerawatanCorona;
 import com.herinoid.rsi.dao.RekapPembelianObatDAO;
+import com.herinoid.rsi.gui.DlgDataEResepDokter;
 import com.herinoid.rsi.gui.DlgDataProlanisPasien;
 import com.herinoid.rsi.gui.DlgRekapPembelianLangsung;
 import com.herinoid.rsi.gui.DlgSimulasiBilling;
@@ -1262,6 +1263,7 @@ public class frmUtama extends javax.swing.JFrame {
         btnBorLos_report = new widget.ButtonBig();
         btnRekapPembelian = new widget.ButtonBig();
         btnRekapObatPerPasien = new widget.ButtonBig();
+        btnDataEresep = new widget.ButtonBig();
         internalFrame1 = new widget.InternalFrame();
         BtnMenu = new widget.ButtonBig();
         jSeparator4 = new javax.swing.JSeparator();
@@ -1545,7 +1547,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         tanggal.setEditable(false);
         tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "06/07/2020" }));
+        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08/07/2020" }));
         tanggal.setDisplayFormat("dd/MM/yyyy");
         tanggal.setName("tanggal"); // NOI18N
         tanggal.setOpaque(false);
@@ -6592,6 +6594,9 @@ public class frmUtama extends javax.swing.JFrame {
         btnRekapObatPerPasien.setText("buttonBig1");
         btnRekapObatPerPasien.setName("btnRekapObatPerPasien"); // NOI18N
 
+        btnDataEresep.setText("E-Resep");
+        btnDataEresep.setName("btnDataEresep"); // NOI18N
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("::[ Khanza SIMKES 2020 ]::");
         setBackground(new java.awt.Color(255, 254, 254));
@@ -10480,6 +10485,8 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         FlayMenu.add(btnResepObatDepan);
         FlayMenu.add(btnRekapPembelian);
         FlayMenu.add(btnRekapObatPerPasien);
+        FlayMenu.add(btnDataEresep);
+        
         btnInputPenjualan.setEnabled(akses.getpenjualan_obat());
         btnDataPenjualan.setEnabled(akses.getpenjualan_obat());
         btnDataPenyerahanDarah.setEnabled(akses.getutd_penyerahan_darah());
@@ -15874,6 +15881,17 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         this.setCursor(Cursor.getDefaultCursor());
     } 
     
+    private void btnDataEresepActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+        isTutup();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+         DlgDataEResepDokter data = new DlgDataEResepDokter(this,false);
+        data.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
+        data.setLocationRelativeTo(PanelUtama);
+        data.setVisible(true);
+        DlgHome.dispose();
+        this.setCursor(Cursor.getDefaultCursor());
+    } 
+    
     /**
     * @param args the command line arguments
     */
@@ -16005,6 +16023,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
     private widget.ButtonBig btnDaftarPermintaanResep;
     private widget.ButtonBig btnDaruratStok;
     private widget.ButtonBig btnDataBatch;
+    private widget.ButtonBig btnDataEresep;
     private widget.ButtonBig btnDataHAIs;
     private widget.ButtonBig btnDataPenjualan;
     private widget.ButtonBig btnDataPenyerahanDarah;
@@ -29034,6 +29053,18 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         btnRekapObatPerPasien.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRekapObatPerPasienActionPerformed(evt);
+            }
+        });
+        
+        btnDataEresep = new widget.ButtonBig();
+        btnDataEresep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/iconfinder_Medical_Result-Health-Document-Virus-Medical_5958965.png"))); 
+        btnDataEresep.setText("E-Resep");
+        btnDataEresep.setIconTextGap(0);
+        btnDataEresep.setName("btnDataEresep"); 
+        btnDataEresep.setPreferredSize(new java.awt.Dimension(200, 90));
+        btnDataEresep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDataEresepActionPerformed(evt);
             }
         });
     }
