@@ -497,7 +497,6 @@ public class ResepDao {
         List<ObatResep> racikans = new LinkedList<>();
         List<ObatResep> biasas = new LinkedList<>();
         for (ObatResep o : reseps) {
-            System.out.println("jenis obate = "+o.getRacikan());
             if (!Utils.isBlank(o.getRacikan())) {                
                 racikans.add(o);
             } else {
