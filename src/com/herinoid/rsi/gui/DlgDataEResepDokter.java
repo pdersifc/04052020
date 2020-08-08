@@ -677,40 +677,11 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void btnCariDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariDataActionPerformed
         String depo = pro.getProperty("DEPOOBAT");
         Bangsal bangsal = BangsalDao.get(depo);
-        model.removeAllElements();
+        
         lblDepo.setText("Depo : " + bangsal.getKode() + "::" + bangsal.getNama());
         List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());
         List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());
-        List<DataEResep> newDataList = new LinkedList<>();
-        if (dataList.size() > 0) {
-            dataList.forEach((d) -> {
-                if (dataRacikanList.size() > 0) {
-                    dataRacikanList.forEach((r) -> {
-                        if (d.getNoResep().equals(r.getNoResep())) {
-                            newDataList.remove(d);
-                            d.getObatDetails().addAll(r.getObatDetails());
-                            newDataList.add(d);
-                        } else {
-                            if (!newDataList.contains(d)) {
-                                newDataList.add(d);
-                            }
-                            if (!newDataList.contains(r)) {
-                                newDataList.add(r);
-                            }
-                        }
-                    });
-                } else {
-                    newDataList.add(d);
-                }
-            });
-        } else if (dataRacikanList.size() > 0) {
-            newDataList.addAll(dataRacikanList);
-        }
-        newDataList.sort(Comparator.comparing(DataEResep::getNoResep));
-        model.add(newDataList);
-        tblData.setModel(model);
-        rowSorter = new TableRowSorter<>(tblData.getModel());
-        tblData.setRowSorter(rowSorter);
+        showResepData(dataList,dataRacikanList);
     }//GEN-LAST:event_btnCariDataActionPerformed
 
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
@@ -731,13 +702,15 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                     if (resep.getObatDetails().size() > 0) {
                         boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo);
                         if (sukses) {
-                            ResepDao.updateValidasi(resep.getNoResep(), new Date(), newDetails);
+                            ResepDao.updateValidasi(resep.getNoRawat(),resep.getNoResep(), new Date(), newDetails);
                             List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());
-                            model.removeAllElements();
-                            model.add(dataList);
-                            tblData.setModel(model);
-                            rowSorter = new TableRowSorter<>(tblData.getModel());
-                            tblData.setRowSorter(rowSorter);
+                            List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());
+                            showResepData(dataList,dataRacikanList);
+//                            model.removeAllElements();
+//                            model.add(dataList);
+//                            tblData.setModel(model);
+//                            rowSorter = new TableRowSorter<>(tblData.getModel());
+//                            tblData.setRowSorter(rowSorter);
                         }
 
                     } else {
@@ -897,4 +870,37 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.TextBox txtNamaDokter;
     // End of variables declaration//GEN-END:variables
 
+    private void showResepData(List<DataEResep> dataList,List<DataEResep> dataRacikanList){
+        model.removeAllElements();
+        List<DataEResep> newDataList = new LinkedList<>();
+        if (dataList.size() > 0) {
+            dataList.forEach((d) -> {
+                if (dataRacikanList.size() > 0) {
+                    dataRacikanList.forEach((r) -> {
+                        if (d.getNoResep().equals(r.getNoResep())) {
+                            newDataList.remove(d);
+                            d.getObatDetails().addAll(r.getObatDetails());
+                            newDataList.add(d);
+                        } else {
+                            if (!newDataList.contains(d)) {
+                                newDataList.add(d);
+                            }
+                            if (!newDataList.contains(r)) {
+                                newDataList.add(r);
+                            }
+                        }
+                    });
+                } else {
+                    newDataList.add(d);
+                }
+            });
+        } else if (dataRacikanList.size() > 0) {
+            newDataList.addAll(dataRacikanList);
+        }
+        newDataList.sort(Comparator.comparing(DataEResep::getNoResep));
+        model.add(newDataList);
+        tblData.setModel(model);
+        rowSorter = new TableRowSorter<>(tblData.getModel());
+        tblData.setRowSorter(rowSorter);
+    }
 }

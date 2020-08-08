@@ -58,6 +58,28 @@ public class ResepDao {
         return sukses;
     }
 
+    public static boolean deleteDetailRacikanByNoResep(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("delete from e_resep_racikan_rsifc_detail where no_resep = ?");
+            try {
+                pst.setString(1, noresep);
+                pst.execute();
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+        } catch (Exception e) {
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+
     public static boolean saveRacikanDetail(String norawat, String noResep, List<ObatResep> reseps) {
         boolean sukses = true;
         PreparedStatement psttmn = null;
@@ -66,7 +88,7 @@ public class ResepDao {
                 if (o.isParent()) {
                     saveObatRacikan(norawat, o);
                 } else {
-                    psttmn = koneksi.prepareStatement("insert into e_resep_racikan_rsifc_detail(no_resep,kode_racik,nama_racik,is_parent,kandungan,kode_brng,jml,aturan_pakai) values(?,?,?,?,?,?,?,?)");
+                    psttmn = koneksi.prepareStatement("insert into e_resep_racikan_rsifc_detail(no_resep,kode_racik,nama_racik,is_parent,kandungan,kode_brng,jml,embalase,tuslah,aturan_pakai) values(?,?,?,?,?,?,?,?,?,?)");
                     try {
                         psttmn.setString(1, noResep);
                         psttmn.setString(2, o.getKodeRacikan());
@@ -75,9 +97,12 @@ public class ResepDao {
                         psttmn.setString(5, o.getKandungan());
                         psttmn.setString(6, o.getKodeObat());
                         psttmn.setInt(7, o.getJumlah());
-                        psttmn.setString(8, o.getAturanPakai());
+                        psttmn.setDouble(8, o.getEmbalase());
+                        psttmn.setDouble(9, o.getTuslah());
+                        psttmn.setString(10, o.getAturanPakai());
                         psttmn.executeUpdate();
                     } catch (Exception e) {
+                        e.printStackTrace();
                         System.out.println("Notifikasi : " + e);
                     } finally {
                         if (psttmn != null) {
@@ -88,6 +113,7 @@ public class ResepDao {
             }
 
         } catch (Exception e) {
+             e.printStackTrace();
             sukses = false;
             System.out.println("Notifikasi : " + e);
         }
@@ -115,7 +141,7 @@ public class ResepDao {
         }
         return sukses;
     }
-    
+
     public static boolean saveDetail(String noResep, List<ObatResep> reseps) {
         boolean sukses = true;
         PreparedStatement psttmn = null;
@@ -465,28 +491,50 @@ public class ResepDao {
         return sukses;
     }
 
-    public static boolean updateValidasi(String noresep, Date validasi,List<ObatResep> reseps) {
+    public static boolean updateValidasi(String norawat, String noresep, Date validasi, List<ObatResep> reseps) {
         boolean sukses = true;
         PreparedStatement pst = null;
+        List<ObatResep> racikans = new LinkedList<>();
+        List<ObatResep> biasas = new LinkedList<>();
+        for (ObatResep o : reseps) {
+            System.out.println("jenis obate = "+o.getRacikan());
+            if (!Utils.isBlank(o.getRacikan())) {                
+                racikans.add(o);
+            } else {
+                biasas.add(o);
+            }
+        }
         try {
-            pst = koneksi.prepareStatement("update e_resep_rsifc set validasi = ?, status = ? where no_resep = ?");
-            try {
-                pst.setString(1, Utils.formatDateTimeDb(validasi));
-                pst.setString(2, Resep.STATUS_SUDAH_VERIFIKASI);
-                pst.setString(3, noresep);
-                pst.executeUpdate();
-                boolean isDeleted = deleteDetailByNoResep(noresep);
-                if(isDeleted){
-                    saveDetail(noresep, reseps);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Notifikasi : " + e);
-            } finally {
-                if (pst != null) {
-                    pst.close();
+            if (biasas.size() > 0) {
+                pst = koneksi.prepareStatement("update e_resep_rsifc set validasi = ?, status = ? where no_resep = ?");
+                try {
+                    pst.setString(1, Utils.formatDateTimeDb(validasi));
+                    pst.setString(2, Resep.STATUS_SUDAH_VERIFIKASI);
+                    pst.setString(3, noresep);
+                    pst.executeUpdate();
+                    boolean isDeleted = deleteDetailByNoResep(noresep);
+                    if (isDeleted) {
+                        saveDetail(noresep, biasas);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Notifikasi : " + e);
+                } finally {
+                    if (pst != null) {
+                        pst.close();
+                    }
                 }
             }
+            if (racikans.size() > 0) {
+                if (isResepRacikanExist(noresep)) {
+                    updateValidasiResepRacikan(noresep);
+                    boolean isDeletedDetail = deleteDetailRacikanByNoResep(noresep);
+                    if (isDeletedDetail) {
+                        saveRacikanDetail(norawat, noresep, racikans);
+                    }
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             sukses = false;
@@ -523,7 +571,33 @@ public class ResepDao {
         }
         return sukses;
     }
-    
+
+    public static boolean updateValidasiResepRacikan(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("update e_resep_racikan_rsifc set validasi = ?, status = ? where no_resep = ?");
+            try {
+                pst.setString(1, Utils.formatDateTimeDb(new Date()));
+                pst.setString(2, Resep.STATUS_SUDAH_VERIFIKASI);
+                pst.setString(3, noresep);
+                pst.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+
     public static List<DataEResep> getResepRacikanByDateAndDepo(String fromDate, String toDate, String depo, String tarif) {
         List<DataEResep> obatList = new LinkedList<>();
         try {
@@ -572,6 +646,36 @@ public class ResepDao {
             }
         }
         return obatList;
+    }
+
+    public static boolean isResepRacikanExist(String noresep) {
+        boolean isExist = false;
+        PreparedStatement pre = null;
+        ResultSet rset = null;
+        try {
+            pre = koneksi.prepareStatement("SELECT * FROM e_resep_racikan_rsifc WHERE no_resep = ?");
+            pre.setString(1, noresep);
+            rset = pre.executeQuery();
+            while (rset.next()) {
+                isExist = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rset != null) {
+
+                    rset.close();
+
+                }
+                if (pre != null) {
+                    pre.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return isExist;
     }
 
     public static List<ObatResep> getObatResepRacikanDetail(String noResep, String depo, String tarif) {
