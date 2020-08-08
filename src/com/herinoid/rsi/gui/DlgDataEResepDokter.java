@@ -356,8 +356,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
         panelisi3.setName("panelisi3"); // NOI18N
         panelisi3.setPreferredSize(new java.awt.Dimension(100, 43));
-        panelisi3.setWarnaAtas(new java.awt.Color(255, 153, 255));
-        panelisi3.setWarnaBawah(new java.awt.Color(255, 0, 255));
         panelisi3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 4, 9));
 
         btnAddObat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/plus_16.png"))); // NOI18N
@@ -405,14 +403,12 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
         internalFrame1.add(panelisi3, java.awt.BorderLayout.PAGE_END);
 
-        FormInput.setBackground(new java.awt.Color(255, 204, 255));
+        FormInput.setBackground(new java.awt.Color(255, 255, 255));
         FormInput.setName("FormInput"); // NOI18N
         FormInput.setPreferredSize(new java.awt.Dimension(864, 108));
-        FormInput.setWarnaAtas(new java.awt.Color(255, 153, 255));
-        FormInput.setWarnaBawah(new java.awt.Color(255, 0, 255));
         FormInput.setLayout(null);
 
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Tarif : ");
         jLabel5.setName("jLabel5"); // NOI18N
         jLabel5.setPreferredSize(new java.awt.Dimension(68, 23));
@@ -433,7 +429,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         FormInput.add(cmbTarif);
         cmbTarif.setBounds(442, 40, 180, 23);
 
-        label21.setForeground(new java.awt.Color(255, 255, 255));
+        label21.setForeground(new java.awt.Color(0, 0, 0));
         label21.setText("Peresep : ");
         label21.setName("label21"); // NOI18N
         label21.setPreferredSize(new java.awt.Dimension(70, 23));
@@ -454,7 +450,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         FormInput.add(txtNamaDokter);
         txtNamaDokter.setBounds(180, 70, 197, 23);
 
-        btnCariData.setForeground(new java.awt.Color(255, 255, 255));
+        btnCariData.setForeground(new java.awt.Color(0, 0, 0));
         btnCariData.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/search_page.png"))); // NOI18N
         btnCariData.setMnemonic('2');
         btnCariData.setText("Cari");
@@ -469,7 +465,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         FormInput.add(btnCariData);
         btnCariData.setBounds(440, 70, 70, 23);
 
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setText("Jenis Perawatan :");
         jLabel10.setName("jLabel10"); // NOI18N
         jLabel10.setPreferredSize(new java.awt.Dimension(68, 23));
@@ -477,7 +473,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         jLabel10.setBounds(10, 10, 110, 23);
 
         perawatanGrup.add(rdoRajal);
-        rdoRajal.setForeground(new java.awt.Color(255, 255, 255));
         rdoRajal.setText("Rawat Jalan");
         rdoRajal.setName("rdoRajal"); // NOI18N
         rdoRajal.setOpaque(false);
@@ -490,7 +485,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         rdoRajal.setBounds(130, 10, 120, 23);
 
         perawatanGrup.add(rdoRanap);
-        rdoRanap.setForeground(new java.awt.Color(255, 255, 255));
         rdoRanap.setText("Rawat Inap");
         rdoRanap.setName("rdoRanap"); // NOI18N
         rdoRanap.setOpaque(false);
@@ -511,7 +505,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         FormInput.add(cmbTanggalfrom);
         cmbTanggalfrom.setBounds(140, 40, 90, 23);
 
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Tanggal Rawat :");
         jLabel6.setName("jLabel6"); // NOI18N
         jLabel6.setPreferredSize(new java.awt.Dimension(68, 23));

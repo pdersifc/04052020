@@ -76,9 +76,6 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         setUndecorated(true);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
-        panelisi1.setWarnaAtas(new java.awt.Color(204, 204, 204));
-        panelisi1.setWarnaBawah(new java.awt.Color(204, 204, 204));
-
         label1.setForeground(new java.awt.Color(0, 0, 0));
         label1.setText("Jumlah :");
         label1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
