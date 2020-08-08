@@ -19,7 +19,7 @@ CREATE TABLE `e_resep_rsifc` (
   KEY `kd_dokter_peresep` (`kd_dokter_peresep`),
   CONSTRAINT `e_resep_rsifc_ibfk_3` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON UPDATE CASCADE,
   CONSTRAINT `e_resep_rsifc_ibfk_4` FOREIGN KEY (`kd_dokter_peresep`) REFERENCES `dokter` (`kd_dokter`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -------------------------------------------
 
@@ -27,11 +27,13 @@ CREATE TABLE `e_resep_rsifc_detail` (
   `no_resep` varchar(20) NOT NULL DEFAULT '',
   `kode_brng` varchar(15) NOT NULL DEFAULT '',
   `jml` double DEFAULT NULL,
+  `embalase` double NOT NULL DEFAULT '0',
+  `tuslah` double NOT NULL DEFAULT '0',
   `aturan_pakai` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`no_resep`,`kode_brng`),
   KEY `kode_brng` (`kode_brng`),
-  CONSTRAINT `e_resep_rsifc_detail_no_resep_ibfk_1` FOREIGN KEY (`no_resep`) REFERENCES `e_resep_rsifc` (`no_resep`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `e_resep_rsifc_detail_ibfk_2` FOREIGN KEY (`kode_brng`) REFERENCES `databarang` (`kode_brng`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `e_resep_rsifc_detail_ibfk_2` FOREIGN KEY (`kode_brng`) REFERENCES `databarang` (`kode_brng`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `e_resep_rsifc_detail_no_resep_ibfk_1` FOREIGN KEY (`no_resep`) REFERENCES `e_resep_rsifc` (`no_resep`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -------------------------------------------------
@@ -49,21 +51,24 @@ CREATE TABLE `e_resep_racikan_rsifc` (
   KEY `kd_dokter_peresep` (`kd_dokter_peresep`),
   CONSTRAINT `e_resep_racikan_rsifc_ibfk_1` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON UPDATE CASCADE,
   CONSTRAINT `e_resep_racikan_rsifc_ibfk_2` FOREIGN KEY (`kd_dokter_peresep`) REFERENCES `dokter` (`kd_dokter`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE `e_resep_racikan_rsifc_detail` (
-  `no_resep` VARCHAR(20) NOT NULL DEFAULT '',
-  `kode_racik` VARCHAR(10) NOT NULL DEFAULT '',
-  `nama_racik` VARCHAR(100) NOT NULL DEFAULT '',
-  `is_parent` TINYINT(1) NOT NULL DEFAULT 0,
-  `kandungan` VARCHAR(100) NOT NULL DEFAULT '',
-  `kode_brng` VARCHAR(15) NOT NULL DEFAULT '',
-  `jml` DOUBLE DEFAULT NULL,
-  `aturan_pakai` VARCHAR(150) DEFAULT NULL,
+  `no_resep` varchar(20) NOT NULL DEFAULT '',
+  `kode_racik` varchar(10) NOT NULL DEFAULT '',
+  `nama_racik` varchar(100) NOT NULL DEFAULT '',
+  `is_parent` tinyint(1) NOT NULL DEFAULT '0',
+  `kandungan` varchar(100) NOT NULL DEFAULT '',
+  `kode_brng` varchar(15) NOT NULL DEFAULT '',
+  `jml` double DEFAULT NULL,
+  `embalase` double NOT NULL DEFAULT '0',
+  `tuslah` double NOT NULL DEFAULT '0',
+  `aturan_pakai` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`no_resep`,`kode_brng`),
   KEY `kode_brng` (`kode_brng`),
-  CONSTRAINT `e_resep_racikan_rsifc_detail_noresep_ibfk_1` FOREIGN KEY (`no_resep`) REFERENCES `e_resep_racikan_rsifc` (`no_resep`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `e_resep_racikan_rsifc_detail_kode_barang_ibfk_2` FOREIGN KEY (`kode_brng`) REFERENCES `databarang` (`kode_brng`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=INNODB DEFAULT CHARSET=latin1
+  CONSTRAINT `e_resep_racikan_rsifc_detail_kode_barang_ibfk_2` FOREIGN KEY (`kode_brng`) REFERENCES `databarang` (`kode_brng`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `e_resep_racikan_rsifc_detail_noresep_ibfk_1` FOREIGN KEY (`no_resep`) REFERENCES `e_resep_racikan_rsifc` (`no_resep`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 ---------------------------------------------------
