@@ -479,7 +479,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(10, 40, 68, 23);
 
         cmbTanggal.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "04-08-2020" }));
+        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "07-08-2020" }));
         cmbTanggal.setDisplayFormat("dd-MM-yyyy");
         cmbTanggal.setName("cmbTanggal"); // NOI18N
         cmbTanggal.setOpaque(false);
@@ -533,7 +533,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         label21.setBounds(10, 70, 68, 23);
 
         txtKodeDokter.setEditable(false);
-        txtKodeDokter.setForeground(new java.awt.Color(255, 255, 255));
+        txtKodeDokter.setForeground(new java.awt.Color(0, 0, 0));
         txtKodeDokter.setName("txtKodeDokter"); // NOI18N
         txtKodeDokter.setPreferredSize(new java.awt.Dimension(80, 23));
         txtKodeDokter.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -545,7 +545,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         txtKodeDokter.setBounds(80, 70, 100, 23);
 
         txtNamaDokter.setEditable(false);
-        txtNamaDokter.setForeground(new java.awt.Color(255, 255, 255));
+        txtNamaDokter.setForeground(new java.awt.Color(0, 0, 0));
         txtNamaDokter.setName("txtNamaDokter"); // NOI18N
         txtNamaDokter.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(txtNamaDokter);
@@ -572,7 +572,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel10.setBounds(10, 10, 65, 23);
 
         LblNoRawat.setEditable(false);
-        LblNoRawat.setForeground(new java.awt.Color(255, 255, 255));
+        LblNoRawat.setForeground(new java.awt.Color(0, 0, 0));
         LblNoRawat.setName("LblNoRawat"); // NOI18N
         LblNoRawat.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNoRawat);
@@ -586,7 +586,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel11.setBounds(190, 10, 65, 23);
 
         LblNoRM.setEditable(false);
-        LblNoRM.setForeground(new java.awt.Color(255, 255, 255));
+        LblNoRM.setForeground(new java.awt.Color(0, 0, 0));
         LblNoRM.setName("LblNoRM"); // NOI18N
         LblNoRM.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNoRM);
@@ -601,7 +601,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
 
         LblNamaPasien.setEditable(false);
         LblNamaPasien.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        LblNamaPasien.setForeground(new java.awt.Color(255, 255, 255));
+        LblNamaPasien.setForeground(new java.awt.Color(0, 0, 0));
         LblNamaPasien.setName("LblNamaPasien"); // NOI18N
         LblNamaPasien.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNamaPasien);
@@ -679,6 +679,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         label1.setName("label1"); // NOI18N
         panelBiasa2.add(label1);
 
+        txtCari.setForeground(new java.awt.Color(0, 0, 0));
         txtCari.setName("txtCari"); // NOI18N
         txtCari.setPreferredSize(new java.awt.Dimension(400, 24));
         panelBiasa2.add(txtCari);

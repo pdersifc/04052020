@@ -437,14 +437,14 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         label21.setBounds(10, 70, 68, 23);
 
         txtKodeDokter.setEditable(false);
-        txtKodeDokter.setForeground(new java.awt.Color(255, 255, 255));
+        txtKodeDokter.setForeground(new java.awt.Color(0, 0, 0));
         txtKodeDokter.setName("txtKodeDokter"); // NOI18N
         txtKodeDokter.setPreferredSize(new java.awt.Dimension(80, 23));
         FormInput.add(txtKodeDokter);
         txtKodeDokter.setBounds(80, 70, 100, 23);
 
         txtNamaDokter.setEditable(false);
-        txtNamaDokter.setForeground(new java.awt.Color(255, 255, 255));
+        txtNamaDokter.setForeground(new java.awt.Color(0, 0, 0));
         txtNamaDokter.setName("txtNamaDokter"); // NOI18N
         txtNamaDokter.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(txtNamaDokter);
@@ -548,6 +548,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         label1.setName("label1"); // NOI18N
         panelBiasa2.add(label1);
 
+        txtCari.setForeground(new java.awt.Color(0, 0, 0));
         txtCari.setName("txtCari"); // NOI18N
         txtCari.setPreferredSize(new java.awt.Dimension(400, 24));
         panelBiasa2.add(txtCari);
