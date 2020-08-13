@@ -65,8 +65,10 @@ private ObatResep obatResep;
     }
     
     public void setData(String kodeDepo, String kategoriObat, String jenisPasien) {
+        System.out.println("depo = "+kodeDepo+" kategori obat = "+kategoriObat+" jenis obat "+jenisPasien);
         model.removeAllElements();
         model.add(ObatDao.getObatByCategory(kodeDepo, kategoriObat, jenisPasien));
+        System.out.println("isi model = "+model.getAll().size());
         tblObat.setModel(model);
         rowSorter = new TableRowSorter<>(tblObat.getModel());
         tblObat.setRowSorter(rowSorter);

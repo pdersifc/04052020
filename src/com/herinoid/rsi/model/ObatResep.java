@@ -12,9 +12,9 @@ package com.herinoid.rsi.model;
 public class ObatResep {
     private String kodeObat;
     private String namaObat;
-    private int jumlah;
+    private double jumlah;
     private String satuan;
-    private String kandungan;
+    private double kandungan;
     private double harga;
     private String jenisObat;
     private String aturanPakai;
@@ -30,12 +30,16 @@ public class ObatResep {
     private int nomorRacik;
     private double embalase;
     private double tuslah;
+    private int pembilang;
+    private int penyebut;
+    private double kapasitas;
     
     
     public ObatResep(){}
-    public ObatResep(String kodeObat,String namaObat,String satuan,String kategori,String jenisObat,double stok){
+    public ObatResep(String kodeObat,String namaObat,double kapasitas,String satuan,String kategori,String jenisObat,double stok){
         this.kodeObat = kodeObat;
         this.namaObat = namaObat;
+        this.kapasitas = kapasitas;
         this.satuan = satuan;
         this.kategori = kategori;
         this.jenisObat = jenisObat;
@@ -73,14 +77,14 @@ public class ObatResep {
     /**
      * @return the jumlah
      */
-    public int getJumlah() {
+    public double getJumlah() {
         return jumlah;
     }
 
     /**
      * @param jumlah the jumlah to set
      */
-    public void setJumlah(int jumlah) {
+    public void setJumlah(double jumlah) {
         this.jumlah = jumlah;
     }
 
@@ -101,14 +105,14 @@ public class ObatResep {
     /**
      * @return the kandungan
      */
-    public String getKandungan() {
+    public double getKandungan() {
         return kandungan;
     }
 
     /**
      * @param kandungan the kandungan to set
      */
-    public void setKandungan(String kandungan) {
+    public void setKandungan(double kandungan) {
         this.kandungan = kandungan;
     }
 
@@ -320,6 +324,48 @@ public class ObatResep {
      */
     public void setTuslah(double tuslah) {
         this.tuslah = tuslah;
+    }
+
+    /**
+     * @return the pembilang
+     */
+    public int getPembilang() {
+        return pembilang;
+    }
+
+    /**
+     * @param pembilang the pembilang to set
+     */
+    public void setPembilang(int pembilang) {
+        this.pembilang = pembilang;
+    }
+
+    /**
+     * @return the penyebut
+     */
+    public int getPenyebut() {
+        return penyebut;
+    }
+
+    /**
+     * @param penyebut the penyebut to set
+     */
+    public void setPenyebut(int penyebut) {
+        this.penyebut = penyebut;
+    }
+
+    /**
+     * @return the kapasitas
+     */
+    public double getKapasitas() {
+        return kapasitas;
+    }
+
+    /**
+     * @param kapasitas the kapasitas to set
+     */
+    public void setKapasitas(double kapasitas) {
+        this.kapasitas = kapasitas;
     }
     
     

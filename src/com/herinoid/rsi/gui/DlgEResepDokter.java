@@ -214,12 +214,19 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jam();
     }
 
-    public void setData(String kodeDepo, String kategoriObat, String jenisPasien) {
+    public void setData(String kdDokter,String nmDokter,String kodeDepo, String kategoriObat, String jenisPasien) {
         model.removeAllElements();
-        model.add(ObatDao.getObatByCategory(kodeDepo, kategoriObat, jenisPasien));
+        if(kategoriObat.equals("K01")){
+            model.add(ObatDao.getObatByCategory(kodeDepo, kategoriObat, jenisPasien));
+        }else{
+            model.add(ObatDao.getObatByDepo(kodeDepo, jenisPasien));
+        }
+        
         tblObat.setModel(model);
         rowSorter = new TableRowSorter<>(tblObat.getModel());
         tblObat.setRowSorter(rowSorter);
+        txtKodeDokter.setText(kdDokter);
+        txtNamaDokter.setText(nmDokter);
     }
 
     public void setPasien(String norawat, String norm, String nmPasien, String jaminan) {
@@ -479,7 +486,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(10, 40, 68, 23);
 
         cmbTanggal.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "07-08-2020" }));
+        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10-08-2020" }));
         cmbTanggal.setDisplayFormat("dd-MM-yyyy");
         cmbTanggal.setName("cmbTanggal"); // NOI18N
         cmbTanggal.setOpaque(false);
@@ -662,6 +669,11 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
             }
         ));
         tblPilihan.setName("tblPilihan"); // NOI18N
+        tblPilihan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPilihanMouseClicked(evt);
+            }
+        });
         scrollPane1.setViewportView(tblPilihan);
 
         jPanel2.add(scrollPane1);
@@ -783,9 +795,9 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
 
     private void tblObatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblObatMouseClicked
         // TODO add your handling code here:
-        int row = tblObat.getSelectedRow();
-        addQty.setVisible(true);
+        int row = tblObat.getSelectedRow();        
         addQty.setData(model.get(tblObat.convertRowIndexToModel(row)), racikanList);
+        addQty.setVisible(true);
     }//GEN-LAST:event_tblObatMouseClicked
 
     private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChkJlnActionPerformed
@@ -835,6 +847,10 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
         }
 
     }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void tblPilihanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPilihanMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblPilihanMouseClicked
 
     private void clean() {
         racikanList = new LinkedList<>();

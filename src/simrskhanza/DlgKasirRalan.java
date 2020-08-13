@@ -8475,11 +8475,13 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 String norawat = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 11).toString();
                 String norm = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 2).toString();
                 String nmPasien = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 3).toString();
-                String kategoriObat = "K01";
-                if (!jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
-                    kategoriObat = "K02";
+                String kdDokter = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 0).toString();
+                String nmDokter = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 1).toString();
+                String kategoriObat = "K02";
+                if (jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
+                    kategoriObat = "K01";
                 }
-                resep.setData(depoObat, kategoriObat, Konstan.PASIEN_RALAN);
+                resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RALAN);
                 resep.setPasien(norawat, norm, nmPasien, jenisBayar);
                 resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                 resep.setLocationRelativeTo(internalFrame1);

@@ -5,13 +5,13 @@
  */
 package com.herinoid.rsi.gui.dialog;
 
-import com.herinoid.rsi.model.MetodeRacikan;
 import com.herinoid.rsi.model.Obat;
 import com.herinoid.rsi.model.ObatResep;
 import com.herinoid.rsi.widget.KeySelectionRenderer;
 import java.awt.Dimension;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
-import org.apache.poi.hwmf.record.HwmfRecordType;
 import widget.ComboBox;
 
 /**
@@ -29,17 +29,21 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
     public DialogAddQtyResepDokter(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setPreferredSize(new Dimension(524, 327));
+        this.setPreferredSize(new Dimension(500, 375));
         lblRacikan.setVisible(false);
         cmbRacikan.setVisible(false);
         lblKandungan.setVisible(false);
         txtKandungan.setVisible(false);
+        lblP1.setVisible(false);
+        lblP2.setVisible(false);
+        txtPembilang.setVisible(false);
+        txtPenyebut.setVisible(false);
         setLocationRelativeTo(null);
     }
 
     public void setData(Obat obat, List<ObatResep> racikans) {
         this.racikanList = racikans;
-        this.obatResep = new ObatResep(obat.getKodeObat(), obat.getNamaObat(), obat.getSatuan(), obat.getKategori(), obat.getJenisObat(), obat.getStok());
+        this.obatResep = new ObatResep(obat.getKodeObat(), obat.getNamaObat(), obat.getKapasitas(), obat.getSatuan(), obat.getKategori(), obat.getJenisObat(), obat.getStok());
         lblObat.setText(obat.getNamaObat());
     }
 
@@ -56,6 +60,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        panelBiasa1 = new widget.PanelBiasa();
         panelisi1 = new widget.panelisi();
         label1 = new widget.Label();
         txtJumlah = new widget.TextBox();
@@ -63,18 +68,27 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         cekRacikan = new widget.CekBox();
         lblRacikan = new widget.Label();
         cmbRacikan = new widget.ComboBox();
-        label4 = new widget.Label();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        lblAturanPake = new widget.Label();
+        scrAturanPake = new javax.swing.JScrollPane();
         txtAturanPakai = new widget.TextArea();
         btnSimpan = new widget.Button();
         btnBatal = new widget.Button();
         lblObat = new widget.Label();
         lblKandungan = new widget.Label();
         txtKandungan = new widget.TextBox();
+        lblP1 = new widget.Label();
+        txtPembilang = new widget.TextBox();
+        txtPenyebut = new widget.TextBox();
+        lblP2 = new widget.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
-        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
+        setResizable(false);
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
+
+        panelBiasa1.setLayout(new javax.swing.BoxLayout(panelBiasa1, javax.swing.BoxLayout.LINE_AXIS));
+
+        panelisi1.setPreferredSize(new java.awt.Dimension(489, 331));
 
         label1.setForeground(new java.awt.Color(0, 0, 0));
         label1.setText("Jumlah :");
@@ -83,8 +97,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         label2.setText("Apakah Racikan ?");
         label2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
-        cekRacikan.setBackground(new java.awt.Color(204, 204, 204));
-        cekRacikan.setText("Iya");
+        cekRacikan.setText("Tidak");
         cekRacikan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cekRacikanActionPerformed(evt);
@@ -100,12 +113,13 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             }
         });
 
-        label4.setText("Aturan Pakai :");
-        label4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblAturanPake.setText("Aturan Pakai :");
+        lblAturanPake.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         txtAturanPakai.setColumns(20);
         txtAturanPakai.setRows(5);
-        jScrollPane1.setViewportView(txtAturanPakai);
+        txtAturanPakai.setOpaque(true);
+        scrAturanPake.setViewportView(txtAturanPakai);
 
         btnSimpan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/save-16x16i.png"))); // NOI18N
         btnSimpan.setText("Simpan");
@@ -129,6 +143,27 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         lblKandungan.setText("Kandungan :");
         lblKandungan.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
+        txtKandungan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtKandunganKeyReleased(evt);
+            }
+        });
+
+        lblP1.setText("P1 :");
+        lblP1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+
+        txtPembilang.setText("1");
+
+        txtPenyebut.setText("1");
+        txtPenyebut.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPenyebutKeyReleased(evt);
+            }
+        });
+
+        lblP2.setText("/");
+        lblP2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+
         javax.swing.GroupLayout panelisi1Layout = new javax.swing.GroupLayout(panelisi1);
         panelisi1.setLayout(panelisi1Layout);
         panelisi1Layout.setHorizontalGroup(
@@ -142,10 +177,6 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                             .addComponent(lblKandungan, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(txtKandungan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelisi1Layout.createSequentialGroup()
-                            .addComponent(lblRacikan, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(cmbRacikan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panelisi1Layout.createSequentialGroup()
                                 .addComponent(btnBatal, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -153,15 +184,29 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                                 .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelisi1Layout.createSequentialGroup()
                                 .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(label4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblAturanPake, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(label2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(label1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cekRacikan, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                                    .addComponent(scrAturanPake, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelisi1Layout.createSequentialGroup()
+                            .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblP1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblRacikan, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelisi1Layout.createSequentialGroup()
+                                    .addComponent(txtPembilang, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(lblP2, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(txtPenyebut, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(cmbRacikan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelisi1Layout.setVerticalGroup(
             panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,7 +221,13 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                 .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbRacikan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblRacikan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblP1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPembilang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPenyebut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblP2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblKandungan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtKandungan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -186,8 +237,8 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                     .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblAturanPake, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrAturanPake, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
@@ -195,7 +246,9 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                 .addGap(34, 34, 34))
         );
 
-        getContentPane().add(panelisi1);
+        panelBiasa1.add(panelisi1);
+
+        getContentPane().add(panelBiasa1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -203,11 +256,20 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
     private void cekRacikanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cekRacikanActionPerformed
         // TODO add your handling code here:
         if (cekRacikan.isSelected()) {
+            cekRacikan.setText("Iya");
             cmbRacikan.removeAllItems();
             lblRacikan.setVisible(true);
             cmbRacikan.setVisible(true);
             lblKandungan.setVisible(true);
             txtKandungan.setVisible(true);
+            lblP1.setVisible(true);
+            lblP2.setVisible(true);
+            txtPembilang.setVisible(true);
+            txtPenyebut.setVisible(true);
+            scrAturanPake.setVisible(false);
+            txtAturanPakai.setVisible(false);
+            txtAturanPakai.setText("-");
+            lblAturanPake.setVisible(false);
             for (ObatResep m : racikanList) {
                 cmbRacikan.addItem(m);
                 KeySelectionRenderer renderer = new KeySelectionRenderer(cmbRacikan) {
@@ -219,10 +281,18 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                 };
             }
         } else {
+            scrAturanPake.setVisible(true);
+            txtAturanPakai.setVisible(true);
+            lblAturanPake.setVisible(true);
+            cekRacikan.setText("Tidak");
             lblRacikan.setVisible(false);
             cmbRacikan.setVisible(false);
             lblKandungan.setVisible(false);
             txtKandungan.setVisible(false);
+            lblP1.setVisible(false);
+            lblP2.setVisible(false);
+            txtPembilang.setVisible(false);
+            txtPenyebut.setVisible(false);
         }
 
     }//GEN-LAST:event_cekRacikanActionPerformed
@@ -230,12 +300,13 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         // TODO add your handling code here:
         obatResep.setFlag(false);
+        clean();
         dispose();
     }//GEN-LAST:event_btnBatalActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
-        obatResep.setJumlah(Integer.parseInt(txtJumlah.getText()));
+        obatResep.setJumlah(Double.parseDouble(txtJumlah.getText()));
         obatResep.setAturanPakai(txtAturanPakai.getText());
         obatResep.setFlag(true);
         obatResep.setEmbalase(0);
@@ -247,7 +318,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                     obatResep.setRacikan(obatRacik.getNamaObat());
                     obatResep.setKodeRacikan(obatRacik.getKodeObat());
                     obatResep.setJenisObat(Obat.OBAT_RACIKAN);
-                    obatResep.setKandungan(txtKandungan.getText());
+                    obatResep.setKandungan(Double.parseDouble(txtKandungan.getText()));
+                    obatResep.setPembilang(Integer.parseInt(txtPembilang.getText()));
+                    obatResep.setPenyebut(Integer.parseInt(txtPenyebut.getText()));
+                    
                 }
             }
         } else {
@@ -268,6 +342,29 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_cmbRacikanActionPerformed
 
+    private void txtPenyebutKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPenyebutKeyReleased
+        // TODO add your handling code here:
+        int p1 = Integer.parseInt(txtPembilang.getText());
+        int p2 = 1;
+        if (txtPenyebut.getText().length() > 0 && !txtPenyebut.getText().isEmpty()) {
+            p2 = Integer.parseInt(txtPenyebut.getText());
+        }
+        double kandungan = obatResep.getKapasitas() * p1 / p2;
+        BigDecimal bd = new BigDecimal(kandungan);
+        BigDecimal bdRounded = bd.setScale(0, RoundingMode.CEILING);
+        txtKandungan.setText(String.valueOf(bdRounded));
+        BigDecimal jumlah = new BigDecimal(obatResep.getKapasitas() / bdRounded.doubleValue());
+        BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
+        txtJumlah.setText(String.valueOf(bulatke.doubleValue()));
+    }//GEN-LAST:event_txtPenyebutKeyReleased
+
+    private void txtKandunganKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKandunganKeyReleased
+        // TODO add your handling code here:
+        BigDecimal jumlah = new BigDecimal(obatResep.getKapasitas() / Double.parseDouble(txtKandungan.getText()));
+        BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
+        txtJumlah.setText(String.valueOf(bulatke.doubleValue()));
+    }//GEN-LAST:event_txtKandunganKeyReleased
+
     void clean() {
         txtJumlah.setText(null);
         txtAturanPakai.setText(null);
@@ -278,6 +375,15 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         lblRacikan.setVisible(false);
         cmbRacikan.setVisible(false);
         txtKandungan.setVisible(false);
+        lblKandungan.setVisible(false);
+        lblP1.setVisible(false);
+        lblP2.setVisible(false);
+        txtPembilang.setText("1");
+        txtPenyebut.setText("");
+        txtPembilang.setVisible(false);
+        txtPenyebut.setVisible(false);
+        txtAturanPakai.setVisible(true);
+        scrAturanPake.setVisible(true);
     }
 
     /**
@@ -327,16 +433,21 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
     private widget.Button btnSimpan;
     private widget.CekBox cekRacikan;
     private widget.ComboBox cmbRacikan;
-    private javax.swing.JScrollPane jScrollPane1;
     private widget.Label label1;
     private widget.Label label2;
-    private widget.Label label4;
+    private widget.Label lblAturanPake;
     private widget.Label lblKandungan;
     private widget.Label lblObat;
+    private widget.Label lblP1;
+    private widget.Label lblP2;
     private widget.Label lblRacikan;
+    private widget.PanelBiasa panelBiasa1;
     private widget.panelisi panelisi1;
+    private javax.swing.JScrollPane scrAturanPake;
     private widget.TextArea txtAturanPakai;
     private widget.TextBox txtJumlah;
     private widget.TextBox txtKandungan;
+    private widget.TextBox txtPembilang;
+    private widget.TextBox txtPenyebut;
     // End of variables declaration//GEN-END:variables
 }

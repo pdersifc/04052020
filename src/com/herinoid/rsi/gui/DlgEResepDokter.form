@@ -298,7 +298,7 @@
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="1">
-                    <StringItem index="0" value="10-08-2020"/>
+                    <StringItem index="0" value="12-08-2020"/>
                   </StringArray>
                 </Property>
                 <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -812,6 +812,9 @@
                         </Property>
                         <Property name="name" type="java.lang.String" value="tblPilihan" noResource="true"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblPilihanMouseClicked"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
