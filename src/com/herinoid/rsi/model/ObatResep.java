@@ -20,6 +20,7 @@ public class ObatResep {
     private String aturanPakai;
     private String kategori;
     private double hargaBeli;
+    private double jmlRacik;
     private double stok;
     private String metodeRacikKode;
     private String metodeRacik;
@@ -366,6 +367,20 @@ public class ObatResep {
      */
     public void setKapasitas(double kapasitas) {
         this.kapasitas = kapasitas;
+    }
+
+    /**
+     * @return the jmlRacik
+     */
+    public double getJmlRacik() {
+        return jmlRacik;
+    }
+
+    /**
+     * @param jmlRacik the jmlRacik to set
+     */
+    public void setJmlRacik(double jmlRacik) {
+        this.jmlRacik = jmlRacik;
     }
     
     

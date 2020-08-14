@@ -321,6 +321,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                     obatResep.setKandungan(Double.parseDouble(txtKandungan.getText()));
                     obatResep.setPembilang(Integer.parseInt(txtPembilang.getText()));
                     obatResep.setPenyebut(Integer.parseInt(txtPenyebut.getText()));
+                    obatResep.setJmlRacik(obatRacik.getJumlah());
                     
                 }
             }
@@ -353,7 +354,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         BigDecimal bd = new BigDecimal(kandungan);
         BigDecimal bdRounded = bd.setScale(0, RoundingMode.CEILING);
         txtKandungan.setText(String.valueOf(bdRounded));
-        BigDecimal jumlah = new BigDecimal(obatResep.getKapasitas() / bdRounded.doubleValue());
+        BigDecimal jumlah = new BigDecimal(obatResep.getJmlRacik()/ bdRounded.doubleValue());
         BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
         txtJumlah.setText(String.valueOf(bulatke.doubleValue()));
     }//GEN-LAST:event_txtPenyebutKeyReleased
