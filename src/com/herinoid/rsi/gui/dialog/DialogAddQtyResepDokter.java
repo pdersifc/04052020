@@ -340,6 +340,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         ObatResep metod = (ObatResep) cmbRacikan.getSelectedItem();
         if (metod != null) {
             obatResep.setRacikan(metod.getNamaObat());
+            obatResep.setJmlRacik(metod.getJumlah());
         }
     }//GEN-LAST:event_cmbRacikanActionPerformed
 
@@ -354,7 +355,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         BigDecimal bd = new BigDecimal(kandungan);
         BigDecimal bdRounded = bd.setScale(0, RoundingMode.CEILING);
         txtKandungan.setText(String.valueOf(bdRounded));
-        BigDecimal jumlah = new BigDecimal(obatResep.getJmlRacik()/ bdRounded.doubleValue());
+        double pembagi = obatResep.getKapasitas()/kandungan;
+        BigDecimal bdPembagi = new BigDecimal(pembagi);
+        BigDecimal bdPembagiRoundup = bdPembagi.setScale(0, RoundingMode.CEILING);
+        BigDecimal jumlah = new BigDecimal(obatResep.getJmlRacik()/ bdPembagiRoundup.doubleValue());
         BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
         txtJumlah.setText(String.valueOf(bulatke.doubleValue()));
     }//GEN-LAST:event_txtPenyebutKeyReleased
@@ -363,7 +367,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         // TODO add your handling code here:
         BigDecimal jumlah = new BigDecimal(obatResep.getKapasitas() / Double.parseDouble(txtKandungan.getText()));
         BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
-        txtJumlah.setText(String.valueOf(bulatke.doubleValue()));
+        
+        BigDecimal hasilPmbagi = new BigDecimal(obatResep.getJmlRacik()/ bulatke.doubleValue());
+        BigDecimal hasilAhir = hasilPmbagi.setScale(0, RoundingMode.CEILING);
+        txtJumlah.setText(String.valueOf(hasilAhir.doubleValue()));
     }//GEN-LAST:event_txtKandunganKeyReleased
 
     void clean() {
