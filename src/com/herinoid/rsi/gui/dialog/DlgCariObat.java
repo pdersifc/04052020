@@ -21,16 +21,18 @@ import javax.swing.table.TableRowSorter;
  * @author Hewrei
  */
 public class DlgCariObat extends javax.swing.JDialog {
-private TabelCariObatResep model;
-private TableRowSorter<TableModel> rowSorter;
-private ObatResep obatResep;
+
+    private TabelCariObatResep model;
+    private TableRowSorter<TableModel> rowSorter;
+    private ObatResep obatResep;
+
     /**
      * Creates new form DlgCariObat
      */
     public DlgCariObat(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setPreferredSize(new Dimension(762, 442));
+        setSize(new Dimension(762, 442));
         model = new TabelCariObatResep();
         txtCari.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -63,17 +65,19 @@ private ObatResep obatResep;
 
         });
     }
-    
+
     public void setData(String kodeDepo, String kategoriObat, String jenisPasien) {
-        System.out.println("depo = "+kodeDepo+" kategori obat = "+kategoriObat+" jenis obat "+jenisPasien);
         model.removeAllElements();
-        model.add(ObatDao.getObatByCategory(kodeDepo, kategoriObat, jenisPasien));
-        System.out.println("isi model = "+model.getAll().size());
+        if (kategoriObat.equals("K01")) {
+            model.add(ObatDao.getObatByCategory(kodeDepo, kategoriObat, jenisPasien));
+        } else {
+            model.add(ObatDao.getObatByDepo(kodeDepo, jenisPasien));
+        }
         tblObat.setModel(model);
         rowSorter = new TableRowSorter<>(tblObat.getModel());
         tblObat.setRowSorter(rowSorter);
     }
-    
+
     public ObatResep getData() {
         return this.obatResep;
     }
@@ -115,13 +119,13 @@ private ObatResep obatResep;
 
         tblObat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         tblObat.setPreferredSize(new java.awt.Dimension(762, 474));
@@ -141,20 +145,20 @@ private ObatResep obatResep;
 
     private void tblObatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblObatMouseClicked
         // TODO add your handling code here:
-     int selected = tblObat.getSelectedRow();
-     Obat data = model.getAll().get(selected);
-     obatResep = new ObatResep();
-     obatResep.setKodeObat(data.getKodeObat());
-     obatResep.setNamaObat(data.getNamaObat());
-     obatResep.setJumlah(0);
-     obatResep.setSatuan(data.getSatuan());
-     obatResep.setJenisObat(data.getJenisObat());
-     obatResep.setKategori(data.getKategori());
-     obatResep.setEmbalase(0);
-     obatResep.setTuslah(0);
-     obatResep.setStok(data.getStok());
-     obatResep.setHarga(data.getHarga());
-     dispose();
+        int selected = tblObat.getSelectedRow();
+        Obat data = model.getAll().get(selected);
+        obatResep = new ObatResep();
+        obatResep.setKodeObat(data.getKodeObat());
+        obatResep.setNamaObat(data.getNamaObat());
+        obatResep.setJumlah(0);
+        obatResep.setSatuan(data.getSatuan());
+        obatResep.setJenisObat(data.getJenisObat());
+        obatResep.setKategori(data.getKategori());
+        obatResep.setEmbalase(0);
+        obatResep.setTuslah(0);
+        obatResep.setStok(data.getStok());
+        obatResep.setHarga(data.getHarga());
+        dispose();
     }//GEN-LAST:event_tblObatMouseClicked
 
     /**
@@ -208,4 +212,8 @@ private ObatResep obatResep;
     private widget.Table tblObat;
     private widget.TextBox txtCari;
     // End of variables declaration//GEN-END:variables
+
+    public void clearData() {
+        obatResep = null;
+    }
 }

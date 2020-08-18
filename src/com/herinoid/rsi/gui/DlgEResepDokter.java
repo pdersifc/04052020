@@ -63,10 +63,6 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         racikanList = new LinkedList<>();
         model = new TabelCariObatResep();
         modelPilihan = new TabelObatResepPilihan();
-//        model.add(ObatDao.getObatByCategory("KMOBT", "K01", Konstan.PASIEN_RALAN));
-//        tblObat.setModel(model);
-//        rowSorter = new TableRowSorter<>(tblObat.getModel());
-//        tblObat.setRowSorter(rowSorter);
         this.setLocation(10, 2);
         setSize(656, 250);
 

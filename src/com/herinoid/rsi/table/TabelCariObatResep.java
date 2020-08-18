@@ -34,7 +34,6 @@ public class TabelCariObatResep extends AbstractTableModel {
         column.add("Satuan");
         column.add("Jenis Obat");
         column.add("Kategori");
-        column.add("Stok"); 
         row = new Vector<Obat>();
     }
 
@@ -104,8 +103,6 @@ public class TabelCariObatResep extends AbstractTableModel {
             return row.get(rowIndex).getJenisObat();
         }else if (columnIndex == 4) {
             return row.get(rowIndex).getKategori();
-        }else if (columnIndex == 5) {
-            return row.get(rowIndex).getStok();
         }
         return null;
     }

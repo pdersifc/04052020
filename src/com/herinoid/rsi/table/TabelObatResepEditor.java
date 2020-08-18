@@ -71,6 +71,14 @@ public class TabelObatResepEditor extends AbstractTableModel {
         return o;
     }
     
+    public synchronized boolean remove(ObatResep obatResep) {
+        boolean isRemoved = row.remove(obatResep);
+        fireTableDataChanged();
+        return isRemoved;
+    }
+    
+   
+    
     public synchronized List<ObatResep> getAll() {
         return row;
     }

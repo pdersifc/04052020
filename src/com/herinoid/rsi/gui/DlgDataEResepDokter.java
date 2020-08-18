@@ -33,18 +33,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.herinoid.rsi.dao.BangsalDao;
 import com.herinoid.rsi.dao.PemberianObatDetailDao;
+import static com.herinoid.rsi.dao.ResepDao.getObatResepDetail;
 import com.herinoid.rsi.gui.dialog.DlgCariObat;
 import com.herinoid.rsi.model.Resep;
 import com.herinoid.rsi.model.RincianResepVerifikasi;
 import com.herinoid.rsi.table.TabelResepRincian;
 import com.herinoid.rsi.util.Konstan;
+import com.herinoid.rsi.widget.KeySelectionRenderer;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import widget.ComboBox;
 
 /**
  *
@@ -135,6 +139,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                     if (obatFromDialog != null) {
                         modelPilihan.add(obatFromDialog);
                     }
+                    addObat.clearData();
                 }
 
                 @Override
@@ -276,6 +281,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void initComponents() {
 
         Popup = new javax.swing.JPopupMenu();
+        MnAllStock = new javax.swing.JMenuItem();
         popHapusRowObat = new javax.swing.JMenuItem();
         TNoRw = new widget.TextBox();
         KdPj = new widget.TextBox();
@@ -332,6 +338,17 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         lblDepo = new widget.Label();
 
         Popup.setName("Popup"); // NOI18N
+
+        MnAllStock.setBackground(new java.awt.Color(255, 255, 255));
+        MnAllStock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Church.png"))); // NOI18N
+        MnAllStock.setText("Tampilkan Semua Stock");
+        MnAllStock.setName("MnAllStock"); // NOI18N
+        MnAllStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnAllStockActionPerformed(evt);
+            }
+        });
+        Popup.add(MnAllStock);
 
         popHapusRowObat.setBackground(new java.awt.Color(255, 255, 255));
         popHapusRowObat.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -513,7 +530,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(370, 40, 60, 23);
 
         cmbTanggalTo.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "12-08-2020" }));
+        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-08-2020" }));
         cmbTanggalTo.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalTo.setName("cmbTanggalTo"); // NOI18N
         cmbTanggalTo.setOpaque(false);
@@ -573,7 +590,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         rdoRanap.setBounds(261, 10, 130, 23);
 
         cmbTanggalfrom.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "12-08-2020" }));
+        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-08-2020" }));
         cmbTanggalfrom.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalfrom.setName("cmbTanggalfrom"); // NOI18N
         cmbTanggalfrom.setOpaque(false);
@@ -837,10 +854,15 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     }//GEN-LAST:event_tblEditorMouseClicked
 
     private void btnAddObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddObatActionPerformed
-        // TODO add your handling code here:        
-        String depo = pro.getProperty("DEPOOBAT");
-        addObat.setData(depo, depo, Konstan.PASIEN_RALAN);
-        addObat.setVisible(true);
+        // TODO add your handling code here:
+        if (tblData.getSelectedRow() > -1) {
+            String depo = pro.getProperty("DEPOOBAT");
+            addObat.setData(depo, kategoriObat, cmbTarif.getSelectedItem().toString());
+            addObat.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Silahkan pilih salah satu data resep pada tabel paling atas..");
+        }
+
     }//GEN-LAST:event_btnAddObatActionPerformed
 
     private void mnTerimaPasienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnTerimaPasienActionPerformed
@@ -857,19 +879,56 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             } else {
                 int halo = JOptionPane.showConfirmDialog(null, "Apa benar obat sudah diambil pasien?? ", "Perhatian", dialogButton);
                 if (halo == 0) {
-                   boolean berhatsil = ResepDao.updateDiterimaPasien(resep.getNoResep());
-                if (berhatsil) {
-                    List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());
-                    List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());
-                    showResepData(dataList, dataRacikanList);
+                    boolean berhatsil = ResepDao.updateDiterimaPasien(resep.getNoResep());
+                    if (berhatsil) {
+                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());
+                        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());
+                        showResepData(dataList, dataRacikanList);
+                    }
                 }
-                }
-                
+
             }
 
         }
 
     }//GEN-LAST:event_mnTerimaPasienActionPerformed
+
+    private void MnAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnAllStockActionPerformed
+        // TODO add your handling code here:
+        List<Bangsal> depos = BangsalDao.getDepoObat();
+        ComboBox cmDepo = new ComboBox();
+        for (Bangsal m : depos) {
+            cmDepo.addItem(m);
+            KeySelectionRenderer renderer = new KeySelectionRenderer(cmDepo) {
+                @Override
+                public String getDisplayValue(Object value) {
+                    Bangsal depo = (Bangsal) value;
+                    return depo.getNama();
+                }
+            };
+        }
+
+        JOptionPane.showMessageDialog(null, cmDepo, "Silahkan pilih Depo", JOptionPane.QUESTION_MESSAGE);
+        Bangsal depo = (Bangsal) cmDepo.getSelectedItem();
+        if (cmDepo.getSelectedItem() != null) {
+            System.out.println("pilihan = " + depo.getNama());
+            int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+            int barisPilihan = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
+            if (baris > -1) {
+                DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
+                if (barisPilihan > -1) {
+                    ObatResep obatKlik = modelPilihan.get(tblEditor.convertRowIndexToModel(barisPilihan));
+                    modelPilihan.remove(obatKlik);
+                    ObatResep d = ResepDao.getObatStock(obatKlik.getKodeObat(), depo.getKode(), cmbTarif.getSelectedItem().toString());
+                    obatKlik.setStok(d.getStok());
+                    modelPilihan.add(obatKlik);                   
+                    tblEditor.setModel(modelPilihan);
+                }
+
+            }
+        }
+
+    }//GEN-LAST:event_MnAllStockActionPerformed
 
     private void clean() {
         racikanList = new LinkedList<>();
@@ -900,6 +959,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.Button BtnKeluar;
     private widget.PanelBiasa FormInput;
     private widget.TextBox KdPj;
+    private javax.swing.JMenuItem MnAllStock;
     private javax.swing.JMenuItem MnAturanPakai1;
     private javax.swing.JMenuItem MnAturanPakai2;
     private javax.swing.JMenuItem MnAturanPakai3;

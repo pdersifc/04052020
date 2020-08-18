@@ -45,6 +45,46 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         this.racikanList = racikans;
         this.obatResep = new ObatResep(obat.getKodeObat(), obat.getNamaObat(), obat.getKapasitas(), obat.getSatuan(), obat.getKategori(), obat.getJenisObat(), obat.getStok());
         lblObat.setText(obat.getNamaObat());
+        if (racikanList.size() > 0) {
+            cekRacikan.setSelected(true);
+            cekRacikan.setText("Iya");
+            cmbRacikan.removeAllItems();
+            lblRacikan.setVisible(true);
+            cmbRacikan.setVisible(true);
+            lblKandungan.setVisible(true);
+            txtKandungan.setVisible(true);
+            lblP1.setVisible(true);
+            lblP2.setVisible(true);
+            txtPembilang.setVisible(true);
+            txtPenyebut.setVisible(true);
+            scrAturanPake.setVisible(false);
+            txtAturanPakai.setVisible(false);
+            txtAturanPakai.setText("-");
+            lblAturanPake.setVisible(false);
+            for (ObatResep m : racikanList) {
+                cmbRacikan.addItem(m);
+                KeySelectionRenderer renderer = new KeySelectionRenderer(cmbRacikan) {
+                    @Override
+                    public String getDisplayValue(Object value) {
+                        ObatResep racik = (ObatResep) value;
+                        return racik.getNamaObat();
+                    }
+                };
+            }
+        } else {
+            scrAturanPake.setVisible(true);
+            txtAturanPakai.setVisible(true);
+            lblAturanPake.setVisible(true);
+            cekRacikan.setText("Tidak");
+            lblRacikan.setVisible(false);
+            cmbRacikan.setVisible(false);
+            lblKandungan.setVisible(false);
+            txtKandungan.setVisible(false);
+            lblP1.setVisible(false);
+            lblP2.setVisible(false);
+            txtPembilang.setVisible(false);
+            txtPenyebut.setVisible(false);
+        }
     }
 
     public ObatResep getData() {
@@ -322,7 +362,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                     obatResep.setPembilang(Integer.parseInt(txtPembilang.getText()));
                     obatResep.setPenyebut(Integer.parseInt(txtPenyebut.getText()));
                     obatResep.setJmlRacik(obatRacik.getJumlah());
-                    
+
                 }
             }
         } else {
@@ -355,10 +395,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         BigDecimal bd = new BigDecimal(kandungan);
         BigDecimal bdRounded = bd.setScale(0, RoundingMode.CEILING);
         txtKandungan.setText(String.valueOf(bdRounded));
-        double pembagi = obatResep.getKapasitas()/kandungan;
+        double pembagi = obatResep.getKapasitas() / kandungan;
         BigDecimal bdPembagi = new BigDecimal(pembagi);
         BigDecimal bdPembagiRoundup = bdPembagi.setScale(0, RoundingMode.CEILING);
-        BigDecimal jumlah = new BigDecimal(obatResep.getJmlRacik()/ bdPembagiRoundup.doubleValue());
+        BigDecimal jumlah = new BigDecimal(obatResep.getJmlRacik() / bdPembagiRoundup.doubleValue());
         BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
         txtJumlah.setText(String.valueOf(bulatke.doubleValue()));
     }//GEN-LAST:event_txtPenyebutKeyReleased
@@ -367,8 +407,8 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         // TODO add your handling code here:
         BigDecimal jumlah = new BigDecimal(obatResep.getKapasitas() / Double.parseDouble(txtKandungan.getText()));
         BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
-        
-        BigDecimal hasilPmbagi = new BigDecimal(obatResep.getJmlRacik()/ bulatke.doubleValue());
+
+        BigDecimal hasilPmbagi = new BigDecimal(obatResep.getJmlRacik() / bulatke.doubleValue());
         BigDecimal hasilAhir = hasilPmbagi.setScale(0, RoundingMode.CEILING);
         txtJumlah.setText(String.valueOf(hasilAhir.doubleValue()));
     }//GEN-LAST:event_txtKandunganKeyReleased

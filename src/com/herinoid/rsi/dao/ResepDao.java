@@ -449,6 +449,69 @@ public class ResepDao {
         }
         return obatDetailList;
     }
+    
+    public static ObatResep getObatStock(String kdObat,String depo, String tarif) {
+        ObatResep obat = new ObatResep();
+        PreparedStatement psttmn = null;
+        ResultSet rset = null;
+        try {
+            psttmn = koneksi.prepareStatement("SELECT o.kode_brng,o.nama_brng,s.satuan,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,j.nama AS jenis,k.nama AS kategori "
+                    + "FROM databarang o "
+                    + "INNER JOIN gudangbarang g ON o.kode_brng = g.kode_brng "
+                    + "INNER JOIN kodesatuan s ON s.kode_sat=o.kode_sat INNER JOIN jenis j ON j.kdjns=o.kdjns INNER JOIN kategori_barang k ON k.kode=o.kode_kategori "
+                    + "WHERE g.kd_bangsal=? AND o.kode_brng = ?");
+            psttmn.setString(1, depo);
+            psttmn.setString(2, kdObat);
+            rset = psttmn.executeQuery();
+            while (rset.next()) {                
+                obat.setKodeObat(rset.getString("kode_brng"));
+                obat.setNamaObat(rset.getString("nama_brng"));
+                obat.setJumlah(0);
+                obat.setAturanPakai("");
+                obat.setHargaBeli(rset.getDouble("h_beli"));
+                obat.setSatuan(rset.getString("satuan"));
+                obat.setJenisObat(rset.getString("jenis"));
+                obat.setKategori(rset.getString("kategori"));
+                obat.setEmbalase(0);
+                obat.setTuslah(0);
+                obat.setStok(rset.getDouble("stok"));
+                double harga = rset.getDouble("ralan");
+                if (tarif.equals(Konstan.PASIEN_KARYAWAN)) {
+                    harga = rset.getDouble("karyawan");
+                } else if (tarif.equals(Konstan.PASIEN_KELAS_VVIP)) {
+                    harga = rset.getDouble("vvip");
+                } else if (tarif.equals(Konstan.PASIEN_KELAS_VIP)) {
+                    harga = rset.getDouble("vip");
+                } else if (tarif.equals(Konstan.PASIEN_KELAS1)) {
+                    harga = rset.getDouble("kelas1");
+                } else if (tarif.equals(Konstan.PASIEN_KELAS2)) {
+                    harga = rset.getDouble("kelas2");
+                } else if (tarif.equals(Konstan.PASIEN_KELAS3)) {
+                    harga = rset.getDouble("kelas3");
+                } else if (tarif.equals(Konstan.PASIEN_BELILUAR)) {
+                    harga = rset.getDouble("beliluar");
+                }
+                obat.setHarga(harga);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (psttmn != null) {
+
+                    psttmn.close();
+
+                }
+                if (rset != null) {
+                    rset.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obat;
+    }
+    
 
     public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo) {
         boolean sukses = true;

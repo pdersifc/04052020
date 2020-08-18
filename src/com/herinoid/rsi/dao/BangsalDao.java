@@ -118,4 +118,34 @@ public class BangsalDao {
         }
         return bangsal;
     }
+    
+     public static List<Bangsal> getDepoObat() {
+        List<Bangsal> bangsals = new LinkedList<>();
+        try {
+            ps = koneksi.prepareStatement("SELECT * FROM bangsal WHERE kd_bangsal IN ('DEPO1','DEPO2','DEPO3','GDFAR','KMOBT') AND STATUS = '1'");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Bangsal b = new Bangsal();
+                b.setKode(rs.getString("kd_bangsal"));
+                b.setNama(rs.getString("nm_bangsal"));
+                bangsals.add(b);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(BangsalDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return bangsals;
+    }
 }
