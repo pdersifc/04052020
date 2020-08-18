@@ -911,7 +911,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         JOptionPane.showMessageDialog(null, cmDepo, "Silahkan pilih Depo", JOptionPane.QUESTION_MESSAGE);
         Bangsal depo = (Bangsal) cmDepo.getSelectedItem();
         if (cmDepo.getSelectedItem() != null) {
-            System.out.println("pilihan = " + depo.getNama());
             int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
             int barisPilihan = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
             if (baris > -1) {
