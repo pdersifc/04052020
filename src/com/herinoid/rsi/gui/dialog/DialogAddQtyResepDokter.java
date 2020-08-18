@@ -427,7 +427,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         lblP1.setVisible(false);
         lblP2.setVisible(false);
         txtPembilang.setText("1");
-        txtPenyebut.setText("");
+        txtPenyebut.setText("1");
         txtPembilang.setVisible(false);
         txtPenyebut.setVisible(false);
         txtAturanPakai.setVisible(true);
