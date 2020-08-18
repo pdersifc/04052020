@@ -233,6 +233,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void setResepVerifikasi(String noRawat, String kdBangsal, String noresep) {
         List<ObatResep> farmasis = PemberianObatDetailDao.getObatValidasiByNoResep(noresep, kdBangsal);
         List<ObatResep> dokters = PemberianObatDetailDao.getResepByNoresep(noresep, kdBangsal);
+        List<ObatResep> dokterRacikans = ResepDao.getObatResepRacikanDetail(noresep, kdBangsal, cmbTarif.getSelectedItem().toString());
         List<RincianResepVerifikasi> rincians = new LinkedList<>();
         if (farmasis.size() > 0) {
             for (ObatResep f : farmasis) {
@@ -240,7 +241,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 r.setKodeObat(f.getKodeObat());
                 r.setNamaObat(f.getNamaObat());
                 double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
-                r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));          
+                r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
                 r.setAturanPakai(f.getAturanPakai());
                 rincians.add(r);
             }
@@ -250,15 +251,35 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         }
         List<RincianResepVerifikasi> rincianDokters = new LinkedList<>();
         if (dokters != null && dokters.size() > 0) {
-            for (ObatResep f : dokters) {
+            dokters.stream().map((f) -> {
                 RincianResepVerifikasi r = new RincianResepVerifikasi();
                 r.setKodeObat(f.getKodeObat());
                 r.setNamaObat(f.getNamaObat());
                 double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
                 r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
                 r.setAturanPakai(f.getAturanPakai());
+                return r;
+            }).forEachOrdered((r) -> {
                 rincianDokters.add(r);
-            }
+            });
+
+        }
+
+        if (dokterRacikans.size() > 0) {
+            dokterRacikans.stream().map((f) -> {
+                RincianResepVerifikasi r = new RincianResepVerifikasi();
+                r.setKodeObat(f.getKodeObat());
+                r.setNamaObat(f.getNamaObat());
+                double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
+                r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
+                r.setAturanPakai(f.getAturanPakai());
+                return r;
+            }).forEachOrdered((r) -> {
+                rincianDokters.add(r);
+            });
+        }
+
+        if (rincianDokters.size() > 0) {
             modelDokter.removeAllElements();
             modelDokter.add(rincianDokters);
             tblDokter.setModel(modelDokter);
@@ -770,7 +791,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 int emmmm = JOptionPane.showConfirmDialog(null, "Anda akan memverifikasi data resep, data yang sudah di verifikasi tidak dapat di verifikasi ulang. silahkan teliti kembali", "Perhatian", dialogButton);
                 if (emmmm == 0) {
                     if (resep.getObatDetails().size() > 0) {
-                        boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo,resep.getNoResep());
+                        boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep());
                         if (sukses) {
                             ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);
                             List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());
@@ -915,7 +936,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                     modelPilihan.remove(obatKlik);
                     ObatResep d = ResepDao.getObatStock(obatKlik.getKodeObat(), depo.getKode(), cmbTarif.getSelectedItem().toString());
                     obatKlik.setStok(d.getStok());
-                    modelPilihan.add(obatKlik);                   
+                    modelPilihan.add(obatKlik);
                     tblEditor.setModel(modelPilihan);
                 }
 
