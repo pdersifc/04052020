@@ -29,6 +29,7 @@ public class Utils {
     public final static String DATE_FORMAT_DB_TIME = "yyyy-MM-dd HH:mm:ss";
     public final static String TIMESTAMP_FORMAT = "dd/MM/yyyy HH:mm:ss";
     public static String[] hariName = {"Ahad","Senin","Selasa","Rabu","Kamis","Jum'at","Sabtu"};
+    public final static String FORMAT_TIME = "HH:mm:ss";
 
     public static java.sql.Date convertUtilToSql(java.util.Date uDate) {
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
@@ -75,6 +76,10 @@ public class Utils {
     
     public static String formatDateTimeDb(Date date) {
         return convertDate(date, DATE_FORMAT_DB_TIME);
+    }
+    
+    public static String formatTime(Date date) {
+        return convertDate(date, FORMAT_TIME);
     }
     
     public static Date getFirstDayInMonth(Date date) {

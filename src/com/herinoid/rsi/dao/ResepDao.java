@@ -521,8 +521,8 @@ public class ResepDao {
             for (ObatResep obat : obats) {
                 psttmn = koneksi.prepareStatement("insert into detail_pemberian_obat(tgl_perawatan,jam,no_rawat,kode_brng,h_beli,biaya_obat,jml,embalase,tuslah,total,status,kd_bangsal,no_batch,no_faktur) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 try {
-                    psttmn.setString(1, Utils.formatDb(reg.getTanggalRawat()));
-                    psttmn.setString(2, reg.getJamRawat());
+                    psttmn.setString(1, Utils.formatDb(new Date()));
+                    psttmn.setString(2, Utils.formatTime(new Date()));
                     psttmn.setString(3, norawat);
                     psttmn.setString(4, obat.getKodeObat());
                     psttmn.setDouble(5, obat.getHargaBeli());
