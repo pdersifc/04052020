@@ -128,5 +128,56 @@ public class PemberianObatDetailDao {
         }
         return obatDetailList;
     }
+    
+    
+    public static List<ObatResep> getObatValidasiByNoResep(String noResep, String depo) {
+        List<ObatResep> obatDetailList = new LinkedList<>();
+        PreparedStatement psttmn = null;
+        ResultSet rset = null;
+        try {
+            psttmn = koneksi.prepareStatement("SELECT d.no_resep,o.kode_brng,o.nama_brng,d.jml,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,j.nama AS jenis,k.nama AS kategori "
+                    + "FROM obat_validasi_eresep_rsifc d "
+                    + "INNER JOIN databarang o ON d.kode_brng = o.kode_brng "
+                    + "INNER JOIN gudangbarang g ON d.kode_brng = g.kode_brng "
+                    + "INNER JOIN kodesatuan s ON s.kode_sat=o.kode_sat INNER JOIN jenis j ON j.kdjns=o.kdjns INNER JOIN kategori_barang k ON k.kode=o.kode_kategori "
+                    + "WHERE d.no_resep = ? AND g.kd_bangsal= ? ");
+            psttmn.setString(1, noResep);
+            psttmn.setString(2, depo);
+            rset = psttmn.executeQuery();
+            while (rset.next()) {
+                ObatResep obat = new ObatResep();
+                obat.setKodeObat(rset.getString("kode_brng"));
+                obat.setNamaObat(rset.getString("nama_brng"));
+                obat.setJumlah(rset.getDouble("jml"));
+                obat.setAturanPakai(rset.getString("aturan_pakai"));
+                obat.setHargaBeli(rset.getDouble("h_beli"));
+                obat.setSatuan(rset.getString("satuan"));
+                obat.setJenisObat(rset.getString("jenis"));
+                obat.setKategori(rset.getString("kategori"));
+                obat.setEmbalase(rset.getDouble("embalase"));
+                obat.setTuslah(rset.getDouble("tuslah"));
+                obat.setStok(rset.getDouble("stok"));
+                double harga = rset.getDouble("ralan");                
+                obat.setHarga(harga);
+                obatDetailList.add(obat);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (psttmn != null) {
+
+                    psttmn.close();
+
+                }
+                if (rset != null) {
+                    rset.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obatDetailList;
+    }
 
 }

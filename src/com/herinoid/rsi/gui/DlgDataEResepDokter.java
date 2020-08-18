@@ -231,22 +231,17 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     }
 
     private void setResepVerifikasi(String noRawat, String kdBangsal, String noresep) {
-        List<ObatResep> farmasis = PemberianObatDetailDao.getPemberianObatDetailByNorawat(noRawat, kdBangsal);
+        List<ObatResep> farmasis = PemberianObatDetailDao.getObatValidasiByNoResep(noresep, kdBangsal);
         List<ObatResep> dokters = PemberianObatDetailDao.getResepByNoresep(noresep, kdBangsal);
         List<RincianResepVerifikasi> rincians = new LinkedList<>();
-        if (farmasis != null && farmasis.size() > 0) {
+        if (farmasis.size() > 0) {
             for (ObatResep f : farmasis) {
                 RincianResepVerifikasi r = new RincianResepVerifikasi();
                 r.setKodeObat(f.getKodeObat());
                 r.setNamaObat(f.getNamaObat());
                 double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
-                r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
-                for (ObatResep o : dokters) {
-                    if (f.getKodeObat().equals(o.getKodeObat())) {
-                        r.setAturanPakai(o.getAturanPakai());
-                        break;
-                    }
-                }
+                r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));          
+                r.setAturanPakai(f.getAturanPakai());
                 rincians.add(r);
             }
             modelFarmasi.removeAllElements();
@@ -775,7 +770,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 int emmmm = JOptionPane.showConfirmDialog(null, "Anda akan memverifikasi data resep, data yang sudah di verifikasi tidak dapat di verifikasi ulang. silahkan teliti kembali", "Perhatian", dialogButton);
                 if (emmmm == 0) {
                     if (resep.getObatDetails().size() > 0) {
-                        boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo);
+                        boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo,resep.getNoResep());
                         if (sukses) {
                             ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);
                             List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString());

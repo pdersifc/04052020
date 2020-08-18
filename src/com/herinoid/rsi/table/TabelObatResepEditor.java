@@ -147,7 +147,7 @@ public class TabelObatResepEditor extends AbstractTableModel {
         ObatResep i = row.get(rowIndex);
         switch (columnIndex) {
             case 2:
-                i.setJumlah(Integer.parseInt(aValue.toString()));
+                i.setJumlah(Double.parseDouble(aValue.toString()));
                 break;
             case 6:
                 i.setEmbalase(Double.parseDouble(aValue.toString()));

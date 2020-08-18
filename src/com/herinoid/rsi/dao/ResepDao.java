@@ -449,8 +449,8 @@ public class ResepDao {
         }
         return obatDetailList;
     }
-    
-    public static ObatResep getObatStock(String kdObat,String depo, String tarif) {
+
+    public static ObatResep getObatStock(String kdObat, String depo, String tarif) {
         ObatResep obat = new ObatResep();
         PreparedStatement psttmn = null;
         ResultSet rset = null;
@@ -463,7 +463,7 @@ public class ResepDao {
             psttmn.setString(1, depo);
             psttmn.setString(2, kdObat);
             rset = psttmn.executeQuery();
-            while (rset.next()) {                
+            while (rset.next()) {
                 obat.setKodeObat(rset.getString("kode_brng"));
                 obat.setNamaObat(rset.getString("nama_brng"));
                 obat.setJumlah(0);
@@ -511,9 +511,8 @@ public class ResepDao {
         }
         return obat;
     }
-    
 
-    public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo) {
+    public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo,String noResep) {
         boolean sukses = true;
         PreparedStatement psttmn = null;
         try {
@@ -537,6 +536,7 @@ public class ResepDao {
                     psttmn.setString(14, "");
                     psttmn.executeUpdate();
                     updateStokGudang(obat.getStok() - obat.getJumlah(), obat.getKodeObat(), depo);
+                    saveObatValidasi(noResep, obat);
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println("Notifikasi : " + e);
@@ -889,9 +889,9 @@ public class ResepDao {
                 pst.setString(2, Resep.STATUS_SAMPAI_PASIEN);
                 pst.setString(3, noresep);
                 pst.executeUpdate();
-                if (isResepRacikanExist(noresep)) {
-
-                }
+//                if (isResepRacikanExist(noresep)) {
+//
+//                }
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println("Notifikasi : " + e);
@@ -905,6 +905,39 @@ public class ResepDao {
             e.printStackTrace();
             sukses = false;
             System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+
+    public static boolean saveObatValidasi(String noResep, ObatResep obat) {
+        boolean sukses = true;
+        PreparedStatement psttmn = null;
+        try {
+            psttmn = koneksi.prepareStatement("insert into obat_validasi_eresep_rsifc(no_resep,kode_brng,is_racikan,kode_racikan,jml,embalase,tuslah,aturan_pakai) values(?,?,?,?,?,?,?,?)");
+            try {
+                psttmn.setString(1, noResep);
+                psttmn.setString(2, obat.getKodeObat());
+                psttmn.setBoolean(3, !Utils.isBlank(obat.getRacikan()));
+                psttmn.setString(4, !Utils.isBlank(obat.getRacikan()) ? obat.getKodeRacikan() : "");
+                psttmn.setDouble(5, obat.getJumlah());
+                psttmn.setDouble(6, obat.getEmbalase());
+                psttmn.setDouble(7, obat.getTuslah());
+                psttmn.setString(8, obat.getAturanPakai());
+                psttmn.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (psttmn != null) {
+                    psttmn.close();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Notifikasi : " + e);
+            sukses = false;
+            JOptionPane.showMessageDialog(null, "error : " + e);
         }
         return sukses;
     }
