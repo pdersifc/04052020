@@ -1471,7 +1471,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                         });
                     }
                 } else {
-                    JOptionPane.showConfirmDialog(rootPane, "Pasien masih ada tunggakan/transaksi belum di closing");
+                    JOptionPane.showMessageDialog(rootPane, "Pasien masih ada tunggakan/transaksi belum di closing");
                 }
 
             }
