@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
@@ -111,6 +112,9 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                 obatFromDialog = addQty.getData();
                 if (obatFromDialog != null) {
                     if (obatFromDialog.isFlag()) {
+                        if(obatFromDialog.isEdit()){
+                            modelPilihan.remove(tblPilihan.getSelectedRow());
+                        }
                         modelPilihan.add(obatFromDialog);
                         tblPilihan.setModel(modelPilihan);
                     }
@@ -210,14 +214,14 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jam();
     }
 
-    public void setData(String kdDokter,String nmDokter,String kodeDepo, String kategoriObat, String jenisPasien) {
+    public void setData(String kdDokter, String nmDokter, String kodeDepo, String kategoriObat, String jenisPasien) {
         model.removeAllElements();
-        if(kategoriObat.equals("K01")){
+        if (kategoriObat.equals("K01")) {
             model.add(ObatDao.getObatByCategory(kodeDepo, kategoriObat, jenisPasien));
-        }else{
+        } else {
             model.add(ObatDao.getObatByDepo(kodeDepo, jenisPasien));
         }
-        
+
         tblObat.setModel(model);
         rowSorter = new TableRowSorter<>(tblObat.getModel());
         tblObat.setRowSorter(rowSorter);
@@ -304,6 +308,9 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         TNoRw = new widget.TextBox();
         KdPj = new widget.TextBox();
         kelas = new widget.TextBox();
+        popObatPilihan = new javax.swing.JPopupMenu();
+        mnEditObat = new javax.swing.JMenuItem();
+        mnHapusItem = new javax.swing.JMenuItem();
         internalFrame1 = new widget.InternalFrame();
         panelisi3 = new widget.panelisi();
         BtnTambah = new widget.Button();
@@ -407,6 +414,32 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
             }
         });
 
+        popObatPilihan.setName("popObatPilihan"); // NOI18N
+
+        mnEditObat.setBackground(new java.awt.Color(255, 255, 255));
+        mnEditObat.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        mnEditObat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/EDIT2.png"))); // NOI18N
+        mnEditObat.setText("Edit Obat Resep");
+        mnEditObat.setName("mnEditObat"); // NOI18N
+        mnEditObat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnEditObatActionPerformed(evt);
+            }
+        });
+        popObatPilihan.add(mnEditObat);
+
+        mnHapusItem.setBackground(new java.awt.Color(255, 255, 255));
+        mnHapusItem.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        mnHapusItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/101.png"))); // NOI18N
+        mnHapusItem.setText("Hapus Obat");
+        mnHapusItem.setName("mnHapusItem"); // NOI18N
+        mnHapusItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnHapusItemActionPerformed(evt);
+            }
+        });
+        popObatPilihan.add(mnHapusItem);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
         setResizable(false);
@@ -482,7 +515,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(10, 40, 68, 23);
 
         cmbTanggal.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10-08-2020" }));
+        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-08-2020" }));
         cmbTanggal.setDisplayFormat("dd-MM-yyyy");
         cmbTanggal.setName("cmbTanggal"); // NOI18N
         cmbTanggal.setOpaque(false);
@@ -664,6 +697,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
 
             }
         ));
+        tblPilihan.setComponentPopupMenu(popObatPilihan);
         tblPilihan.setName("tblPilihan"); // NOI18N
         tblPilihan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -791,7 +825,7 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
 
     private void tblObatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblObatMouseClicked
         // TODO add your handling code here:
-        int row = tblObat.getSelectedRow();        
+        int row = tblObat.getSelectedRow();
         addQty.setData(model.get(tblObat.convertRowIndexToModel(row)), racikanList);
         addQty.setVisible(true);
     }//GEN-LAST:event_tblObatMouseClicked
@@ -827,12 +861,12 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
             boolean sukses = false;
             String noresep = ResepDao.getNoResepForUpdate();
             resep.setNoResep(noresep);
-            if(biasas.size()>0){
+            if (biasas.size() > 0) {
                 sukses = ResepDao.save(resep);
             }
-            if(racikans.size()>0){
+            if (racikans.size() > 0) {
                 sukses = ResepDao.saveRacikan(resep);
-                
+
             }
             if (sukses) {
                 clean();
@@ -846,7 +880,32 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
 
     private void tblPilihanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPilihanMouseClicked
         // TODO add your handling code here:
+
     }//GEN-LAST:event_tblPilihanMouseClicked
+
+    private void mnHapusItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnHapusItemActionPerformed
+        // TODO add your handling code here:
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int wkwkw = JOptionPane.showConfirmDialog(null, "Serius mau menghapus obat ini..?", "Perhatian", dialogButton);
+        if (wkwkw == 0) {
+            int baris = tblPilihan.convertRowIndexToModel(tblPilihan.getSelectedRow());
+            if (baris > -1) {
+                modelPilihan.remove(baris);
+            } else {
+                JOptionPane.showMessageDialog(null, "Silahkan pilih baris obat yang mau di hapus..");
+            }
+        }
+    }//GEN-LAST:event_mnHapusItemActionPerformed
+
+    private void mnEditObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnEditObatActionPerformed
+        // TODO add your handling code here:
+        int row = tblPilihan.getSelectedRow();
+        if (row > -1) {
+            addQty.setDataEdit(modelPilihan.get(tblPilihan.convertRowIndexToModel(row)), racikanList);
+            addQty.setVisible(true);
+        }
+
+    }//GEN-LAST:event_mnEditObatActionPerformed
 
     private void clean() {
         racikanList = new LinkedList<>();
@@ -905,9 +964,12 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
     private widget.Label label13;
     private widget.Label label21;
     private widget.Label lblJaminan;
+    private javax.swing.JMenuItem mnEditObat;
+    private javax.swing.JMenuItem mnHapusItem;
     private widget.PanelBiasa panelBiasa1;
     private widget.PanelBiasa panelBiasa2;
     private widget.panelisi panelisi3;
+    private javax.swing.JPopupMenu popObatPilihan;
     private javax.swing.JMenuItem ppBersihkan;
     private javax.swing.JMenuItem ppStok;
     private javax.swing.JMenuItem ppStok1;

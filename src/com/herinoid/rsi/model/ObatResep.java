@@ -34,6 +34,7 @@ public class ObatResep {
     private int pembilang;
     private int penyebut;
     private double kapasitas;
+    private boolean edit;
     
     
     public ObatResep(){}
@@ -382,6 +383,21 @@ public class ObatResep {
     public void setJmlRacik(double jmlRacik) {
         this.jmlRacik = jmlRacik;
     }
+
+    /**
+     * @return the edit
+     */
+    public boolean isEdit() {
+        return edit;
+    }
+
+    /**
+     * @param edit the edit to set
+     */
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+    }
+
     
     
     

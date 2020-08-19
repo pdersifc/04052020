@@ -45,6 +45,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         this.racikanList = racikans;
         this.obatResep = new ObatResep(obat.getKodeObat(), obat.getNamaObat(), obat.getKapasitas(), obat.getSatuan(), obat.getKategori(), obat.getJenisObat(), obat.getStok());
         lblObat.setText(obat.getNamaObat());
+        obatResep.setEdit(false);
         if (racikanList.size() > 0) {
             cekRacikan.setSelected(true);
             cekRacikan.setText("Iya");
@@ -71,6 +72,60 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                     }
                 };
             }
+        } else {
+            scrAturanPake.setVisible(true);
+            txtAturanPakai.setVisible(true);
+            lblAturanPake.setVisible(true);
+            cekRacikan.setText("Tidak");
+            lblRacikan.setVisible(false);
+            cmbRacikan.setVisible(false);
+            lblKandungan.setVisible(false);
+            txtKandungan.setVisible(false);
+            lblP1.setVisible(false);
+            lblP2.setVisible(false);
+            txtPembilang.setVisible(false);
+            txtPenyebut.setVisible(false);
+        }
+    }
+    
+    public void setDataEdit(ObatResep obat, List<ObatResep> racikans) {
+        this.obatResep = obat;
+        obatResep.setEdit(true);
+        txtJumlah.setText(String.valueOf(obat.getJumlah()));
+        txtAturanPakai.setText(obat.getAturanPakai());
+        this.racikanList = racikans;
+        if (racikanList.size() > 0) {
+            cekRacikan.setSelected(true);
+            cekRacikan.setText("Iya");
+            cmbRacikan.removeAllItems();
+            lblRacikan.setVisible(true);
+            cmbRacikan.setVisible(true);
+            lblKandungan.setVisible(true);
+            txtKandungan.setVisible(true);
+            lblP1.setVisible(true);
+            lblP2.setVisible(true);
+            txtPembilang.setVisible(true);
+            txtPenyebut.setVisible(true);
+            scrAturanPake.setVisible(false);
+            txtAturanPakai.setVisible(false);
+            txtAturanPakai.setText("-");
+            lblAturanPake.setVisible(false);
+            for (ObatResep m : racikanList) {
+                cmbRacikan.addItem(m);
+                KeySelectionRenderer renderer = new KeySelectionRenderer(cmbRacikan) {
+                    @Override
+                    public String getDisplayValue(Object value) {
+                        ObatResep racik = (ObatResep) value;
+                        return racik.getNamaObat();
+                    }
+                };
+            }
+            cekRacikan.setText("Iya");
+            txtKandungan.setText(String.valueOf(obat.getKandungan()));
+            txtPembilang.setText(String.valueOf(obat.getPembilang()));
+            txtPenyebut.setText(String.valueOf(obat.getPenyebut()));
+//            cmbRacikan.setSelectedItem(obat.getR);
+            
         } else {
             scrAturanPake.setVisible(true);
             txtAturanPakai.setVisible(true);
@@ -352,7 +407,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         obatResep.setEmbalase(0);
         obatResep.setTuslah(0);
         if (cekRacikan.isSelected()) {
-            if (racikanList.size() == 1) {;
+            if (racikanList.size() > 0) {
                 ObatResep obatRacik = (ObatResep) cmbRacikan.getSelectedItem();
                 if (obatRacik != null) {
                     obatResep.setRacikan(obatRacik.getNamaObat());
