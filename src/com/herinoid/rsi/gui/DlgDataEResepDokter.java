@@ -239,7 +239,13 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             for (ObatResep f : farmasis) {
                 RincianResepVerifikasi r = new RincianResepVerifikasi();
                 r.setKodeObat(f.getKodeObat());
-                r.setNamaObat(f.getNamaObat());
+                String obat = "";
+                if(!Utils.isBlank(f.getKodeRacikan())){
+                    obat = f.getNamaObat() + " ("+f.getKodeRacikan()+")";
+                }else{
+                    obat = f.getNamaObat();
+                }
+                r.setNamaObat(obat);
                 double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
                 r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
                 r.setAturanPakai(f.getAturanPakai());
@@ -269,7 +275,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             dokterRacikans.stream().map((f) -> {
                 RincianResepVerifikasi r = new RincianResepVerifikasi();
                 r.setKodeObat(f.getKodeObat());
-                r.setNamaObat(f.getNamaObat());
+                r.setNamaObat(f.getNamaObat() + " ("+f.getKodeRacikan()+")");
                 double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
                 r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
                 r.setAturanPakai(f.getAturanPakai());
