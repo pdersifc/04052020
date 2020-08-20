@@ -109,3 +109,10 @@ CREATE TABLE `obat_validasi_eresep_rsifc` (
   CONSTRAINT `obat_validasi_eresep_rsifc_ibfk_1` FOREIGN KEY (`kode_brng`) REFERENCES `databarang` (`kode_brng`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--------------------------- tgl 20/08/2020 by herinoid--------------------------------------
+ALTER TABLE `rsifc_db`.`e_resep_rsifc`   
+  ADD COLUMN `jenis_pasien` VARCHAR(20) DEFAULT 'RALAN'   NOT NULL AFTER `status`;
+
+ALTER TABLE `rsifc_db`.`e_resep_racikan_rsifc`   
+  ADD COLUMN `jenis_pasien` VARCHAR(20) DEFAULT 'RALAN'   NOT NULL AFTER `status`;
+
