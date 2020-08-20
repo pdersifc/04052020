@@ -9,7 +9,9 @@ import bridging.DlgSKDPBPJS;
 import bridging.INACBGPerawatanCorona;
 import bridging.InhealthDataSJP;
 import bridging.SisruteRujukanKeluar;
+import com.herinoid.rsi.dao.PemeriksaanDao;
 import com.herinoid.rsi.gui.DlgEResepDokter;
+import com.herinoid.rsi.model.PemeriksaanRalan;
 import com.herinoid.rsi.util.Konstan;
 import inventory.DlgResepObat;
 import inventory.DlgPemberianObat;
@@ -8481,8 +8483,9 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 if (jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
                     kategoriObat = "K01";
                 }
-                resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RALAN);
-                resep.setPasien(norawat, norm, nmPasien, jenisBayar);
+                PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRalanByNoRawat(norawat);
+                resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RALAN,periksaRalan);
+                resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RANAP);
                 resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                 resep.setLocationRelativeTo(internalFrame1);
                 resep.setVisible(true);

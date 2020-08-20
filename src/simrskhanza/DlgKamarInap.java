@@ -23,7 +23,10 @@ import bridging.DlgDataTB;
 import bridging.DlgSKDPBPJS;
 import bridging.INACBGPerawatanCorona;
 import bridging.SisruteRujukanKeluar;
+import com.herinoid.rsi.dao.PemeriksaanDao;
+import com.herinoid.rsi.gui.DlgEResepDokter;
 import com.herinoid.rsi.gui.DlgSimulasiBilling;
+import com.herinoid.rsi.model.PemeriksaanRalan;
 import laporan.DlgDiagnosaPenyakit;
 import informasi.InformasiAnalisaKamin;
 import keuangan.DlgKamar;
@@ -44,6 +47,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,6 +58,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -71,6 +76,7 @@ import permintaan.DlgPermintaanLaboratorium;
 import permintaan.DlgPermintaanRadiologi;
 import rekammedis.RMDataAsuhanGizi;
 import rekammedis.RMDataMonitoringAsuhanGizi;
+import com.herinoid.rsi.util.Konstan;
 
 /**
  *
@@ -101,6 +107,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
     private double lama = 0, persenbayi = 0, hargakamar = 0;
     private String gabungkan = "", norawatgabung = "", kamaryangdigabung = "", dokterranap = "", bangsal = "", diagnosa_akhir = "", namakamar = "", umur = "0", sttsumur = "Th";
     private String noRm = "", nmPasien = "";
+    private final Properties prop = new Properties();
 
     /**
      * Creates new form DlgKamarInap
@@ -831,6 +838,12 @@ public class DlgKamarInap extends javax.swing.JDialog {
         } catch (Exception e) {
             diagnosaakhir.setEditable(false);
         }
+        
+        try {
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));            
+        } catch (Exception ex) {
+            System.out.println("Notif Load XML : " + ex);
+        }
     }
 
     /**
@@ -918,6 +931,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         MnObatNonfornasBpjs = new javax.swing.JMenuItem();
         MnDeposit = new javax.swing.JMenuItem();
         MnBilling = new javax.swing.JMenuItem();
+        MnEresep = new javax.swing.JMenuItem();
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
         MnLaporan = new javax.swing.JMenu();
         MnRincianObat = new javax.swing.JMenuItem();
@@ -2019,6 +2033,18 @@ public class DlgKamarInap extends javax.swing.JDialog {
             }
         });
         jPopupMenu1.add(MnBilling);
+
+        MnEresep.setBackground(new java.awt.Color(255, 255, 255));
+        MnEresep.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MnEresep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnEresep.setText("E-Resep Dokter");
+        MnEresep.setName("MnEresep"); // NOI18N
+        MnEresep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnEresepActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(MnEresep);
 
         jSeparator12.setBackground(new java.awt.Color(190, 220, 180));
         jSeparator12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(190, 220, 180)));
@@ -4035,7 +4061,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         R2.setPreferredSize(new java.awt.Dimension(90, 23));
         panelCari.add(R2);
 
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "28-07-2020" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "20-08-2020" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -4058,7 +4084,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         jLabel22.setPreferredSize(new java.awt.Dimension(25, 23));
         panelCari.add(jLabel22);
 
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "28-07-2020" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "20-08-2020" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -4085,7 +4111,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         R3.setPreferredSize(new java.awt.Dimension(75, 23));
         panelCari.add(R3);
 
-        DTPCari3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "28-07-2020" }));
+        DTPCari3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "20-08-2020" }));
         DTPCari3.setDisplayFormat("dd-MM-yyyy");
         DTPCari3.setName("DTPCari3"); // NOI18N
         DTPCari3.setOpaque(false);
@@ -4108,7 +4134,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         jLabel25.setPreferredSize(new java.awt.Dimension(25, 23));
         panelCari.add(jLabel25);
 
-        DTPCari4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "28-07-2020" }));
+        DTPCari4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "20-08-2020" }));
         DTPCari4.setDisplayFormat("dd-MM-yyyy");
         DTPCari4.setName("DTPCari4"); // NOI18N
         DTPCari4.setOpaque(false);
@@ -9950,6 +9976,46 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         }
     }//GEN-LAST:event_MnSimulasiBillingActionPerformed
 
+    private void MnEresepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnEresepActionPerformed
+        // TODO add your handling code here:
+        if (tabMode.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Maaf, data pasien sudah habis...!!!!");
+        } else if (TPasien.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu data registrasi pada table...!!!");
+            TCari.requestFocus();
+        } else {
+            String depoObat = "";
+            int baris = tbKamIn.getSelectedRow();
+            try {
+                prop.loadFromXML(new FileInputStream("setting/database.xml"));
+                depoObat = prop.getProperty("DEPOOBAT");
+            } catch (Exception ex) {
+                depoObat = "KMOBT";
+            }
+            if (tbKamIn.getSelectedRow() != -1) {
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                DlgEResepDokter resep = new DlgEResepDokter(null, false);
+                String jenisBayar = tbKamIn.getValueAt(baris, 6).toString();
+                String norawat = tbKamIn.getValueAt(baris, 0).toString();
+                String norm = tbKamIn.getValueAt(baris, 1).toString();
+                String nmPasien = tbKamIn.getValueAt(baris, 2).toString();
+                String kdDokter = "xxx";
+                String nmDokter = tbKamIn.getValueAt(baris, 18).toString();
+                String kategoriObat = "K02";
+                if (jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
+                    kategoriObat = "K01";
+                }
+                PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRanapByNoRawat(norawat);
+                resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RALAN,periksaRalan);
+                resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RANAP);
+                resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                resep.setLocationRelativeTo(internalFrame1);
+                resep.setVisible(true);
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        } 
+    }//GEN-LAST:event_MnEresepActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -10026,6 +10092,7 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private javax.swing.JMenuItem MnDiagnosaAkhir;
     private javax.swing.JMenuItem MnDiagnosaMasuk;
     private javax.swing.JMenuItem MnDiet;
+    private javax.swing.JMenuItem MnEresep;
     private javax.swing.JMenuItem MnFormulirPenerimaan;
     private javax.swing.JMenuItem MnFormulirPenerimaan1;
     private javax.swing.JMenuItem MnFormulirPenerimaan2;

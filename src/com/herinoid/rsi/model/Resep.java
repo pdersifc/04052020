@@ -22,6 +22,7 @@ public class Resep {
     private String noRawat;
     private String kdDokter;
     private String status;
+    private String jenisPasien;
     private List<ObatResep> obatResepDetail;
     private List<ObatResep> obatResepRacikanDetail;
     
@@ -137,6 +138,20 @@ public class Resep {
      */
     public void setObatResepRacikanDetail(List<ObatResep> obatResepRacikanDetail) {
         this.obatResepRacikanDetail = obatResepRacikanDetail;
+    }
+
+    /**
+     * @return the jenisPasien
+     */
+    public String getJenisPasien() {
+        return jenisPasien;
+    }
+
+    /**
+     * @param jenisPasien the jenisPasien to set
+     */
+    public void setJenisPasien(String jenisPasien) {
+        this.jenisPasien = jenisPasien;
     }
     
     
