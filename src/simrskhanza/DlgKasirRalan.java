@@ -8485,7 +8485,7 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 }
                 PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRalanByNoRawat(norawat);
                 resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RALAN,periksaRalan);
-                resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RANAP);
+                resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RALAN);
                 resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                 resep.setLocationRelativeTo(internalFrame1);
                 resep.setVisible(true);
