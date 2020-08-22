@@ -75,25 +75,6 @@ CREATE TABLE `e_resep_racikan_rsifc_detail` (
 
 ---------------------------------------------------
 
-CREATE TABLE `obat_racikan_eresep_rsifc` (
-  `tgl_perawatan` date NOT NULL,
-  `jam` time NOT NULL,
-  `no_rawat` varchar(17) NOT NULL,
-  `no_racik` varchar(2) NOT NULL,
-  `nama_racik` varchar(100) NOT NULL,
-  `kd_racik` varchar(3) NOT NULL,
-  `jml_dr` int(11) NOT NULL,
-  `aturan_pakai` varchar(150) NOT NULL,
-  `keterangan` varchar(50) NOT NULL,
-  PRIMARY KEY (`tgl_perawatan`,`jam`,`no_rawat`,`no_racik`),
-  KEY `kd_racik` (`kd_racik`),
-  KEY `no_rawat` (`no_rawat`),
-  KEY `no_racik` (`no_racik`),
-  CONSTRAINT `obat_racikan_eresep_rsifc_ibfk_1` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON UPDATE CASCADE,
-  CONSTRAINT `obat_racikan_eresep_rsifc_ibfk_2` FOREIGN KEY (`kd_racik`) REFERENCES `metode_racik` (`kd_racik`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
 
 CREATE TABLE `obat_validasi_eresep_rsifc` (
   `no_resep` varchar(20) NOT NULL DEFAULT '',
@@ -115,4 +96,29 @@ ALTER TABLE `rsifc_db`.`e_resep_rsifc`
 
 ALTER TABLE `rsifc_db`.`e_resep_racikan_rsifc`   
   ADD COLUMN `jenis_pasien` VARCHAR(20) DEFAULT 'RALAN'   NOT NULL AFTER `status`;
+
+-------------------------- tgl 22/08/2020 by herinoid ------------------------------------------
+CREATE TABLE `obat_racikan_eresep_rsifc` (
+  `no_resep` varchar(20) NOT NULL,
+  `tgl_perawatan` date NOT NULL,
+  `jam` time NOT NULL,
+  `no_rawat` varchar(17) NOT NULL,
+  `no_racik` varchar(2) NOT NULL,
+  `nama_racik` varchar(100) NOT NULL,
+  `kd_racik` varchar(20) NOT NULL,
+  `metode_racik` varchar(3) NOT NULL,
+  `jml_dr` int(11) NOT NULL,
+  `aturan_pakai` varchar(150) NOT NULL,
+  `keterangan` varchar(50) NOT NULL,
+  PRIMARY KEY (`no_resep`,`tgl_perawatan`,`jam`,`no_rawat`,`no_racik`),
+  KEY `kd_racik` (`kd_racik`),
+  KEY `no_rawat` (`no_rawat`),
+  KEY `no_racik` (`no_racik`),
+  KEY `obat_racikan_eresep_rsifc_ibfk_2` (`metode_racik`),
+  CONSTRAINT `obat_racikan_eresep_rsifc_ibfk_2` FOREIGN KEY (`metode_racik`) REFERENCES `metode_racik` (`kd_racik`) ON UPDATE CASCADE,
+  CONSTRAINT `obat_racikan_eresep_rsifc_ibfk_1` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `rsifc_db`.`obat_validasi_eresep_rsifc`   
+  ADD COLUMN `nama_racikan` VARCHAR(40) NOT NULL DEFAULT '' AFTER `kode_racikan`;
 
