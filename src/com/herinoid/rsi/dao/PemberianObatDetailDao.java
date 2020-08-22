@@ -135,12 +135,12 @@ public class PemberianObatDetailDao {
         PreparedStatement psttmn = null;
         ResultSet rset = null;
         try {
-            psttmn = koneksi.prepareStatement("SELECT d.no_resep,o.kode_brng,d.kode_racikan,o.nama_brng,d.jml,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,j.nama AS jenis,k.nama AS kategori "
+            psttmn = koneksi.prepareStatement("SELECT d.no_resep,o.kode_brng,d.kode_racikan,d.nama_racikan,o.nama_brng,d.jml,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,j.nama AS jenis,k.nama AS kategori "
                     + "FROM obat_validasi_eresep_rsifc d "
                     + "INNER JOIN databarang o ON d.kode_brng = o.kode_brng "
                     + "INNER JOIN gudangbarang g ON d.kode_brng = g.kode_brng "
                     + "INNER JOIN kodesatuan s ON s.kode_sat=o.kode_sat INNER JOIN jenis j ON j.kdjns=o.kdjns INNER JOIN kategori_barang k ON k.kode=o.kode_kategori "
-                    + "WHERE d.no_resep = ? AND g.kd_bangsal= ? ");
+                    + "WHERE d.no_resep = ? AND g.kd_bangsal= ? order by kode_racikan");
             psttmn.setString(1, noResep);
             psttmn.setString(2, depo);
             rset = psttmn.executeQuery();
@@ -158,6 +158,7 @@ public class PemberianObatDetailDao {
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
                 obat.setKodeRacikan(rset.getString("kode_racikan"));
+                obat.setRacikan(rset.getString("nama_racikan"));
                 double harga = rset.getDouble("ralan");                
                 obat.setHarga(harga);
                 obatDetailList.add(obat);
@@ -179,6 +180,39 @@ public class PemberianObatDetailDao {
             }
         }
         return obatDetailList;
+    }
+    
+    public static ObatResep getObatRacikanByNoResep(String noResep, String kdRacikan) {
+        ObatResep obat = new ObatResep();
+        PreparedStatement psttmn = null;
+        ResultSet rset = null;
+        try {
+            psttmn = koneksi.prepareStatement("SELECT r.jml_dr,r.aturan_pakai,m.nm_racik FROM obat_racikan_eresep_rsifc r JOIN metode_racik m ON r.metode_racik = m.kd_racik where r.no_resep = ? and r.kd_racik = ?");
+            psttmn.setString(1, noResep);
+            psttmn.setString(2, kdRacikan);
+            rset = psttmn.executeQuery();
+            while (rset.next()) {
+                obat.setJmlRacik(rset.getDouble("jml_dr"));
+                obat.setAturanPakai(rset.getString("aturan_pakai"));
+                obat.setMetodeRacik(rset.getString("nm_racik"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (psttmn != null) {
+
+                    psttmn.close();
+
+                }
+                if (rset != null) {
+                    rset.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obat;
     }
 
 }

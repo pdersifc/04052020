@@ -29,6 +29,7 @@ public class TabelResepRincian extends AbstractTableModel {
     public TabelResepRincian() {
         super();
         column = new Vector<String>();
+        column.add("Racikan");
         column.add("Nama Obat");
         column.add("( jml * harga) + embalase + tuslah = total");
         column.add("Aturan Pakai");
@@ -88,10 +89,12 @@ public class TabelResepRincian extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (columnIndex == 0) {
-            return row.get(rowIndex).getNamaObat();
+            return row.get(rowIndex).getRacikan();
         } else if (columnIndex == 1) {
-            return row.get(rowIndex).getRincian();
+            return row.get(rowIndex).getNamaObat();
         } else if (columnIndex == 2) {
+            return row.get(rowIndex).getRincian();
+        } else if (columnIndex == 3) {
             return row.get(rowIndex).getAturanPakai();
         } 
         return null;

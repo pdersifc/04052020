@@ -89,7 +89,7 @@ public class ResepDao {
         try {
             for (ObatResep o : reseps) {
                 if (o.isParent()) {
-                    saveObatRacikan(norawat, o);
+                    saveObatRacikan(noResep,norawat, o);
                 } else {
                     psttmn = koneksi.prepareStatement("insert into e_resep_racikan_rsifc_detail(no_resep,kode_racik,nama_racik,is_parent,kandungan,kode_brng,jml,embalase,tuslah,p1,p2,aturan_pakai) values(?,?,?,?,?,?,?,?,?,?,?,?)");
                     try {
@@ -241,22 +241,24 @@ public class ResepDao {
         return sukses;
     }
 
-    public static boolean saveObatRacikan(String norawat, ObatResep obat) {
+    public static boolean saveObatRacikan(String noresep,String norawat, ObatResep obat) {
         boolean sukses = true;
         PreparedStatement psttmn = null;
         try {
-            RegPeriksa reg = RegPeriksaDao.get(norawat);
-            psttmn = koneksi.prepareStatement("insert into obat_racikan_eresep_rsifc(tgl_perawatan,jam,no_rawat,no_racik,nama_racik,kd_racik,jml_dr,aturan_pakai,keterangan) values(?,?,?,?,?,?,?,?,?)");
+            
+            psttmn = koneksi.prepareStatement("insert into obat_racikan_eresep_rsifc(no_resep,tgl_perawatan,jam,no_rawat,no_racik,nama_racik,kd_racik,metode_racik,jml_dr,aturan_pakai,keterangan) values(?,?,?,?,?,?,?,?,?,?,?)");
             try {
-                psttmn.setString(1, Utils.formatDb(reg.getTanggalRawat()));
-                psttmn.setString(2, reg.getJamRawat());
-                psttmn.setString(3, norawat);
-                psttmn.setString(4, String.valueOf(obat.getNomorRacik()));
-                psttmn.setString(5, obat.getNamaObat());
-                psttmn.setString(6, obat.getMetodeRacikKode());
-                psttmn.setDouble(7, obat.getJumlah());
-                psttmn.setString(8, obat.getAturanPakai());
-                psttmn.setDouble(9, obat.getKandungan());
+                psttmn.setString(1, noresep);
+                psttmn.setString(2, Utils.formatDb(new Date()));
+                psttmn.setString(3, Utils.formatTime(new Date()));
+                psttmn.setString(4, norawat);
+                psttmn.setString(5, String.valueOf(obat.getNomorRacik()));
+                psttmn.setString(6, obat.getNamaObat());
+                psttmn.setString(7, obat.getKodeRacikan());
+                psttmn.setString(8, obat.getMetodeRacikKode());
+                psttmn.setDouble(9, obat.getJumlah());
+                psttmn.setString(10, obat.getAturanPakai());
+                psttmn.setDouble(11, obat.getKandungan());
                 psttmn.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
@@ -926,16 +928,17 @@ public class ResepDao {
         boolean sukses = true;
         PreparedStatement psttmn = null;
         try {
-            psttmn = koneksi.prepareStatement("insert into obat_validasi_eresep_rsifc(no_resep,kode_brng,is_racikan,kode_racikan,jml,embalase,tuslah,aturan_pakai) values(?,?,?,?,?,?,?,?)");
+            psttmn = koneksi.prepareStatement("insert into obat_validasi_eresep_rsifc(no_resep,kode_brng,is_racikan,kode_racikan,nama_racikan,jml,embalase,tuslah,aturan_pakai) values(?,?,?,?,?,?,?,?,?)");
             try {
                 psttmn.setString(1, noResep);
                 psttmn.setString(2, obat.getKodeObat());
                 psttmn.setBoolean(3, !Utils.isBlank(obat.getRacikan()));
                 psttmn.setString(4, !Utils.isBlank(obat.getRacikan()) ? obat.getKodeRacikan() : "");
-                psttmn.setDouble(5, obat.getJumlah());
-                psttmn.setDouble(6, obat.getEmbalase());
-                psttmn.setDouble(7, obat.getTuslah());
-                psttmn.setString(8, obat.getAturanPakai());
+                psttmn.setString(5, !Utils.isBlank(obat.getRacikan()) ? obat.getRacikan(): "");
+                psttmn.setDouble(6, obat.getJumlah());
+                psttmn.setDouble(7, obat.getEmbalase());
+                psttmn.setDouble(8, obat.getTuslah());
+                psttmn.setString(9, obat.getAturanPakai());
                 psttmn.executeUpdate();
             } catch (Exception e) {
                 e.printStackTrace();

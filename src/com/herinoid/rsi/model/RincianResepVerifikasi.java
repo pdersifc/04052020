@@ -14,6 +14,8 @@ public class RincianResepVerifikasi {
     private String namaObat;
     private String rincian;
     private String aturanPakai;
+    private String racikan;
+    private int urutan;
     
     public RincianResepVerifikasi(){}
 
@@ -72,6 +74,36 @@ public class RincianResepVerifikasi {
     public void setAturanPakai(String aturanPakai) {
         this.aturanPakai = aturanPakai;
     }
+
+    /**
+     * @return the racikan
+     */
+    public String getRacikan() {
+        return racikan;
+    }
+
+    /**
+     * @param racikan the racikan to set
+     */
+    public void setRacikan(String racikan) {
+        this.racikan = racikan;
+    }
+
+    /**
+     * @return the urutan
+     */
+    public int getUrutan() {
+        return urutan;
+    }
+
+    /**
+     * @param urutan the urutan to set
+     */
+    public void setUrutan(int urutan) {
+        this.urutan = urutan;
+    }
+    
+    
     
     
 }

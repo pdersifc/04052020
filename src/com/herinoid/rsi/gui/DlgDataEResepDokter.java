@@ -236,22 +236,81 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         List<ObatResep> dokters = PemberianObatDetailDao.getResepByNoresep(noresep, kdBangsal);
         List<ObatResep> dokterRacikans = ResepDao.getObatResepRacikanDetail(noresep, kdBangsal, cmbTarif.getSelectedItem().toString());
         List<RincianResepVerifikasi> rincians = new LinkedList<>();
+
         if (farmasis.size() > 0) {
+            List<ObatResep> farmasiNonRaciks = new LinkedList<>();
+            List<ObatResep> farmasiRaciks = new LinkedList<>();
             for (ObatResep f : farmasis) {
-                RincianResepVerifikasi r = new RincianResepVerifikasi();
-                r.setKodeObat(f.getKodeObat());
-                String obat = "";
-                if (!Utils.isBlank(f.getKodeRacikan())) {
-                    obat = f.getNamaObat() + " (" + f.getKodeRacikan() + ")";
+                if (Utils.isBlank(f.getKodeRacikan())) {
+                    if (!farmasiNonRaciks.contains(f)) {
+                        farmasiNonRaciks.add(f);
+                    }
                 } else {
-                    obat = f.getNamaObat();
+                    if (!farmasiRaciks.contains(f)) {
+                        farmasiRaciks.add(f);
+                    }
                 }
-                r.setNamaObat(obat);
-                double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
-                r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
-                r.setAturanPakai(f.getAturanPakai());
-                rincians.add(r);
             }
+
+            if (farmasiNonRaciks.size() > 0) {
+                farmasiNonRaciks.stream().map((f) -> {
+                    RincianResepVerifikasi r = new RincianResepVerifikasi();
+                    r.setKodeObat(f.getKodeObat());
+                    r.setNamaObat(f.getNamaObat());
+                    double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
+                    r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
+                    r.setAturanPakai(f.getAturanPakai());
+                    return r;
+                }).forEachOrdered((r) -> {
+                    rincians.add(r);
+                });
+
+            }
+
+            if (farmasiRaciks.size() > 0) {
+                Collections.sort(farmasiRaciks, Comparator.comparing(ObatResep::getKodeRacikan));
+                String rck = null;
+                int urut = 0;
+                for (ObatResep f : farmasiRaciks) {
+                    urut++;
+                    if (Utils.isBlank(rck)) {
+                        rck = f.getRacikan();
+                        RincianResepVerifikasi r = new RincianResepVerifikasi();
+                        ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(noresep, f.getKodeRacikan());
+                        r.setKodeObat(f.getKodeRacikan());
+                        r.setRacikan(f.getRacikan());
+                        r.setNamaObat(obatRck.getMetodeRacik());
+                        r.setRincian(String.valueOf(obatRck.getJmlRacik()));
+                        r.setAturanPakai(obatRck.getAturanPakai());
+                        r.setUrutan(urut);
+                        rincians.add(r);
+                    } else {
+                        if (!rck.equals(f.getRacikan())) {                            
+                            RincianResepVerifikasi r = new RincianResepVerifikasi();
+                            ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(noresep, f.getKodeRacikan());
+                            r.setKodeObat(f.getKodeRacikan());
+                            r.setNamaObat(obatRck.getMetodeRacik());
+                            r.setRacikan(f.getRacikan());
+                            r.setRincian(String.valueOf(obatRck.getJmlRacik()));
+                            r.setAturanPakai(obatRck.getAturanPakai());
+                            r.setUrutan(urut);
+                            rincians.add(r);
+                            rck = f.getRacikan();
+                        }
+                    }
+                    RincianResepVerifikasi r = new RincianResepVerifikasi();
+                    r.setKodeObat(f.getKodeObat());
+                    r.setNamaObat(f.getNamaObat());
+                    double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
+                    r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
+                    r.setAturanPakai(f.getAturanPakai());
+                    r.setUrutan(urut);
+                    rincians.add(r);
+                }
+                Collections.sort(rincians, Comparator
+                        .comparing(RincianResepVerifikasi::getUrutan));
+            }
+
             modelFarmasi.removeAllElements();
             modelFarmasi.add(rincians);
             tblFarmasi.setModel(modelFarmasi);
@@ -273,20 +332,49 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         }
 
         if (dokterRacikans.size() > 0) {
-            dokterRacikans.stream().map((f) -> {
+            Collections.sort(dokterRacikans, Comparator.comparing(ObatResep::getKodeRacikan));
+            
+            String rck = null;
+            int urut = 0;
+            for (ObatResep f : dokterRacikans) {
+                urut++;
+                if (Utils.isBlank(rck)) {
+                    RincianResepVerifikasi r = new RincianResepVerifikasi();
+                    ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(noresep, f.getKodeRacikan());
+                    r.setKodeObat(f.getKodeRacikan());
+                    r.setNamaObat(obatRck.getMetodeRacik());
+                    r.setRacikan(f.getRacikan());
+                    r.setRincian(String.valueOf(obatRck.getJmlRacik()));
+                    r.setAturanPakai(obatRck.getAturanPakai());
+                    r.setUrutan(urut);
+                    rck = f.getRacikan();
+                    rincianDokters.add(r);
+                } else {
+                    if (!rck.equals(f.getRacikan())) {
+                        rck = f.getRacikan();
+                        RincianResepVerifikasi r = new RincianResepVerifikasi();
+                        ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(noresep, f.getKodeRacikan());
+                        r.setKodeObat(f.getKodeRacikan());
+                        r.setNamaObat(obatRck.getMetodeRacik());
+                        r.setRacikan(f.getRacikan());
+                        r.setRincian(String.valueOf(obatRck.getJmlRacik()));
+                        r.setAturanPakai(obatRck.getAturanPakai());
+                        r.setUrutan(urut);
+                        rincianDokters.add(r);
+                    }
+                }
                 RincianResepVerifikasi r = new RincianResepVerifikasi();
                 r.setKodeObat(f.getKodeObat());
-                r.setNamaObat(f.getNamaObat() + " (" + f.getKodeRacikan() + ")");
+                r.setNamaObat(f.getNamaObat());
                 double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
                 r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
                 r.setAturanPakai(f.getAturanPakai());
-                return r;
-            }).forEachOrdered((r) -> {
+                r.setUrutan(urut);
                 rincianDokters.add(r);
-            });
+            }
             Collections.sort(rincianDokters, Comparator
-                    .comparing(RincianResepVerifikasi::getKodeObat)
-                    .thenComparing(RincianResepVerifikasi::getKodeObat));
+                    .comparing(RincianResepVerifikasi::getUrutan)
+                    .thenComparing(RincianResepVerifikasi::getUrutan));
         }
 
         if (rincianDokters.size() > 0) {
