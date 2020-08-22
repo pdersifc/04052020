@@ -120,5 +120,5 @@ CREATE TABLE `obat_racikan_eresep_rsifc` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE `rsifc_db`.`obat_validasi_eresep_rsifc`   
-  ADD COLUMN `nama_racikan` VARCHAR(40) NOT NULL DEFAULT '' AFTER `kode_racikan`;
+  ADD COLUMN `nama_racikan` VARCHAR(40) NULL AFTER `kode_racikan`;
 
