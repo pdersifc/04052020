@@ -92,8 +92,32 @@
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="MnPackaging">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="11" style="0"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/picture/Vial-Pills.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Pengepakan"/>
+            <Property name="name" type="java.lang.String" value="MnPackaging" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MnPackagingActionPerformed"/>
+          </Events>
+        </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="mnTerimaPasien">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="0"/>
+            </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/picture/PatientMale.png"/>
             </Property>
@@ -104,7 +128,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnTerimaPasienActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="MnAturanPakai1">
+        <MenuItem class="javax.swing.JMenuItem" name="MnEtiket">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -115,11 +139,11 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/picture/PrinterSettings.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Cetak Aturan Pakai Model 1"/>
-            <Property name="name" type="java.lang.String" value="MnAturanPakai1" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Cetak ETiket Obat"/>
+            <Property name="name" type="java.lang.String" value="MnEtiket" noResource="true"/>
           </Properties>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="MnAturanPakai2">
+        <MenuItem class="javax.swing.JMenuItem" name="MnNotaObat">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -130,23 +154,8 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/picture/PrinterSettings.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Cetak Aturan Pakai Model 2"/>
-            <Property name="name" type="java.lang.String" value="MnAturanPakai2" noResource="true"/>
-          </Properties>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="MnAturanPakai3">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-            </Property>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="11" style="0"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/picture/PrinterSettings.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Cetak Aturan Pakai Model 3"/>
-            <Property name="name" type="java.lang.String" value="MnAturanPakai3" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Cetak Nota Obat"/>
+            <Property name="name" type="java.lang.String" value="MnNotaObat" noResource="true"/>
           </Properties>
         </MenuItem>
       </SubComponents>
@@ -413,7 +422,7 @@
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="1">
-                    <StringItem index="0" value="22-08-2020"/>
+                    <StringItem index="0" value="25-08-2020"/>
                   </StringArray>
                 </Property>
                 <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -530,7 +539,7 @@
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="1">
-                    <StringItem index="0" value="22-08-2020"/>
+                    <StringItem index="0" value="25-08-2020"/>
                   </StringArray>
                 </Property>
                 <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>

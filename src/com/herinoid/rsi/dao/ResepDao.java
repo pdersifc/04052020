@@ -345,7 +345,7 @@ public class ResepDao {
     public static List<DataEResep> getResepByDateAndDepo(String fromDate, String toDate, String depo, String tarif,String jenisPasien) {
         List<DataEResep> obatList = new LinkedList<>();
         try {
-            ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`sampai_pasien`,"
+            ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
                     + "e.`status` FROM e_resep_rsifc e "
                     + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
                     + "INNER JOIN poliklinik p ON p.`kd_poli`=r.`kd_poli` "
@@ -367,6 +367,7 @@ public class ResepDao {
                 obat.setPasien(rs.getString("no_rawat") + " " + rs.getString("no_rkm_medis") + " " + rs.getString("nm_pasien"));
                 obat.setValidasi(rs.getString("validasi"));
                 obat.setDiterima(rs.getString("sampai_pasien"));
+                obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
                 List<ObatResep> obatDetails = getObatResepDetail(obat.getNoResep(), depo, tarif);
@@ -677,7 +678,7 @@ public class ResepDao {
     public static List<DataEResep> getResepRacikanByDateAndDepo(String fromDate, String toDate, String depo, String tarif,String jenisPasien) {
         List<DataEResep> obatList = new LinkedList<>();
         try {
-            ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`sampai_pasien`,"
+            ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
                     + "e.`status` FROM e_resep_racikan_rsifc e "
                     + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
                     + "INNER JOIN poliklinik p ON p.`kd_poli`=r.`kd_poli` "
@@ -699,6 +700,7 @@ public class ResepDao {
                 obat.setPasien(rs.getString("no_rawat") + " " + rs.getString("no_rkm_medis") + " " + rs.getString("nm_pasien"));
                 obat.setValidasi(rs.getString("validasi"));
                 obat.setDiterima(rs.getString("sampai_pasien"));
+                obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
                 List<ObatResep> obatDetails = getObatResepRacikanDetail(obat.getNoResep(), depo, tarif);
@@ -957,5 +959,70 @@ public class ResepDao {
         }
         return sukses;
     }
+    
+    public static boolean updatePackingRacikan(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("update e_resep_racikan_rsifc set packing = ?,status = ? where no_resep = ?");
+            try {
+                pst.setString(1, Utils.formatDateTimeDb(new Date()));
+                pst.setString(2, Resep.STATUS_PACKING);
+                pst.setString(3, noresep);
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+    
+    public static boolean updatePacking(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            if (isResepExist(noresep)) {
+                pst = koneksi.prepareStatement("update e_resep_rsifc set packing = ?,status = ? where no_resep = ?");
+                try {
+                    pst.setString(1, Utils.formatDateTimeDb(new Date()));
+                    pst.setString(2, Resep.STATUS_PACKING);
+                    pst.setString(3, noresep);
+                    pst.executeUpdate();
+                    if (isResepRacikanExist(noresep)) {
+                        updatePackingRacikan(noresep);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.out.println("Notifikasi : " + e);
+                } finally {
+                    if (pst != null) {
+                        pst.close();
+                    }
+                }
+
+            } else {
+                if (isResepRacikanExist(noresep)) {
+                    updatePackingRacikan(noresep);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+
 
 }

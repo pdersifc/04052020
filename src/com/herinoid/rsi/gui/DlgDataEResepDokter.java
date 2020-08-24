@@ -50,6 +50,7 @@ import java.util.Set;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import widget.ComboBox;
+import inventory.DlgAturanPakai;
 
 /**
  *
@@ -72,6 +73,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private String sttRawat, kategoriObat;
     private int row, rowEditor;
     private String kdBangsal, tarif;
+    private DlgAturanPakai aturanpakai = new DlgAturanPakai(null, false);
 
     /**
      * Creates new form DlgPenyakit
@@ -209,6 +211,40 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
         }
         setCmbData();
+
+        aturanpakai.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (aturanpakai.getTable().getSelectedRow() != -1) {
+                    tblEditor.setValueAt(aturanpakai.getTable().getValueAt(aturanpakai.getTable().getSelectedRow(), 0).toString(), tblEditor.getSelectedRow(), 10);
+                    tblEditor.requestFocus();
+                }
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
+        });
     }
 
     public void setData(String kodeDepo, String kategoriObat, String jenisPasien) {
@@ -285,7 +321,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                         r.setUrutan(urut);
                         rincians.add(r);
                     } else {
-                        if (!rck.equals(f.getRacikan())) {                            
+                        if (!rck.equals(f.getRacikan())) {
                             RincianResepVerifikasi r = new RincianResepVerifikasi();
                             ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(noresep, f.getKodeRacikan());
                             r.setKodeObat(f.getKodeRacikan());
@@ -333,7 +369,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
         if (dokterRacikans.size() > 0) {
             Collections.sort(dokterRacikans, Comparator.comparing(ObatResep::getKodeRacikan));
-            
+
             String rck = null;
             int urut = 0;
             for (ObatResep f : dokterRacikans) {
@@ -402,10 +438,10 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         kelas = new widget.TextBox();
         perawatanGrup = new javax.swing.ButtonGroup();
         printPopup = new javax.swing.JPopupMenu();
+        MnPackaging = new javax.swing.JMenuItem();
         mnTerimaPasien = new javax.swing.JMenuItem();
-        MnAturanPakai1 = new javax.swing.JMenuItem();
-        MnAturanPakai2 = new javax.swing.JMenuItem();
-        MnAturanPakai3 = new javax.swing.JMenuItem();
+        MnEtiket = new javax.swing.JMenuItem();
+        MnNotaObat = new javax.swing.JMenuItem();
         panelResep = new widget.PanelBiasa();
         panelBiasa4 = new widget.PanelBiasa();
         scrollPane1 = new widget.ScrollPane();
@@ -492,6 +528,20 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
         printPopup.setName("printPopup"); // NOI18N
 
+        MnPackaging.setBackground(new java.awt.Color(255, 255, 255));
+        MnPackaging.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnPackaging.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Vial-Pills.png"))); // NOI18N
+        MnPackaging.setText("Pengepakan");
+        MnPackaging.setName("MnPackaging"); // NOI18N
+        MnPackaging.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnPackagingActionPerformed(evt);
+            }
+        });
+        printPopup.add(MnPackaging);
+
+        mnTerimaPasien.setBackground(new java.awt.Color(255, 255, 255));
+        mnTerimaPasien.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         mnTerimaPasien.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/PatientMale.png"))); // NOI18N
         mnTerimaPasien.setText("Diterima Pasien");
         mnTerimaPasien.setName("mnTerimaPasien"); // NOI18N
@@ -502,26 +552,19 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         });
         printPopup.add(mnTerimaPasien);
 
-        MnAturanPakai1.setBackground(new java.awt.Color(255, 255, 255));
-        MnAturanPakai1.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        MnAturanPakai1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/PrinterSettings.png"))); // NOI18N
-        MnAturanPakai1.setText("Cetak Aturan Pakai Model 1");
-        MnAturanPakai1.setName("MnAturanPakai1"); // NOI18N
-        printPopup.add(MnAturanPakai1);
+        MnEtiket.setBackground(new java.awt.Color(255, 255, 255));
+        MnEtiket.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnEtiket.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/PrinterSettings.png"))); // NOI18N
+        MnEtiket.setText("Cetak ETiket Obat");
+        MnEtiket.setName("MnEtiket"); // NOI18N
+        printPopup.add(MnEtiket);
 
-        MnAturanPakai2.setBackground(new java.awt.Color(255, 255, 255));
-        MnAturanPakai2.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        MnAturanPakai2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/PrinterSettings.png"))); // NOI18N
-        MnAturanPakai2.setText("Cetak Aturan Pakai Model 2");
-        MnAturanPakai2.setName("MnAturanPakai2"); // NOI18N
-        printPopup.add(MnAturanPakai2);
-
-        MnAturanPakai3.setBackground(new java.awt.Color(255, 255, 255));
-        MnAturanPakai3.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        MnAturanPakai3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/PrinterSettings.png"))); // NOI18N
-        MnAturanPakai3.setText("Cetak Aturan Pakai Model 3");
-        MnAturanPakai3.setName("MnAturanPakai3"); // NOI18N
-        printPopup.add(MnAturanPakai3);
+        MnNotaObat.setBackground(new java.awt.Color(255, 255, 255));
+        MnNotaObat.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnNotaObat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/PrinterSettings.png"))); // NOI18N
+        MnNotaObat.setText("Cetak Nota Obat");
+        MnNotaObat.setName("MnNotaObat"); // NOI18N
+        printPopup.add(MnNotaObat);
 
         panelResep.setName("panelResep"); // NOI18N
         panelResep.setLayout(new java.awt.GridLayout(1, 2));
@@ -644,7 +687,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(370, 40, 60, 23);
 
         cmbTanggalTo.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-08-2020" }));
+        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-08-2020" }));
         cmbTanggalTo.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalTo.setName("cmbTanggalTo"); // NOI18N
         cmbTanggalTo.setOpaque(false);
@@ -704,7 +747,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         rdoRanap.setBounds(261, 10, 130, 23);
 
         cmbTanggalfrom.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-08-2020" }));
+        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-08-2020" }));
         cmbTanggalfrom.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalfrom.setName("cmbTanggalfrom"); // NOI18N
         cmbTanggalfrom.setOpaque(false);
@@ -972,7 +1015,14 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private void tblEditorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEditorMouseClicked
         // TODO add your handling code here:
-
+        int barisPilihan = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
+        if (barisPilihan > -1) {
+            if (tblEditor.getSelectedColumn() == 10) {
+                aturanpakai.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
+                aturanpakai.setLocationRelativeTo(internalFrame1);
+                aturanpakai.setVisible(true);
+            }
+        }
     }//GEN-LAST:event_tblEditorMouseClicked
 
     private void btnAddObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddObatActionPerformed
@@ -1055,6 +1105,37 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     }//GEN-LAST:event_MnAllStockActionPerformed
 
+    private void MnPackagingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPackagingActionPerformed
+        // TODO add your handling code here:
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        String depo = pro.getProperty("DEPOOBAT");
+        int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+        if (baris > -1) {
+            DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
+            if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
+                JOptionPane.showMessageDialog(null, "Resep belum divalidasi, silahkan di validasi terlebih dahulu..");
+            } else if (resep.getStatus().equals(Resep.STATUS_SAMPAI_PASIEN)) {
+                JOptionPane.showMessageDialog(null, "Resep sudah diambil pasien..");
+            } else {
+                int halo = JOptionPane.showConfirmDialog(null, "Apakah anda mau melakukan pengepakan obat..? ", "Perhatian", dialogButton);
+                if (halo == 0) {
+                    boolean berhatsil = ResepDao.updatePacking(resep.getNoResep());
+                    if (berhatsil) {
+                        String jenisPasien = Konstan.PASIEN_RALAN;
+                        if (rdoRanap.isSelected()) {
+                            jenisPasien = Konstan.PASIEN_RANAP;
+                        }
+                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                        showResepData(dataList, dataRacikanList);
+                    }
+                }
+
+            }
+
+        }
+    }//GEN-LAST:event_MnPackagingActionPerformed
+
     private void clean() {
         racikanList = new LinkedList<>();
         model.removeAllElements();
@@ -1085,9 +1166,9 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.PanelBiasa FormInput;
     private widget.TextBox KdPj;
     private javax.swing.JMenuItem MnAllStock;
-    private javax.swing.JMenuItem MnAturanPakai1;
-    private javax.swing.JMenuItem MnAturanPakai2;
-    private javax.swing.JMenuItem MnAturanPakai3;
+    private javax.swing.JMenuItem MnEtiket;
+    private javax.swing.JMenuItem MnNotaObat;
+    private javax.swing.JMenuItem MnPackaging;
     private javax.swing.JPopupMenu Popup;
     private widget.TextBox TNoRw;
     private widget.Button btnAddObat;

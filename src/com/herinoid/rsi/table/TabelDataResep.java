@@ -35,6 +35,7 @@ public class TabelDataResep extends AbstractTableModel {
         column.add("Dokter Peresep");
         column.add("Jaminan");
         column.add("Waktu Validasi");
+        column.add("Pengepakan");
         column.add("Sampai Pasien");
         row = new Vector<DataEResep>();
     }
@@ -117,6 +118,8 @@ public class TabelDataResep extends AbstractTableModel {
         } else if (columnIndex == 7) {
             return row.get(rowIndex).getValidasi();
         } else if (columnIndex == 8) {
+            return row.get(rowIndex).getPacking();
+        } else if (columnIndex == 9) {
             return row.get(rowIndex).getDiterima();
         } 
         return null;

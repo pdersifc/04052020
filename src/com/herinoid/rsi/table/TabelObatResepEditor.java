@@ -39,6 +39,7 @@ public class TabelObatResepEditor extends AbstractTableModel {
         column.add("Tuslah");
         column.add("Stock");
         column.add("Kategori");
+        column.add("Aturan Pakai");
         row = new Vector<ObatResep>();
     }
 
@@ -131,7 +132,9 @@ public class TabelObatResepEditor extends AbstractTableModel {
             return row.get(rowIndex).getStok();
         }else if (columnIndex == 9) {
             return row.get(rowIndex).getKategori();
-        }  
+        }else if (columnIndex == 10) {
+            return row.get(rowIndex).getAturanPakai();
+        }   
         return null;
     }
     
@@ -155,6 +158,8 @@ public class TabelObatResepEditor extends AbstractTableModel {
             case 7:
                 i.setTuslah(Double.parseDouble(aValue.toString()));
                 break;
+            case 10:
+                i.setAturanPakai(aValue.toString());
             default:
                 break;
         }

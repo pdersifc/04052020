@@ -23,6 +23,7 @@ public class DataEResep {
     private String jaminan;
     private String validasi;
     private String diterima;
+    private String packing;
     private List<ObatResep> obatDetails;
 
     public DataEResep() {
@@ -204,4 +205,20 @@ public class DataEResep {
     public int hashCode() {
         return getNoResep() != null ? getNoResep().hashCode() : 0;
     }
+
+    /**
+     * @return the packing
+     */
+    public String getPacking() {
+        return packing;
+    }
+
+    /**
+     * @param packing the packing to set
+     */
+    public void setPacking(String packing) {
+        this.packing = packing;
+    }
+    
+    
 }

@@ -16,6 +16,7 @@ public class Resep {
     public static final String STATUS_BELUM_VERIFIKASI = "BELUM VALIDASI";
     public static final String STATUS_SUDAH_VERIFIKASI = "TERVALIDASI";
     public static final String STATUS_SAMPAI_PASIEN = "SAMPAI PASIEN";
+    public static final String STATUS_PACKING = "PROSES PENGEPAKAN";
     private String noResep;
     private Date tglResep;
     private String jamResep;
