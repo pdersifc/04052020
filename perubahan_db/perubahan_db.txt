@@ -122,3 +122,9 @@ CREATE TABLE `obat_racikan_eresep_rsifc` (
 ALTER TABLE `rsifc_db`.`obat_validasi_eresep_rsifc`   
   ADD COLUMN `nama_racikan` VARCHAR(40) NULL AFTER `kode_racikan`;
 
+--------------------- tgl 25/08/2020 ------------------------------------------------
+ALTER TABLE `rsifc_db`.`e_resep_rsifc`   
+  ADD COLUMN `packing` DATETIME NULL AFTER `jenis_pasien`;
+
+ALTER TABLE `rsifc_db`.`e_resep_racikan_rsifc`   
+  ADD COLUMN `packing` DATETIME NULL AFTER `jenis_pasien`;
