@@ -35,7 +35,7 @@ public class TabelDataResep extends AbstractTableModel {
         column.add("Dokter Peresep");
         column.add("Jaminan");
         column.add("Waktu Validasi");
-        column.add("Pengepakan");
+        column.add("Dispansing ");
         column.add("Sampai Pasien");
         row = new Vector<DataEResep>();
     }

@@ -7,6 +7,7 @@ package com.herinoid.rsi.gui.dialog;
 
 import com.herinoid.rsi.model.Obat;
 import com.herinoid.rsi.model.ObatResep;
+import com.herinoid.rsi.util.Utils;
 import com.herinoid.rsi.widget.KeySelectionRenderer;
 import java.awt.Dimension;
 import java.math.BigDecimal;
@@ -235,7 +236,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         lblObat.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblObat.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
-        lblKandungan.setText("Kandungan :");
+        lblKandungan.setText("Dosis :");
         lblKandungan.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         txtKandungan.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -298,8 +299,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(lblP2, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(txtPenyebut, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(txtPenyebut, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(cmbRacikan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -450,22 +450,40 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         BigDecimal bd = new BigDecimal(kandungan);
         BigDecimal bdRounded = bd.setScale(0, RoundingMode.CEILING);
         txtKandungan.setText(String.valueOf(bdRounded));
-        double pembagi = obatResep.getKapasitas() / kandungan;
-        BigDecimal bdPembagi = new BigDecimal(pembagi);
-        BigDecimal bdPembagiRoundup = bdPembagi.setScale(0, RoundingMode.CEILING);
-        BigDecimal jumlah = new BigDecimal(obatResep.getJmlRacik() / bdPembagiRoundup.doubleValue());
-        BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
-        txtJumlah.setText(String.valueOf(bulatke.doubleValue()));
+//        double pembagi = obatResep.getKapasitas() / kandungan;
+        double hasilHitung = (kandungan /obatResep.getKapasitas()) * obatResep.getJmlRacik();
+        String bulat = Utils.format(hasilHitung,0);
+        String hasilDecimal = Utils.format(hasilHitung,2);
+        int bulatDepan = Integer.parseInt(bulat);
+        int decim = Integer.parseInt(hasilDecimal.substring(hasilDecimal.indexOf("."), hasilDecimal.length()));
+        if(decim>50){
+            bulatDepan = bulatDepan+1;
+        }
+        
+//        BigDecimal bdPembagi = new BigDecimal(pembagi);
+//        BigDecimal bdPembagiRoundup = bdPembagi.setScale(0, RoundingMode.CEILING);
+//        BigDecimal jumlah = new BigDecimal(obatResep.getJmlRacik() / bdPembagiRoundup.doubleValue());
+//        BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
+        txtJumlah.setText(String.valueOf(bulatDepan));
     }//GEN-LAST:event_txtPenyebutKeyReleased
 
     private void txtKandunganKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKandunganKeyReleased
         // TODO add your handling code here:
-        BigDecimal jumlah = new BigDecimal(obatResep.getKapasitas() / Double.parseDouble(txtKandungan.getText()));
-        BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
-
-        BigDecimal hasilPmbagi = new BigDecimal(obatResep.getJmlRacik() / bulatke.doubleValue());
-        BigDecimal hasilAhir = hasilPmbagi.setScale(0, RoundingMode.CEILING);
-        txtJumlah.setText(String.valueOf(hasilAhir.doubleValue()));
+//        BigDecimal jumlah = new BigDecimal(obatResep.getKapasitas() / Double.parseDouble(txtKandungan.getText()));
+//        BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
+//
+//        BigDecimal hasilPmbagi = new BigDecimal(obatResep.getJmlRacik() / bulatke.doubleValue());
+//        BigDecimal hasilAhir = hasilPmbagi.setScale(0, RoundingMode.CEILING);
+        
+        double hasilHitung = (Double.parseDouble(txtKandungan.getText()) /obatResep.getKapasitas()) * obatResep.getJmlRacik();
+        String bulat = Utils.format(hasilHitung,0);
+        String hasilDecimal = Utils.format(hasilHitung,2);
+        int bulatDepan = Integer.parseInt(bulat);
+        int decim = Integer.parseInt(hasilDecimal.substring(hasilDecimal.indexOf("."), hasilDecimal.length()));
+        if(decim>50){
+            bulatDepan = bulatDepan+1;
+        }
+        txtJumlah.setText(String.valueOf(bulatDepan));
     }//GEN-LAST:event_txtKandunganKeyReleased
 
     void clean() {
