@@ -6,6 +6,7 @@
 package com.herinoid.rsi.dao;
 
 import com.herinoid.rsi.model.DataEResep;
+import com.herinoid.rsi.model.EtiketObat;
 import com.herinoid.rsi.model.Obat;
 import com.herinoid.rsi.model.ObatResep;
 import com.herinoid.rsi.model.RegPeriksa;
@@ -89,7 +90,7 @@ public class ResepDao {
         try {
             for (ObatResep o : reseps) {
                 if (o.isParent()) {
-                    saveObatRacikan(noResep,norawat, o);
+                    saveObatRacikan(noResep, norawat, o);
                 } else {
                     psttmn = koneksi.prepareStatement("insert into e_resep_racikan_rsifc_detail(no_resep,kode_racik,nama_racik,is_parent,kandungan,kode_brng,jml,embalase,tuslah,p1,p2,aturan_pakai) values(?,?,?,?,?,?,?,?,?,?,?,?)");
                     try {
@@ -241,11 +242,11 @@ public class ResepDao {
         return sukses;
     }
 
-    public static boolean saveObatRacikan(String noresep,String norawat, ObatResep obat) {
+    public static boolean saveObatRacikan(String noresep, String norawat, ObatResep obat) {
         boolean sukses = true;
         PreparedStatement psttmn = null;
         try {
-            
+
             psttmn = koneksi.prepareStatement("insert into obat_racikan_eresep_rsifc(no_resep,tgl_perawatan,jam,no_rawat,no_racik,nama_racik,kd_racik,metode_racik,jml_dr,aturan_pakai,keterangan) values(?,?,?,?,?,?,?,?,?,?,?)");
             try {
                 psttmn.setString(1, noresep);
@@ -342,7 +343,7 @@ public class ResepDao {
         return noresep;
     }
 
-    public static List<DataEResep> getResepByDateAndDepo(String fromDate, String toDate, String depo, String tarif,String jenisPasien) {
+    public static List<DataEResep> getResepByDateAndDepo(String fromDate, String toDate, String depo, String tarif, String jenisPasien) {
         List<DataEResep> obatList = new LinkedList<>();
         try {
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
@@ -379,7 +380,7 @@ public class ResepDao {
                 obatList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
@@ -444,7 +445,7 @@ public class ResepDao {
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (psttmn != null) {
@@ -506,7 +507,7 @@ public class ResepDao {
                 obat.setHarga(harga);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (psttmn != null) {
@@ -524,7 +525,7 @@ public class ResepDao {
         return obat;
     }
 
-    public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo,String noResep) {
+    public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo, String noResep) {
         boolean sukses = true;
         PreparedStatement psttmn = null;
         try {
@@ -675,7 +676,7 @@ public class ResepDao {
         return sukses;
     }
 
-    public static List<DataEResep> getResepRacikanByDateAndDepo(String fromDate, String toDate, String depo, String tarif,String jenisPasien) {
+    public static List<DataEResep> getResepRacikanByDateAndDepo(String fromDate, String toDate, String depo, String tarif, String jenisPasien) {
         List<DataEResep> obatList = new LinkedList<>();
         try {
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
@@ -688,7 +689,7 @@ public class ResepDao {
                     + "WHERE e.tgl_resep BETWEEN ? AND ? AND e.jenis_pasien = ? ORDER BY e.`no_resep`");
             ps.setString(1, fromDate);
             ps.setString(2, toDate);
-            ps.setString(3,jenisPasien);
+            ps.setString(3, jenisPasien);
             rs = ps.executeQuery();
             while (rs.next()) {
                 DataEResep obat = new DataEResep();
@@ -712,7 +713,7 @@ public class ResepDao {
                 obatList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
@@ -742,7 +743,7 @@ public class ResepDao {
                 isExist = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rset != null) {
@@ -772,7 +773,7 @@ public class ResepDao {
                 isExist = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rset != null) {
@@ -841,7 +842,7 @@ public class ResepDao {
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (psttmn != null) {
@@ -936,7 +937,7 @@ public class ResepDao {
                 psttmn.setString(2, obat.getKodeObat());
                 psttmn.setBoolean(3, !Utils.isBlank(obat.getRacikan()));
                 psttmn.setString(4, !Utils.isBlank(obat.getRacikan()) ? obat.getKodeRacikan() : "");
-                psttmn.setString(5, !Utils.isBlank(obat.getRacikan()) ? obat.getRacikan(): "");
+                psttmn.setString(5, !Utils.isBlank(obat.getRacikan()) ? obat.getRacikan() : "");
                 psttmn.setDouble(6, obat.getJumlah());
                 psttmn.setDouble(7, obat.getEmbalase());
                 psttmn.setDouble(8, obat.getTuslah());
@@ -959,7 +960,7 @@ public class ResepDao {
         }
         return sukses;
     }
-    
+
     public static boolean updatePackingRacikan(String noresep) {
         boolean sukses = true;
         PreparedStatement pst = null;
@@ -986,7 +987,7 @@ public class ResepDao {
         }
         return sukses;
     }
-    
+
     public static boolean updatePacking(String noresep) {
         boolean sukses = true;
         PreparedStatement pst = null;
@@ -1024,5 +1025,56 @@ public class ResepDao {
         return sukses;
     }
 
+    public static List<EtiketObat> getEtiketByNoResep(String noResep, String depo) {
+        List<EtiketObat> obatList = new LinkedList<>();
+        try {
+            ps = koneksi.prepareStatement("SELECT e.`no_resep`,e.`no_rawat`,e.`tgl_resep`,e.`jam_resep`,p.`no_rkm_medis`,p.`nm_pasien`,b.`nama_brng`,d.`jml`,s.`satuan`,b.`expire`,d.`aturan_pakai`,l.`nm_bangsal` FROM e_resep_rsifc_detail d "
+                    + "JOIN e_resep_rsifc e ON e.`no_resep`=d.`no_resep` "
+                    + "JOIN databarang b ON d.kode_brng = b.kode_brng "
+                    + "JOIN gudangbarang g ON b.`kode_brng`=g.`kode_brng` "
+                    + "JOIN bangsal l ON l.`kd_bangsal`= g.`kd_bangsal` "
+                    + "JOIN kodesatuan s ON s.`kode_sat` = b.`kode_sat` "
+                    + "JOIN reg_periksa r ON r.`no_rawat` = e.`no_rawat` "
+                    + "JOIN pasien p ON p.`no_rkm_medis` = r.`no_rkm_medis` "
+                    + "WHERE d.`no_resep` = ? AND g.`kd_bangsal` = ?");
+            ps.setString(1, noResep);
+            ps.setString(2, depo);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                EtiketObat obat = new EtiketObat();
+                obat.setNoResep(rs.getString("no_resep"));
+                obat.setNoRawat(rs.getString("no_rawat"));
+                obat.setTanggal(Utils.formatDateSql(rs.getDate("tgl_resep")));
+                obat.setJam(rs.getString("jam_resep"));
+                obat.setNoRekamMedis(rs.getString("no_rkm_medis"));
+                obat.setPasien(rs.getString("nm_pasien"));
+                obat.setObat(rs.getString("nama_brng"));
+                obat.setSatuan(rs.getString("satuan"));
+                obat.setJml(rs.getInt("jml"));
+                obat.setExpire(Utils.formatDateSql(rs.getDate("expire")));
+                obat.setAturanPakai(rs.getString("aturan_pakai"));
+                obat.setLokasi(rs.getString("nm_bangsal"));
+                obatList.add(obat);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obatList;
+    }
 
 }

@@ -142,6 +142,9 @@
             <Property name="text" type="java.lang.String" value="Cetak ETiket Obat"/>
             <Property name="name" type="java.lang.String" value="MnEtiket" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MnEtiketActionPerformed"/>
+          </Events>
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="MnNotaObat">
           <Properties>

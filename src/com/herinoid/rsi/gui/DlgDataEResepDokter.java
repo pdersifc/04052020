@@ -35,12 +35,15 @@ import com.herinoid.rsi.dao.BangsalDao;
 import com.herinoid.rsi.dao.PemberianObatDetailDao;
 import static com.herinoid.rsi.dao.ResepDao.getObatResepDetail;
 import com.herinoid.rsi.gui.dialog.DlgCariObat;
+import com.herinoid.rsi.model.EtiketObat;
 import com.herinoid.rsi.model.PemeriksaanRalan;
 import com.herinoid.rsi.model.Resep;
 import com.herinoid.rsi.model.RincianResepVerifikasi;
 import com.herinoid.rsi.table.TabelResepRincian;
 import com.herinoid.rsi.util.Konstan;
 import com.herinoid.rsi.widget.KeySelectionRenderer;
+import fungsi.akses;
+import fungsi.sekuel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,6 +54,9 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import widget.ComboBox;
 import inventory.DlgAturanPakai;
+import java.util.HashMap;
+import java.util.Map;
+import org.json.JSONObject;
 
 /**
  *
@@ -73,6 +79,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private String sttRawat, kategoriObat;
     private int row, rowEditor;
     private String kdBangsal, tarif;
+    private sekuel Sequel = new sekuel();
     private DlgAturanPakai aturanpakai = new DlgAturanPakai(null, false);
 
     /**
@@ -557,6 +564,11 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         MnEtiket.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/PrinterSettings.png"))); // NOI18N
         MnEtiket.setText("Cetak ETiket Obat");
         MnEtiket.setName("MnEtiket"); // NOI18N
+        MnEtiket.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnEtiketActionPerformed(evt);
+            }
+        });
         printPopup.add(MnEtiket);
 
         MnNotaObat.setBackground(new java.awt.Color(255, 255, 255));
@@ -1135,6 +1147,31 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
         }
     }//GEN-LAST:event_MnPackagingActionPerformed
+
+    private void MnEtiketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnEtiketActionPerformed
+        // TODO add your handling code here:
+        String depo = pro.getProperty("DEPOOBAT");
+        int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+        if (baris > -1) {
+            DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
+            Map<String, Object> param = new HashMap<>();
+            param.put("namars", akses.getnamars());
+            param.put("alamatrs", akses.getalamatrs());
+            param.put("kotars", akses.getkabupatenrs());
+            param.put("propinsirs", akses.getpropinsirs());
+            param.put("kontakrs", akses.getkontakrs());
+            param.put("emailrs", akses.getemailrs());
+            param.put("logo", Sequel.cariGambar("select logo from setting"));
+            List<EtiketObat> data = ResepDao.getEtiketByNoResep(resep.getNoResep(), depo);
+            if (data != null) {               
+                String reportName = "etiketEResep.jasper";
+                String folder = "report";
+                Utils.print(reportName, folder, ".:: Etiket EResep ::.", data, param);
+            }
+
+        }
+
+    }//GEN-LAST:event_MnEtiketActionPerformed
 
     private void clean() {
         racikanList = new LinkedList<>();

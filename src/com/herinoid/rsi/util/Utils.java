@@ -9,7 +9,10 @@ package com.herinoid.rsi.util;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -174,7 +177,7 @@ public class Utils {
         }
     }
 
-    public void print(String reportName, String reportDirName, String judul, Collection<?> list, Map parameters) {
+    public static void print(String reportName, String reportDirName, String judul, Collection<?> list, Map parameters) {
         Properties systemProp = System.getProperties();
         String currentDir = systemProp.getProperty("user.dir");
         File dir = new File(currentDir);
@@ -192,10 +195,9 @@ public class Utils {
         } // end if
 
         try {
-            String namafile = "./" + reportDirName + "/" + reportName;
+            String namafile = "./" + reportDirName + "/" + reportName;            
             JRDataSource dataSource = new JRBeanCollectionDataSource(list);
-            JasperReport jasperReport = JasperCompileManager.compileReport(namafile);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(namafile, parameters, dataSource);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setTitle(judul);
             Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
