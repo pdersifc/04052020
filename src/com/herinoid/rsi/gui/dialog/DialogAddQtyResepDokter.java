@@ -88,7 +88,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             txtPenyebut.setVisible(false);
         }
     }
-    
+
     public void setDataEdit(ObatResep obat, List<ObatResep> racikans) {
         this.obatResep = obat;
         obatResep.setEdit(true);
@@ -126,7 +126,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             txtPembilang.setText(String.valueOf(obat.getPembilang()));
             txtPenyebut.setText(String.valueOf(obat.getPenyebut()));
 //            cmbRacikan.setSelectedItem(obat.getR);
-            
+
         } else {
             scrAturanPake.setVisible(true);
             txtAturanPakai.setVisible(true);
@@ -401,7 +401,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
-        obatResep.setJumlah(Double.parseDouble(txtJumlah.getText()));
+        obatResep.setJumlah(Double.parseDouble(txtJumlah.getText().replace(",", ".")));
         obatResep.setAturanPakai(txtAturanPakai.getText());
         obatResep.setFlag(true);
         obatResep.setEmbalase(0);
@@ -413,7 +413,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                     obatResep.setRacikan(obatRacik.getNamaObat());
                     obatResep.setKodeRacikan(obatRacik.getKodeObat());
                     obatResep.setJenisObat(Obat.OBAT_RACIKAN);
-                    obatResep.setKandungan(Double.parseDouble(txtKandungan.getText()));
+                    obatResep.setKandungan(Double.parseDouble(txtKandungan.getText().replace(",", ".")));
                     obatResep.setPembilang(Integer.parseInt(txtPembilang.getText()));
                     obatResep.setPenyebut(Integer.parseInt(txtPenyebut.getText()));
                     obatResep.setJmlRacik(obatRacik.getJumlah());
@@ -447,43 +447,21 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             p2 = Integer.parseInt(txtPenyebut.getText());
         }
         double kandungan = obatResep.getKapasitas() * p1 / p2;
-        BigDecimal bd = new BigDecimal(kandungan);
-        BigDecimal bdRounded = bd.setScale(0, RoundingMode.CEILING);
-        txtKandungan.setText(String.valueOf(bdRounded));
-//        double pembagi = obatResep.getKapasitas() / kandungan;
-        double hasilHitung = (kandungan /obatResep.getKapasitas()) * obatResep.getJmlRacik();
-        String bulat = Utils.format(hasilHitung,0);
-        String hasilDecimal = Utils.format(hasilHitung,2);
-        int bulatDepan = Integer.parseInt(bulat);
-        int decim = Integer.parseInt(hasilDecimal.substring(hasilDecimal.indexOf("."), hasilDecimal.length()));
-        if(decim>50){
-            bulatDepan = bulatDepan+1;
-        }
-        
-//        BigDecimal bdPembagi = new BigDecimal(pembagi);
-//        BigDecimal bdPembagiRoundup = bdPembagi.setScale(0, RoundingMode.CEILING);
-//        BigDecimal jumlah = new BigDecimal(obatResep.getJmlRacik() / bdPembagiRoundup.doubleValue());
-//        BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
-        txtJumlah.setText(String.valueOf(bulatDepan));
+//        BigDecimal bd = new BigDecimal(kandungan);
+//        BigDecimal bdRounded = bd.setScale(0, RoundingMode.CEILING);
+        txtKandungan.setText(Utils.format(kandungan, 2));
+        double hasilHitung = (kandungan / obatResep.getKapasitas()) * obatResep.getJmlRacik();
+        String hasilDecimal = Utils.format(hasilHitung, 2);
+        txtJumlah.setText(hasilDecimal);
     }//GEN-LAST:event_txtPenyebutKeyReleased
 
     private void txtKandunganKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKandunganKeyReleased
         // TODO add your handling code here:
-//        BigDecimal jumlah = new BigDecimal(obatResep.getKapasitas() / Double.parseDouble(txtKandungan.getText()));
-//        BigDecimal bulatke = jumlah.setScale(0, RoundingMode.CEILING);
-//
-//        BigDecimal hasilPmbagi = new BigDecimal(obatResep.getJmlRacik() / bulatke.doubleValue());
-//        BigDecimal hasilAhir = hasilPmbagi.setScale(0, RoundingMode.CEILING);
-        
-        double hasilHitung = (Double.parseDouble(txtKandungan.getText()) /obatResep.getKapasitas()) * obatResep.getJmlRacik();
-        String bulat = Utils.format(hasilHitung,0);
-        String hasilDecimal = Utils.format(hasilHitung,2);
-        int bulatDepan = Integer.parseInt(bulat);
-        int decim = Integer.parseInt(hasilDecimal.substring(hasilDecimal.indexOf("."), hasilDecimal.length()));
-        if(decim>50){
-            bulatDepan = bulatDepan+1;
+        if (!Utils.isBlank(txtKandungan.getText())) {
+            double hasilHitung = (Double.parseDouble(txtKandungan.getText().replace(",", ".")) / obatResep.getKapasitas()) * obatResep.getJmlRacik();            
+            String hasilDecimal = Utils.format(hasilHitung, 2);
+            txtJumlah.setText(hasilDecimal);
         }
-        txtJumlah.setText(String.valueOf(bulatDepan));
     }//GEN-LAST:event_txtKandunganKeyReleased
 
     void clean() {
