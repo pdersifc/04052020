@@ -30,7 +30,8 @@ public class TabelObatResepEditor extends AbstractTableModel {
         super();
         column = new Vector<String>();
         column.add("Racikan");
-        column.add("Nama Obat");         
+        column.add("Nama Obat"); 
+        column.add("Dosis");        
         column.add("Jumlah");
         column.add("Satuan");
         column.add("Jenis Obat");
@@ -117,22 +118,24 @@ public class TabelObatResepEditor extends AbstractTableModel {
         } else if (columnIndex == 1) {
             return row.get(rowIndex).getNamaObat();
         } else if (columnIndex == 2) {
+            return row.get(rowIndex).getKandungan();
+        }else if (columnIndex == 3) {
             return row.get(rowIndex).getJumlah();
-        } else if (columnIndex == 3) {
+        } else if (columnIndex == 4) {
             return row.get(rowIndex).getSatuan();
-        }else if (columnIndex == 4) {
-            return row.get(rowIndex).getJenisObat();
         }else if (columnIndex == 5) {
-            return row.get(rowIndex).getHarga();
+            return row.get(rowIndex).getJenisObat();
         }else if (columnIndex == 6) {
-            return row.get(rowIndex).getEmbalase();
+            return row.get(rowIndex).getHarga();
         }else if (columnIndex == 7) {
-            return row.get(rowIndex).getTuslah();
+            return row.get(rowIndex).getEmbalase();
         }else if (columnIndex == 8) {
-            return row.get(rowIndex).getStok();
+            return row.get(rowIndex).getTuslah();
         }else if (columnIndex == 9) {
-            return row.get(rowIndex).getKategori();
+            return row.get(rowIndex).getStok();
         }else if (columnIndex == 10) {
+            return row.get(rowIndex).getKategori();
+        }else if (columnIndex == 11) {
             return row.get(rowIndex).getAturanPakai();
         }   
         return null;
@@ -149,16 +152,16 @@ public class TabelObatResepEditor extends AbstractTableModel {
     {   
         ObatResep i = row.get(rowIndex);
         switch (columnIndex) {
-            case 2:
+            case 3:
                 i.setJumlah(Double.parseDouble(aValue.toString()));
                 break;
-            case 6:
+            case 7:
                 i.setEmbalase(Double.parseDouble(aValue.toString()));
                 break;
-            case 7:
+            case 8:
                 i.setTuslah(Double.parseDouble(aValue.toString()));
                 break;
-            case 10:
+            case 11:
                 i.setAturanPakai(aValue.toString());
             default:
                 break;

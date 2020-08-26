@@ -35,6 +35,7 @@ public class ObatResep {
     private int penyebut;
     private double kapasitas;
     private boolean edit;
+    private int urutan;
     
     
     public ObatResep(){}
@@ -396,6 +397,20 @@ public class ObatResep {
      */
     public void setEdit(boolean edit) {
         this.edit = edit;
+    }
+
+    /**
+     * @return the urutan
+     */
+    public int getUrutan() {
+        return urutan;
+    }
+
+    /**
+     * @param urutan the urutan to set
+     */
+    public void setUrutan(int urutan) {
+        this.urutan = urutan;
     }
 
     

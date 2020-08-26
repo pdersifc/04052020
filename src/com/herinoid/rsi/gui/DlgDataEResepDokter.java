@@ -185,8 +185,9 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                 kategoriObat = "K02";
                             }
                             List<ObatResep> list = data.getObatDetails();
+                            List<ObatResep> dataObats = getAllObatListByNoResep(list, data.getNoResep());
                             modelPilihan.removeAllElements();
-                            modelPilihan.add(list);
+                            modelPilihan.add(dataObats);
                             tblEditor.setModel(modelPilihan);
                             double total = 0;
                             double ppn = 0;
@@ -252,6 +253,81 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             public void windowDeactivated(WindowEvent e) {
             }
         });
+    }
+
+    private List<ObatResep> getAllObatListByNoResep(List<ObatResep> dataObats, String noResep) {
+        
+        List<ObatResep> nonRacikans = new LinkedList<>();
+        List<ObatResep> obatRacikans = new LinkedList<>();
+        for (ObatResep o : dataObats) {
+            if (Utils.isBlank(o.getRacikan())) {
+                nonRacikans.add(o);
+            } else {
+                obatRacikans.add(o);
+            }
+        }
+        
+        List<ObatResep> obatTemotos = new LinkedList<>();
+        obatTemotos.addAll(nonRacikans);
+        if (obatRacikans.size() > 0) {
+            Collections.sort(obatRacikans, Comparator.comparing(ObatResep::getKodeRacikan));
+            String rck = null;
+            int urut = 0;
+            for (ObatResep f : obatRacikans) {
+                urut++;
+                if (Utils.isBlank(rck)) {                    
+                    rck = f.getRacikan();
+                    ObatResep r = new ObatResep();
+                    ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(noResep, f.getKodeRacikan());
+                    r.setKodeObat(f.getKodeRacikan());
+                    r.setRacikan(f.getRacikan());
+                    r.setNamaObat(obatRck.getMetodeRacik());
+                    r.setJumlah(obatRck.getJmlRacik());
+                    r.setJenisObat("Racikan");
+                    r.setAturanPakai(obatRck.getAturanPakai());
+                    r.setKategori(f.getKategori());
+                    r.setUrutan(urut);
+                    obatTemotos.add(r);
+                } else {
+                    if (!rck.equals(f.getRacikan())) {
+                        ObatResep r = new ObatResep();
+                        ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(noResep, f.getKodeRacikan());
+                        r.setKodeObat(f.getKodeRacikan());
+                        r.setNamaObat(obatRck.getMetodeRacik());
+                        r.setRacikan(f.getRacikan());
+                        r.setJumlah(obatRck.getJmlRacik());
+                        r.setAturanPakai(obatRck.getAturanPakai());
+                        r.setUrutan(urut);
+                        obatTemotos.add(r);
+                        rck = f.getRacikan();
+                    }
+                }
+                
+                ObatResep obat = new ObatResep();
+                obat.setKodeObat(f.getKodeObat());
+                obat.setNamaObat(f.getNamaObat());
+                obat.setJumlah(f.getJumlah());
+                obat.setAturanPakai(f.getAturanPakai());
+                obat.setHargaBeli(f.getHargaBeli());
+                obat.setSatuan(f.getSatuan());
+                obat.setJenisObat(f.getJenisObat());
+                obat.setKategori(f.getKategori());
+                obat.setEmbalase(f.getEmbalase());
+                obat.setTuslah(f.getTuslah());
+                obat.setStok(f.getStok());
+                obat.setKodeRacikan(f.getKodeRacikan());
+                obat.setKandungan(f.getKandungan());
+                obat.setHarga(f.getHarga());
+                obat.setRacikan("");
+                obat.setUrutan(urut);
+                obatTemotos.add(obat);
+            }
+            
+            Collections.sort(obatTemotos, Comparator
+                    .comparing(ObatResep::getUrutan));
+        }
+
+        return obatTemotos;
     }
 
     public void setData(String kodeDepo, String kategoriObat, String jenisPasien) {
@@ -958,11 +1034,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
                             List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
                             showResepData(dataList, dataRacikanList);
-//                            model.removeAllElements();
-//                            model.add(dataList);
-//                            tblData.setModel(model);
-//                            rowSorter = new TableRowSorter<>(tblData.getModel());
-//                            tblData.setRowSorter(rowSorter);
                         }
 
                     } else {
@@ -1029,7 +1100,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         // TODO add your handling code here:
         int barisPilihan = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
         if (barisPilihan > -1) {
-            if (tblEditor.getSelectedColumn() == 10) {
+            if (tblEditor.getSelectedColumn() == 11) {
                 aturanpakai.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
                 aturanpakai.setLocationRelativeTo(internalFrame1);
                 aturanpakai.setVisible(true);
@@ -1163,7 +1234,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             param.put("emailrs", akses.getemailrs());
             param.put("logo", Sequel.cariGambar("select logo from setting"));
             List<EtiketObat> data = ResepDao.getEtiketByNoResep(resep.getNoResep(), depo);
-            if (data != null) {               
+            if (data != null) {
                 String reportName = "etiketEResep.jasper";
                 String folder = "report";
                 Utils.print(reportName, folder, ".:: Etiket EResep ::.", data, param);
