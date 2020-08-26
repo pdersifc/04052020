@@ -32,6 +32,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.herinoid.rsi.dao.BangsalDao;
+import com.herinoid.rsi.dao.PasienDao;
 import com.herinoid.rsi.dao.PemberianObatDetailDao;
 import static com.herinoid.rsi.dao.ResepDao.getObatResepDetail;
 import com.herinoid.rsi.gui.dialog.DlgCariObat;
@@ -42,6 +43,8 @@ import com.herinoid.rsi.model.RincianResepVerifikasi;
 import com.herinoid.rsi.table.TabelResepRincian;
 import com.herinoid.rsi.util.Konstan;
 import com.herinoid.rsi.widget.KeySelectionRenderer;
+import com.herinoid.rsi.dao.PemeriksaanDao;
+import com.herinoid.rsi.model.Pasien;
 import fungsi.akses;
 import fungsi.sekuel;
 import java.util.Collection;
@@ -174,6 +177,16 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                     int selected = tblData.getSelectedRow();
                     if (selected != -1) {
                         DataEResep data = model.getAll().get(selected);
+                        Pasien pasien = PasienDao.get(data.getNorm());
+                        lblPasien.setText(data.getPasien());
+                        lblTelp.setText(pasien.getNoTelp());
+                        lblAlamat.setText(pasien.getAlamat());
+                        PemeriksaanRalan periksa = PemeriksaanDao.getPemeriksaanRalanByNoRawat(data.getNoRawat());
+                        lbBB.setText(periksa.getBeratBadan() == null ? " kg" : periksa.getBeratBadan() + " kg");
+                        lbTB.setText(periksa.getTinggiBadan() == null ? " cm" : periksa.getTinggiBadan() + " cm");
+                        lbSuhuBadan.setText(periksa.getSuhuTubuh());
+                        lbTekanDarah.setText(periksa.getTekanDarah());
+                        lbAlergi.setText(periksa.getAlergi());
                         if (Utils.isBlank(data.getValidasi())) {
                             panelSulapan.remove(panelResep);
                             panelDetailTotal.setVisible(true);
@@ -232,7 +245,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             @Override
             public void windowClosed(WindowEvent e) {
                 if (aturanpakai.getTable().getSelectedRow() != -1) {
-                    tblEditor.setValueAt(aturanpakai.getTable().getValueAt(aturanpakai.getTable().getSelectedRow(), 0).toString(), tblEditor.getSelectedRow(), 10);
+                    tblEditor.setValueAt(aturanpakai.getTable().getValueAt(aturanpakai.getTable().getSelectedRow(), 0).toString(), tblEditor.getSelectedRow(), 11);
                     tblEditor.requestFocus();
                 }
             }
@@ -256,7 +269,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     }
 
     private List<ObatResep> getAllObatListByNoResep(List<ObatResep> dataObats, String noResep) {
-        
+
         List<ObatResep> nonRacikans = new LinkedList<>();
         List<ObatResep> obatRacikans = new LinkedList<>();
         for (ObatResep o : dataObats) {
@@ -266,7 +279,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 obatRacikans.add(o);
             }
         }
-        
+
         List<ObatResep> obatTemotos = new LinkedList<>();
         obatTemotos.addAll(nonRacikans);
         if (obatRacikans.size() > 0) {
@@ -275,7 +288,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             int urut = 0;
             for (ObatResep f : obatRacikans) {
                 urut++;
-                if (Utils.isBlank(rck)) {                    
+                if (Utils.isBlank(rck)) {
                     rck = f.getRacikan();
                     ObatResep r = new ObatResep();
                     ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(noResep, f.getKodeRacikan());
@@ -283,9 +296,10 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                     r.setRacikan(f.getRacikan());
                     r.setNamaObat(obatRck.getMetodeRacik());
                     r.setJumlah(obatRck.getJmlRacik());
-                    r.setJenisObat("Racikan");
+                    r.setParent(true);
+//                    r.setJenisObat("Racikan");
                     r.setAturanPakai(obatRck.getAturanPakai());
-                    r.setKategori(f.getKategori());
+//                    r.setKategori(f.getKategori());
                     r.setUrutan(urut);
                     obatTemotos.add(r);
                 } else {
@@ -297,13 +311,15 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                         r.setRacikan(f.getRacikan());
                         r.setJumlah(obatRck.getJmlRacik());
                         r.setAturanPakai(obatRck.getAturanPakai());
+                        r.setParent(true);
                         r.setUrutan(urut);
                         obatTemotos.add(r);
                         rck = f.getRacikan();
                     }
                 }
-                
+
                 ObatResep obat = new ObatResep();
+                obat.setParent(false);
                 obat.setKodeObat(f.getKodeObat());
                 obat.setNamaObat(f.getNamaObat());
                 obat.setJumlah(f.getJumlah());
@@ -322,7 +338,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 obat.setUrutan(urut);
                 obatTemotos.add(obat);
             }
-            
+
             Collections.sort(obatTemotos, Comparator
                     .comparing(ObatResep::getUrutan));
         }
@@ -550,6 +566,22 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         cmbTanggalfrom = new widget.Tanggal();
         jLabel6 = new widget.Label();
         jLabel7 = new widget.Label();
+        jLabel15 = new widget.Label();
+        lbTB = new widget.Label();
+        lbBB = new widget.Label();
+        jLabel16 = new widget.Label();
+        jLabel17 = new widget.Label();
+        lbTekanDarah = new widget.Label();
+        jLabel18 = new widget.Label();
+        lbSuhuBadan = new widget.Label();
+        jLabel19 = new widget.Label();
+        lbAlergi = new widget.Label();
+        label7 = new widget.Label();
+        lblPasien = new widget.Label();
+        label9 = new widget.Label();
+        lblTelp = new widget.Label();
+        label11 = new widget.Label();
+        lblAlamat = new widget.Label();
         jPanel1 = new javax.swing.JPanel();
         panelBiasa1 = new widget.PanelBiasa();
         panelBiasa2 = new widget.PanelBiasa();
@@ -764,7 +796,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
         FormInput.setBackground(new java.awt.Color(255, 255, 255));
         FormInput.setName("FormInput"); // NOI18N
-        FormInput.setPreferredSize(new java.awt.Dimension(864, 79));
+        FormInput.setPreferredSize(new java.awt.Dimension(983, 120));
         FormInput.setLayout(null);
 
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
@@ -775,7 +807,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(370, 40, 60, 23);
 
         cmbTanggalTo.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-08-2020" }));
+        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-08-2020" }));
         cmbTanggalTo.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalTo.setName("cmbTanggalTo"); // NOI18N
         cmbTanggalTo.setOpaque(false);
@@ -835,7 +867,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         rdoRanap.setBounds(261, 10, 130, 23);
 
         cmbTanggalfrom.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-08-2020" }));
+        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-08-2020" }));
         cmbTanggalfrom.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalfrom.setName("cmbTanggalfrom"); // NOI18N
         cmbTanggalfrom.setOpaque(false);
@@ -856,6 +888,115 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         jLabel7.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel7);
         jLabel7.setBounds(240, 40, 20, 23);
+
+        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel15.setText("Tinggi Badan :");
+        jLabel15.setName("jLabel15"); // NOI18N
+        jLabel15.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(jLabel15);
+        jLabel15.setBounds(760, 10, 80, 23);
+
+        lbTB.setForeground(new java.awt.Color(0, 0, 0));
+        lbTB.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbTB.setText("cm");
+        lbTB.setName("lbTB"); // NOI18N
+        lbTB.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(lbTB);
+        lbTB.setBounds(850, 10, 80, 23);
+
+        lbBB.setForeground(new java.awt.Color(0, 0, 0));
+        lbBB.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbBB.setText("kg");
+        lbBB.setName("lbBB"); // NOI18N
+        lbBB.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(lbBB);
+        lbBB.setBounds(850, 30, 80, 23);
+
+        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel16.setText("Berat Badan :");
+        jLabel16.setName("jLabel16"); // NOI18N
+        jLabel16.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(jLabel16);
+        jLabel16.setBounds(760, 30, 80, 23);
+
+        jLabel17.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel17.setText("Tekanan Darah :");
+        jLabel17.setName("jLabel17"); // NOI18N
+        jLabel17.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(jLabel17);
+        jLabel17.setBounds(760, 50, 80, 23);
+
+        lbTekanDarah.setForeground(new java.awt.Color(0, 0, 0));
+        lbTekanDarah.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbTekanDarah.setName("lbTekanDarah"); // NOI18N
+        lbTekanDarah.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(lbTekanDarah);
+        lbTekanDarah.setBounds(850, 50, 80, 23);
+
+        jLabel18.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel18.setText("Suhu Badan :");
+        jLabel18.setName("jLabel18"); // NOI18N
+        jLabel18.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(jLabel18);
+        jLabel18.setBounds(760, 70, 80, 23);
+
+        lbSuhuBadan.setForeground(new java.awt.Color(0, 0, 0));
+        lbSuhuBadan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbSuhuBadan.setName("lbSuhuBadan"); // NOI18N
+        lbSuhuBadan.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(lbSuhuBadan);
+        lbSuhuBadan.setBounds(850, 70, 80, 23);
+
+        jLabel19.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel19.setText("Alergi :");
+        jLabel19.setName("jLabel19"); // NOI18N
+        jLabel19.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(jLabel19);
+        jLabel19.setBounds(760, 90, 80, 23);
+
+        lbAlergi.setForeground(new java.awt.Color(0, 0, 0));
+        lbAlergi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbAlergi.setName("lbAlergi"); // NOI18N
+        lbAlergi.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(lbAlergi);
+        lbAlergi.setBounds(850, 90, 250, 23);
+
+        label7.setText("Pasien : ");
+        label7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        label7.setName("label7"); // NOI18N
+        FormInput.add(label7);
+        label7.setBounds(50, 70, 70, 20);
+
+        lblPasien.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblPasien.setText("Pasien");
+        lblPasien.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblPasien.setName("lblPasien"); // NOI18N
+        FormInput.add(lblPasien);
+        lblPasien.setBounds(130, 70, 400, 20);
+
+        label9.setText("No. Telp :");
+        label9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        label9.setName("label9"); // NOI18N
+        FormInput.add(label9);
+        label9.setBounds(60, 90, 60, 20);
+
+        lblTelp.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblTelp.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblTelp.setName("lblTelp"); // NOI18N
+        FormInput.add(lblTelp);
+        lblTelp.setBounds(130, 90, 120, 20);
+
+        label11.setText("Alamat : ");
+        label11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        label11.setName("label11"); // NOI18N
+        FormInput.add(label11);
+        label11.setBounds(260, 90, 60, 20);
+
+        lblAlamat.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblAlamat.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblAlamat.setName("lblAlamat"); // NOI18N
+        FormInput.add(lblAlamat);
+        lblAlamat.setBounds(330, 90, 380, 20);
 
         internalFrame1.add(FormInput, java.awt.BorderLayout.PAGE_START);
 
@@ -1287,20 +1428,36 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.ComboBox cmbTarif;
     private widget.InternalFrame internalFrame1;
     private widget.Label jLabel10;
+    private widget.Label jLabel15;
+    private widget.Label jLabel16;
+    private widget.Label jLabel17;
+    private widget.Label jLabel18;
+    private widget.Label jLabel19;
     private widget.Label jLabel5;
     private widget.Label jLabel6;
     private widget.Label jLabel7;
     private javax.swing.JPanel jPanel1;
     private widget.TextBox kelas;
     private widget.Label label1;
+    private widget.Label label11;
     private widget.Label label13;
     private widget.Label label2;
     private widget.Label label3;
     private widget.Label label4;
     private widget.Label label5;
     private widget.Label label6;
+    private widget.Label label7;
+    private widget.Label label9;
+    private widget.Label lbAlergi;
+    private widget.Label lbBB;
+    private widget.Label lbSuhuBadan;
+    private widget.Label lbTB;
+    private widget.Label lbTekanDarah;
+    private widget.Label lblAlamat;
     private widget.Label lblDepo;
+    private widget.Label lblPasien;
     private widget.Label lblPpn;
+    private widget.Label lblTelp;
     private widget.Label lblTotal;
     private widget.Label lblTotalPpn;
     private javax.swing.JMenuItem mnTerimaPasien;

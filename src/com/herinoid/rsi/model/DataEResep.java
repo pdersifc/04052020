@@ -12,7 +12,7 @@ import java.util.List;
  * @author Hewrei
  */
 public class DataEResep {
-
+    private String norm;
     private String noRawat;
     private String noResep;
     private String tglResep;
@@ -218,6 +218,20 @@ public class DataEResep {
      */
     public void setPacking(String packing) {
         this.packing = packing;
+    }
+
+    /**
+     * @return the norm
+     */
+    public String getNorm() {
+        return norm;
+    }
+
+    /**
+     * @param norm the norm to set
+     */
+    public void setNorm(String norm) {
+        this.norm = norm;
     }
     
     

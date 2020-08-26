@@ -126,13 +126,13 @@ public class TabelObatResepEditor extends AbstractTableModel {
         }else if (columnIndex == 5) {
             return row.get(rowIndex).getJenisObat();
         }else if (columnIndex == 6) {
-            return row.get(rowIndex).getHarga();
+            return row.get(rowIndex).isParent()?"":row.get(rowIndex).getHarga();
         }else if (columnIndex == 7) {
-            return row.get(rowIndex).getEmbalase();
+            return row.get(rowIndex).isParent()?"":row.get(rowIndex).getEmbalase();
         }else if (columnIndex == 8) {
-            return row.get(rowIndex).getTuslah();
+            return row.get(rowIndex).isParent()?"":row.get(rowIndex).getTuslah();
         }else if (columnIndex == 9) {
-            return row.get(rowIndex).getStok();
+            return row.get(rowIndex).isParent()?"":row.get(rowIndex).getStok();
         }else if (columnIndex == 10) {
             return row.get(rowIndex).getKategori();
         }else if (columnIndex == 11) {
