@@ -35,6 +35,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import kepegawaian.DlgCariDokter;
+import com.herinoid.rsi.dao.BangsalDao;
+import com.herinoid.rsi.model.Bangsal;
 
 /**
  *
@@ -217,6 +219,8 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
     }
 
     public void setData(String kdDokter, String nmDokter, String kodeDepo, String kategoriObat, String jenisPasien, PemeriksaanRalan periksa) {
+        Bangsal bangsal = BangsalDao.get(kodeDepo);
+        lblDepo.setText(bangsal.getNama());
         model.removeAllElements();
         if (kategoriObat.equals("K01")) {
             model.add(ObatDao.getObatByCategory(kodeDepo, kategoriObat, jenisPasien));
@@ -366,6 +370,9 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         panelBiasa2 = new widget.PanelBiasa();
         label1 = new widget.Label();
         txtCari = new widget.TextBox();
+        panelBiasa3 = new widget.PanelBiasa();
+        label2 = new widget.Label();
+        lblDepo = new widget.Label();
         scrollPane2 = new widget.ScrollPane();
         tblObat = new widget.Table();
 
@@ -834,6 +841,23 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         txtCari.setPreferredSize(new java.awt.Dimension(400, 24));
         panelBiasa2.add(txtCari);
 
+        panelBiasa3.setBorder(null);
+        panelBiasa3.setName("panelBiasa3"); // NOI18N
+        panelBiasa3.setPreferredSize(new java.awt.Dimension(400, 30));
+        panelBiasa3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        label2.setText("Lokasi Obat : ");
+        label2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        label2.setName("label2"); // NOI18N
+        panelBiasa3.add(label2);
+
+        lblDepo.setText("Depo Obat");
+        lblDepo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblDepo.setName("lblDepo"); // NOI18N
+        panelBiasa3.add(lblDepo);
+
+        panelBiasa2.add(panelBiasa3);
+
         panelBiasa1.add(panelBiasa2, java.awt.BorderLayout.PAGE_START);
 
         scrollPane2.setName("scrollPane2"); // NOI18N
@@ -1079,18 +1103,21 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
     private widget.TextBox kelas;
     private widget.Label label1;
     private widget.Label label13;
+    private widget.Label label2;
     private widget.Label label21;
     private widget.Label lbAlergi;
     private widget.Label lbBB;
     private widget.Label lbSuhuBadan;
     private widget.Label lbTB;
     private widget.Label lbTekanDarah;
+    private widget.Label lblDepo;
     private widget.Label lblJaminan;
     private widget.Label lblPoli;
     private javax.swing.JMenuItem mnEditObat;
     private javax.swing.JMenuItem mnHapusItem;
     private widget.PanelBiasa panelBiasa1;
     private widget.PanelBiasa panelBiasa2;
+    private widget.PanelBiasa panelBiasa3;
     private widget.panelisi panelisi3;
     private javax.swing.JPopupMenu popObatPilihan;
     private javax.swing.JMenuItem ppBersihkan;
