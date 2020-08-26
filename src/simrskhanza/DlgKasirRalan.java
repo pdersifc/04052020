@@ -8479,13 +8479,14 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 String nmPasien = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 3).toString();
                 String kdDokter = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 0).toString();
                 String nmDokter = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 1).toString();
+                String poli = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 4).toString();
                 String kategoriObat = "K02";
                 if (jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
                     kategoriObat = "K01";
                 }
                 PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRalanByNoRawat(norawat);
                 resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RALAN,periksaRalan);
-                resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RALAN);
+                resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RALAN,poli);
                 resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                 resep.setLocationRelativeTo(internalFrame1);
                 resep.setVisible(true);

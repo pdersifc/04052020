@@ -10001,13 +10001,14 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 String nmPasien = tbKamIn.getValueAt(baris, 2).toString();
                 String kdDokter = "xxx";
                 String nmDokter = tbKamIn.getValueAt(baris, 18).toString();
+                String poli = tbKamIn.getValueAt(baris, 7).toString();
                 String kategoriObat = "K02";
                 if (jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
                     kategoriObat = "K01";
                 }
                 PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRanapByNoRawat(norawat);
                 resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RALAN,periksaRalan);
-                resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RANAP);
+                resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RANAP,poli);
                 resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                 resep.setLocationRelativeTo(internalFrame1);
                 resep.setVisible(true);

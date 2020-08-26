@@ -114,7 +114,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                 obatFromDialog = addQty.getData();
                 if (obatFromDialog != null) {
                     if (obatFromDialog.isFlag()) {
-                        if(obatFromDialog.isEdit()){
+                        if (obatFromDialog.isEdit()) {
                             modelPilihan.remove(tblPilihan.getSelectedRow());
                         }
                         modelPilihan.add(obatFromDialog);
@@ -216,7 +216,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jam();
     }
 
-    public void setData(String kdDokter, String nmDokter, String kodeDepo, String kategoriObat, String jenisPasien,PemeriksaanRalan periksa) {
+    public void setData(String kdDokter, String nmDokter, String kodeDepo, String kategoriObat, String jenisPasien, PemeriksaanRalan periksa) {
         model.removeAllElements();
         if (kategoriObat.equals("K01")) {
             model.add(ObatDao.getObatByCategory(kodeDepo, kategoriObat, jenisPasien));
@@ -229,18 +229,20 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         tblObat.setRowSorter(rowSorter);
         txtKodeDokter.setText(kdDokter);
         txtNamaDokter.setText(nmDokter);
-        lbBB.setText(periksa.getBeratBadan()==null?" kg":periksa.getBeratBadan()+" kg");
-        lbTB.setText(periksa.getTinggiBadan()==null?" cm":periksa.getTinggiBadan()+" cm");
+        lbBB.setText(periksa.getBeratBadan() == null ? " kg" : periksa.getBeratBadan() + " kg");
+        lbTB.setText(periksa.getTinggiBadan() == null ? " cm" : periksa.getTinggiBadan() + " cm");
         lbSuhuBadan.setText(periksa.getSuhuTubuh());
         lbTekanDarah.setText(periksa.getTekanDarah());
         lbAlergi.setText(periksa.getAlergi());
     }
 
-    public void setPasien(String norawat, String norm, String nmPasien, String jaminan,String jenisPasien) {
+    public void setPasien(String norawat, String norm, String nmPasien, String jaminan, String jenisPasien,String poli) {
         LblNoRawat.setText(norawat);
         LblNoRM.setText(norm);
         LblNamaPasien.setText(nmPasien);
         lblJaminan.setText(jaminan);
+        
+        lblPoli.setText(poli);
         this.jenisPasien = jenisPasien;
     }
 
@@ -354,6 +356,8 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lbBB = new widget.Label();
         lbTekanDarah = new widget.Label();
         lbSuhuBadan = new widget.Label();
+        jLabel20 = new widget.Label();
+        lblPoli = new widget.Label();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         scrollPane1 = new widget.ScrollPane();
@@ -533,7 +537,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(10, 40, 68, 23);
 
         cmbTanggal.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-08-2020" }));
+        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-08-2020" }));
         cmbTanggal.setDisplayFormat("dd-MM-yyyy");
         cmbTanggal.setName("cmbTanggal"); // NOI18N
         cmbTanggal.setOpaque(false);
@@ -654,11 +658,11 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lbAlergi.setBounds(890, 80, 250, 23);
 
         jLabel14.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel14.setText("Jaminan :");
+        jLabel14.setText("Poli/Bangsal :");
         jLabel14.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel14.setName("jLabel14"); // NOI18N
         FormInput.add(jLabel14);
-        jLabel14.setBounds(430, 70, 70, 23);
+        jLabel14.setBounds(430, 40, 100, 23);
 
         lblJaminan.setForeground(new java.awt.Color(0, 0, 0));
         lblJaminan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -762,6 +766,21 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lbSuhuBadan.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(lbSuhuBadan);
         lbSuhuBadan.setBounds(890, 60, 80, 23);
+
+        jLabel20.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel20.setText("Jaminan :");
+        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel20.setName("jLabel20"); // NOI18N
+        FormInput.add(jLabel20);
+        jLabel20.setBounds(430, 70, 70, 23);
+
+        lblPoli.setForeground(new java.awt.Color(0, 0, 0));
+        lblPoli.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblPoli.setText("umum");
+        lblPoli.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblPoli.setName("lblPoli"); // NOI18N
+        FormInput.add(lblPoli);
+        lblPoli.setBounds(540, 40, 270, 20);
 
         internalFrame1.add(FormInput, java.awt.BorderLayout.PAGE_START);
 
@@ -930,40 +949,42 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
         } else if (txtKodeDokter.getText().trim().equals("") || txtKodeDokter.getText().trim().equals("xxx")) {
             Valid.textKosong(txtKodeDokter, "Dokter");
         } else {
-            Resep resep = new Resep();
-            resep.setKdDokter(txtKodeDokter.getText());
-            resep.setNoRawat(LblNoRawat.getText());
-            resep.setTglResep(cmbTanggal.getDate());
-            resep.setJamResep(cmbJam.getSelectedItem().toString() + ":" + cmbMnt.getSelectedItem().toString() + ":" + cmbDtk.getSelectedItem().toString());
-            resep.setStatus(Resep.STATUS_BELUM_VERIFIKASI);
-            resep.setJenisPasien(jenisPasien);
-            List<ObatResep> biasas = new LinkedList<>();
-            List<ObatResep> racikans = new LinkedList<>();
-            for (ObatResep o : modelPilihan.getAll()) {
-                if (o.getJenisObat().equals(Obat.OBAT_RACIKAN)) {
-                    racikans.add(o);
-                } else {
-                    biasas.add(o);
+            int oke = JOptionPane.showConfirmDialog(null, "Apakah data sudah benar, silahkan cek kembali sebelum disimpan?", "Perhatian", JOptionPane.YES_NO_OPTION);
+            if (oke == 0) {
+                Resep resep = new Resep();
+                resep.setKdDokter(txtKodeDokter.getText());
+                resep.setNoRawat(LblNoRawat.getText());
+                resep.setTglResep(cmbTanggal.getDate());
+                resep.setJamResep(cmbJam.getSelectedItem().toString() + ":" + cmbMnt.getSelectedItem().toString() + ":" + cmbDtk.getSelectedItem().toString());
+                resep.setStatus(Resep.STATUS_BELUM_VERIFIKASI);
+                resep.setJenisPasien(jenisPasien);
+                List<ObatResep> biasas = new LinkedList<>();
+                List<ObatResep> racikans = new LinkedList<>();
+                for (ObatResep o : modelPilihan.getAll()) {
+                    if (o.getJenisObat().equals(Obat.OBAT_RACIKAN)) {
+                        racikans.add(o);
+                    } else {
+                        biasas.add(o);
+                    }
+                }
+                resep.setObatResepRacikanDetail(racikans);
+                resep.setObatResepDetail(biasas);
+                boolean sukses = false;
+                String noresep = ResepDao.getNoResepForUpdate();
+                resep.setNoResep(noresep);
+                if (biasas.size() > 0) {
+                    sukses = ResepDao.save(resep);
+                }
+                if (racikans.size() > 0) {
+                    sukses = ResepDao.saveRacikan(resep);
+
+                }
+                if (sukses) {
+                    clean();
+                    dispose();
+
                 }
             }
-            resep.setObatResepRacikanDetail(racikans);
-            resep.setObatResepDetail(biasas);
-            boolean sukses = false;
-            String noresep = ResepDao.getNoResepForUpdate();
-            resep.setNoResep(noresep);
-            if (biasas.size() > 0) {
-                sukses = ResepDao.save(resep);
-            }
-            if (racikans.size() > 0) {
-                sukses = ResepDao.saveRacikan(resep);
-
-            }
-            if (sukses) {
-                clean();
-                dispose();
-
-            }
-
         }
 
     }//GEN-LAST:event_btnSimpanActionPerformed
@@ -1051,6 +1072,7 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
     private widget.Label jLabel17;
     private widget.Label jLabel18;
     private widget.Label jLabel19;
+    private widget.Label jLabel20;
     private widget.Label jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1064,6 +1086,7 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
     private widget.Label lbTB;
     private widget.Label lbTekanDarah;
     private widget.Label lblJaminan;
+    private widget.Label lblPoli;
     private javax.swing.JMenuItem mnEditObat;
     private javax.swing.JMenuItem mnHapusItem;
     private widget.PanelBiasa panelBiasa1;
