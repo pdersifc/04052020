@@ -114,7 +114,7 @@ public class TabelObatResepEditor extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (columnIndex == 0) {
-            return row.get(rowIndex).getRacikan();
+            return row.get(rowIndex).isParent()?row.get(rowIndex).getRacikan():"";
         } else if (columnIndex == 1) {
             return row.get(rowIndex).getNamaObat();
         } else if (columnIndex == 2) {

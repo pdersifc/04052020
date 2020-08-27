@@ -49,6 +49,7 @@ public class Utils {
     public final static String TIMESTAMP_FORMAT = "dd/MM/yyyy HH:mm:ss";
     public static String[] hariName = {"Ahad", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"};
     public final static String FORMAT_TIME = "HH:mm:ss";
+    public final static String TSID_FORMAT_LONG = "yyyyMMddHHmmssSSSSSS";
 
     public static java.sql.Date convertUtilToSql(java.util.Date uDate) {
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
@@ -211,6 +212,10 @@ public class Utils {
             JOptionPane.showMessageDialog(null, "Report Can't view because : " + e);
         }
 
+    }
+    
+    public static String TSID(Date date) {
+        return convertDate(date, TSID_FORMAT_LONG);
     }
 
 }

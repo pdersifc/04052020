@@ -334,7 +334,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 obat.setKodeRacikan(f.getKodeRacikan());
                 obat.setKandungan(f.getKandungan());
                 obat.setHarga(f.getHarga());
-                obat.setRacikan("");
+                obat.setRacikan(f.getRacikan());
                 obat.setUrutan(urut);
                 obatTemotos.add(obat);
             }
