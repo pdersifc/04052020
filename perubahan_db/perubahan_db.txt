@@ -128,3 +128,31 @@ ALTER TABLE `rsifc_db`.`e_resep_rsifc`
 
 ALTER TABLE `rsifc_db`.`e_resep_racikan_rsifc`   
   ADD COLUMN `packing` DATETIME NULL AFTER `jenis_pasien`;
+
+------------------- tanggal 27/08/2020 by herinoid ----------------------------------------
+ALTER TABLE `rsifc_db`.`obat_validasi_eresep_rsifc`   
+  ADD COLUMN `code` VARCHAR(25) DEFAULT ''  NOT NULL FIRST, 
+  DROP PRIMARY KEY,
+  ADD PRIMARY KEY (`code`, `no_resep`, `kode_brng`);
+
+di drop dulu tabel e_resep_racikan_rsifc_detail kmudian excute kode di bawah ini:
+
+CREATE TABLE `e_resep_racikan_rsifc_detail` (
+  `code` VARCHAR(25) NOT NULL DEFAULT '',
+  `no_resep` VARCHAR(20) NOT NULL DEFAULT '',
+  `kode_racik` VARCHAR(10) NOT NULL DEFAULT '',
+  `nama_racik` VARCHAR(100) NOT NULL DEFAULT '',
+  `is_parent` TINYINT(1) NOT NULL DEFAULT '0',
+  `p1` INT(10) NOT NULL DEFAULT '1',
+  `p2` INT(10) NOT NULL DEFAULT '1',
+  `kandungan` DOUBLE(20,2) NOT NULL DEFAULT '0.00',
+  `kode_brng` VARCHAR(15) NOT NULL DEFAULT '',
+  `jml` DOUBLE DEFAULT NULL,
+  `embalase` DOUBLE(20,2) NOT NULL DEFAULT '0.00',
+  `tuslah` DOUBLE(20,2) NOT NULL DEFAULT '0.00',
+  `aturan_pakai` VARCHAR(150) DEFAULT NULL,
+  PRIMARY KEY (`code`,`no_resep`,`kode_brng`),
+  KEY `kode_brng` (`kode_brng`),
+  CONSTRAINT `e_resep_racikan_rsifc_detail_kode_barang_ibfk_2` FOREIGN KEY (`kode_brng`) REFERENCES `databarang` (`kode_brng`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `e_resep_racikan_rsifc_detail_noresep_ibfk_1` FOREIGN KEY (`no_resep`) REFERENCES `e_resep_racikan_rsifc` (`no_resep`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=latin1
