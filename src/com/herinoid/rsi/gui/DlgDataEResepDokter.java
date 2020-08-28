@@ -65,6 +65,7 @@ import javax.swing.JOptionPane;
 import widget.ComboBox;
 import inventory.DlgAturanPakai;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.json.JSONObject;
 
@@ -91,6 +92,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private String kdBangsal, tarif;
     private sekuel Sequel = new sekuel();
     private DlgAturanPakai aturanpakai = new DlgAturanPakai(null, false);
+    private double total = 0;
 
     /**
      * Creates new form DlgPenyakit
@@ -213,7 +215,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             modelPilihan.removeAllElements();
                             modelPilihan.add(dataObats);
                             tblEditor.setModel(modelPilihan);
-                            double total = 0;
+                            total = 0;
                             double ppn = 0;
                             double totalPpn = 0;
 
@@ -223,13 +225,16 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             ppn = (total * 10) / 100;
                             totalPpn = total + ppn;
                             lblTotal.setText("Total : " + Utils.format(total, 0));
-                            lblPpn.setText("PPN : " + Utils.format(ppn, 0));
-                            lblTotalPpn.setText("Total + PPN : " + Utils.format(totalPpn, 0));
+//                            lblPpn.setText("PPN : " + Utils.format(ppn, 0));
+//                            lblTotalPpn.setText("Total + PPN : " + Utils.format(totalPpn, 0));
                         } else {
 //                            panelSulapan.remove(Popup);
+
                             setResepVerifikasi(data.getNoRawat(), kdBangsal, data.getNoResep(), data.getJaminan());
                             panelSulapan.add(panelResep);
                             panelSulapan.repaint();
+                            Bangsal bangsal = BangsalDao.get(kdBangsal);
+                            lblDepoResep.setText(bangsal.getNama());
                             panelDetailTotal.setVisible(false);
                             scrollDetail.setVisible(false);
                             panelResep.setVisible(true);
@@ -564,6 +569,9 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         scrollPane1 = new widget.ScrollPane();
         tblFarmasi = new widget.Table();
         panelBiasa3 = new widget.PanelBiasa();
+        panelBiasa5 = new widget.PanelBiasa();
+        label8 = new widget.Label();
+        lblDepoResep = new widget.Label();
         scrollPane3 = new widget.ScrollPane();
         tblDokter = new widget.Table();
         PopupEditorFarmasi = new javax.swing.JPopupMenu();
@@ -621,8 +629,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         label4 = new widget.Label();
         label3 = new widget.Label();
         lblTotal = new widget.Label();
-        lblPpn = new widget.Label();
-        lblTotalPpn = new widget.Label();
         lblDepo = new widget.Label();
 
         Popup.setName("Popup"); // NOI18N
@@ -734,7 +740,21 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
         panelBiasa3.setBorder(javax.swing.BorderFactory.createTitledBorder("Resep Asli Dokter"));
         panelBiasa3.setName("panelBiasa3"); // NOI18N
-        panelBiasa3.setLayout(new javax.swing.BoxLayout(panelBiasa3, javax.swing.BoxLayout.LINE_AXIS));
+        panelBiasa3.setLayout(new java.awt.BorderLayout());
+
+        panelBiasa5.setName("panelBiasa5"); // NOI18N
+
+        label8.setText("Depo : ");
+        label8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        label8.setName("label8"); // NOI18N
+        panelBiasa5.add(label8);
+
+        lblDepoResep.setText("isi depo");
+        lblDepoResep.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblDepoResep.setName("lblDepoResep"); // NOI18N
+        panelBiasa5.add(lblDepoResep);
+
+        panelBiasa3.add(panelBiasa5, java.awt.BorderLayout.PAGE_START);
 
         scrollPane3.setName("scrollPane3"); // NOI18N
 
@@ -752,7 +772,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         tblDokter.setName("tblDokter"); // NOI18N
         scrollPane3.setViewportView(tblDokter);
 
-        panelBiasa3.add(scrollPane3);
+        panelBiasa3.add(scrollPane3, java.awt.BorderLayout.CENTER);
 
         panelResep.add(panelBiasa3);
 
@@ -1166,18 +1186,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         lblTotal.setName("lblTotal"); // NOI18N
         panelDetailTotal.add(lblTotal);
 
-        lblPpn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPpn.setText("PPN : ");
-        lblPpn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblPpn.setName("lblPpn"); // NOI18N
-        panelDetailTotal.add(lblPpn);
-
-        lblTotalPpn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTotalPpn.setText("Total + PPN : ");
-        lblTotalPpn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblTotalPpn.setName("lblTotalPpn"); // NOI18N
-        panelDetailTotal.add(lblTotalPpn);
-
         lblDepo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDepo.setText("Depo : ");
         lblDepo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -1226,28 +1234,45 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         if (row > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(row));
             List<ObatResep> newDetails = modelPilihan.getAll();
-            if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
-                int emmmm = JOptionPane.showConfirmDialog(null, "Anda akan memverifikasi data resep, data yang sudah di verifikasi tidak dapat di verifikasi ulang. silahkan teliti kembali", "Perhatian", dialogButton);
-                if (emmmm == 0) {
-                    if (resep.getObatDetails().size() > 0) {
-                        boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep());
-                        if (sukses) {
-                            String jenisPasien = Konstan.PASIEN_RALAN;
-                            if (rdoRanap.isSelected()) {
-                                jenisPasien = Konstan.PASIEN_RANAP;
-                            }
-                            ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);
-                            List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-                            List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-                            showResepData(dataList, dataRacikanList);
-                        }
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, "data obat kosong");
-                    }
+            boolean cekStok = true;
+            String obatName = "";
+            for (ObatResep o : newDetails) {
+                if (o.getStok() < 1) {
+                    cekStok = false;
+                    obatName = o.getNamaObat();
+                    break;
+                } else if (o.getStok() < o.getJumlah()) {
+                    cekStok = false;
+                    obatName = o.getNamaObat();
+                    break;
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "Data sudah diverifikasi, anda tidak dapat memverifikasi ulang..");
+            }
+            if (cekStok) {
+                if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
+                    int emmmm = JOptionPane.showConfirmDialog(null, "Anda akan memverifikasi data resep, data yang sudah di verifikasi tidak dapat di verifikasi ulang. silahkan teliti kembali", "Perhatian", dialogButton);
+                    if (emmmm == 0) {
+                        if (resep.getObatDetails().size() > 0) {
+                            boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep());
+                            if (sukses) {
+                                String jenisPasien = Konstan.PASIEN_RALAN;
+                                if (rdoRanap.isSelected()) {
+                                    jenisPasien = Konstan.PASIEN_RANAP;
+                                }
+                                ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);
+                                List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                showResepData(dataList, dataRacikanList);
+                            }
+
+                        } else {
+                            JOptionPane.showMessageDialog(null, "data obat kosong");
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Data sudah diverifikasi, anda tidak dapat memverifikasi ulang..");
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Stok obat "+obatName+" tidak mencukupi, silahkan edit lagi..");
             }
 
         }
@@ -1256,18 +1281,23 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private void tblEditorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblEditorKeyReleased
         // TODO add your handling code here:
-        List<ObatResep> list = modelPilihan.getAll();
-        double total = 0;
-        double ppn = 0;
-        double totalPpn = 0;
-        for (ObatResep o : list) {
-            total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
+        ObatResep obat = modelPilihan.get(tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow()));
+        if (obat.getStok() > 0 && obat.getStok() >= obat.getJumlah()) {
+            total = total + (obat.getHarga() * obat.getJumlah()) + obat.getEmbalase() + obat.getTuslah();
+            lblTotal.setText("Total : " + Utils.format(total, 0));
+        } else {
+            JOptionPane.showMessageDialog(null, "Stok obat tidak mencukupi, silahkan cari obat di lokasi lain");
+            if (obat.getStok() > 0 && obat.getJumlah() > obat.getStok()) {
+                obat.setJumlah(obat.getStok());
+                removeDuplicate(obat);
+                for (ObatResep o : modelPilihan.getAll()) {
+                    total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
+                }
+                lblTotal.setText("Total : " + Utils.format(total, 0));
+            }
+
         }
-        ppn = (total * 10) / 100;
-        totalPpn = total + ppn;
-        lblTotal.setText("Total : " + Utils.format(total, 0));
-        lblPpn.setText("PPN : " + Utils.format(ppn, 0));
-        lblTotalPpn.setText("Total + PPN : " + Utils.format(totalPpn, 0));
+
     }//GEN-LAST:event_tblEditorKeyReleased
 
     private void rdoRajalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoRajalActionPerformed
@@ -1508,12 +1538,12 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                 Obat obat = ObatDao.getObat(kdBangsal, r.getKodeObat());
                                 double stok = 0;
                                 double jumlah = 0;
-                                if(obat!=null){
+                                if (obat != null) {
                                     stok = obat.getStok();
                                 }
-                                if(r.getRincian().length()>6){
+                                if (r.getRincian().length() > 6) {
                                     jumlah = Double.parseDouble(r.getRincian().substring(0, r.getRincian().indexOf("x")).replaceAll("\\s", ""));
-                                }else{
+                                } else {
                                     jumlah = Double.parseDouble(r.getRincian().replaceAll("\\s", ""));
                                 }
                                 ResepDao.updateStokGudang(stok + jumlah, r.getKodeObat(), kdBangsal);
@@ -1543,7 +1573,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                         modelPilihan.removeAllElements();
                         modelPilihan.add(dataObats);
                         tblEditor.setModel(modelPilihan);
-                        double total = 0;
+                        total = 0;
                         double ppn = 0;
                         double totalPpn = 0;
 
@@ -1553,8 +1583,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                         ppn = (total * 10) / 100;
                         totalPpn = total + ppn;
                         lblTotal.setText("Total : " + Utils.format(total, 0));
-                        lblPpn.setText("PPN : " + Utils.format(ppn, 0));
-                        lblTotalPpn.setText("Total + PPN : " + Utils.format(totalPpn, 0));
+//                        lblPpn.setText("PPN : " + Utils.format(ppn, 0));
+//                        lblTotalPpn.setText("Total + PPN : " + Utils.format(totalPpn, 0));
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Hanya data resep yang sudah divalidasi yang bisa dihapus!");
@@ -1573,9 +1603,9 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             int baris = tblFarmasi.convertRowIndexToModel(tblFarmasi.getSelectedRow());
             DataEResep resep = model.get(tblData.convertRowIndexToModel(tblData.getSelectedRow()));
             if (baris > -1) {
-                RincianResepVerifikasi oresep = modelFarmasi.get(tblFarmasi.convertRowIndexToModel(baris));                
+                RincianResepVerifikasi oresep = modelFarmasi.get(tblFarmasi.convertRowIndexToModel(baris));
                 modelFarmasi.remove(baris);
-                ResepDao.deleteDataObatValidasiFarmasiSatuan(resep.getNoResep(),oresep.getKodeObat());
+                ResepDao.deleteDataObatValidasiFarmasiSatuan(resep.getNoResep(), oresep.getKodeObat());
             } else {
                 JOptionPane.showMessageDialog(null, "Silahkan pilih baris obat yang mau di hapus..");
             }
@@ -1644,6 +1674,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.Label label5;
     private widget.Label label6;
     private widget.Label label7;
+    private widget.Label label8;
     private widget.Label label9;
     private widget.Label lbAlergi;
     private widget.Label lbBB;
@@ -1652,11 +1683,10 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.Label lbTekanDarah;
     private widget.Label lblAlamat;
     private widget.Label lblDepo;
+    private widget.Label lblDepoResep;
     private widget.Label lblPasien;
-    private widget.Label lblPpn;
     private widget.Label lblTelp;
     private widget.Label lblTotal;
-    private widget.Label lblTotalPpn;
     private javax.swing.JMenuItem mnAturanPakai;
     private javax.swing.JMenuItem mnHapusObat;
     private javax.swing.JMenuItem mnTerimaPasien;
@@ -1664,6 +1694,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.PanelBiasa panelBiasa2;
     private widget.PanelBiasa panelBiasa3;
     private widget.PanelBiasa panelBiasa4;
+    private widget.PanelBiasa panelBiasa5;
     private widget.panelisi panelDetailTotal;
     private widget.PanelBiasa panelResep;
     private widget.panelisi panelSulapan;
@@ -1716,5 +1747,17 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         tblData.setModel(model);
         rowSorter = new TableRowSorter<>(tblData.getModel());
         tblData.setRowSorter(rowSorter);
+    }
+
+    private void removeDuplicate(ObatResep obatResep) {
+        for (Iterator<ObatResep> i = modelPilihan.getAll().iterator(); i.hasNext();) {
+            ObatResep obat = i.next();
+            if (obat.getKodeObat().equals(obatResep.getKodeObat())) {
+                int index = modelPilihan.getAll().indexOf(obat);
+                modelPilihan.remove(index);
+                break;
+            }
+        }
+        modelPilihan.add(obatResep);
     }
 }

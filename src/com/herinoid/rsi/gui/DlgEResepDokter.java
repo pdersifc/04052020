@@ -855,14 +855,14 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         FormInput.add(lblPoli);
         lblPoli.setBounds(540, 40, 270, 20);
 
-        jLabel21.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel21.setForeground(new java.awt.Color(0, 153, 0));
         jLabel21.setText("Total  :");
         jLabel21.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel21.setName("jLabel21"); // NOI18N
         FormInput.add(jLabel21);
         jLabel21.setBounds(430, 80, 60, 23);
 
-        lblTotal.setForeground(new java.awt.Color(0, 0, 0));
+        lblTotal.setForeground(new java.awt.Color(0, 153, 0));
         lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblTotal.setText("0.0");
         lblTotal.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
