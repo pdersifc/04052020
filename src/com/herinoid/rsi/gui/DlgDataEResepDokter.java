@@ -11,6 +11,8 @@ import com.herinoid.rsi.model.DataEResep;
 import com.herinoid.rsi.model.ObatResep;
 import com.herinoid.rsi.table.TabelDataResep;
 import com.herinoid.rsi.table.TabelObatResepEditor;
+import com.herinoid.rsi.model.Obat;
+import com.herinoid.rsi.dao.ObatDao;
 import fungsi.validasi;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -32,6 +34,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.herinoid.rsi.dao.BangsalDao;
+import com.herinoid.rsi.dao.MarginDao;
 import com.herinoid.rsi.dao.PasienDao;
 import com.herinoid.rsi.dao.PemberianObatDetailDao;
 import static com.herinoid.rsi.dao.ResepDao.getObatResepDetail;
@@ -47,6 +50,8 @@ import com.herinoid.rsi.dao.PemeriksaanDao;
 import com.herinoid.rsi.model.Pasien;
 import com.herinoid.rsi.model.RegPeriksa;
 import com.herinoid.rsi.dao.RegPeriksaDao;
+import com.herinoid.rsi.model.MarginBpjs;
+import com.herinoid.rsi.model.MarginObatNonBpjs;
 import fungsi.akses;
 import fungsi.sekuel;
 import java.util.Collection;
@@ -109,6 +114,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             rdoRajal.setSelected(true);
             kdBangsal = pro.getProperty("DEPOOBAT");
             btnEdit.setVisible(false);
+            btnHapus.setVisible(false);
             txtCari.getDocument().addDocumentListener(new DocumentListener() {
 
                 @Override
@@ -196,6 +202,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             scrollDetail.setVisible(true);
                             panelResep.setVisible(false);
                             btnEdit.setVisible(false);
+                            btnHapus.setVisible(false);
                             if (data.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
                                 kategoriObat = "K01";
                             } else {
@@ -227,6 +234,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             scrollDetail.setVisible(false);
                             panelResep.setVisible(true);
                             btnEdit.setVisible(true);
+                            btnHapus.setVisible(true);
                         }
 
                     }
@@ -560,6 +568,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         tblDokter = new widget.Table();
         PopupEditorFarmasi = new javax.swing.JPopupMenu();
         mnAturanPakai = new javax.swing.JMenuItem();
+        mnHapusObat = new javax.swing.JMenuItem();
         internalFrame1 = new widget.InternalFrame();
         panelisi3 = new widget.panelisi();
         btnAddObat = new widget.Button();
@@ -760,6 +769,18 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             }
         });
         PopupEditorFarmasi.add(mnAturanPakai);
+
+        mnHapusObat.setBackground(new java.awt.Color(255, 255, 255));
+        mnHapusObat.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        mnHapusObat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cross.png"))); // NOI18N
+        mnHapusObat.setText("Hapus Obat");
+        mnHapusObat.setName("mnHapusObat"); // NOI18N
+        mnHapusObat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnHapusObatActionPerformed(evt);
+            }
+        });
+        PopupEditorFarmasi.add(mnHapusObat);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -1458,10 +1479,10 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
             for (RincianResepVerifikasi r : modelFarmasi.getAll()) {
                 ResepDao.updateAturanPakaiFarmasi(r.getAturanPakai(), resep.getNoResep(), r.getKodeObat());
-                if(!Utils.isBlank(r.getRacikan())){
+                if (!Utils.isBlank(r.getRacikan())) {
                     ResepDao.updateAturanPakaiRacikan(r.getAturanPakai(), resep.getNoResep(), r.getKodeObat());
                 }
-                
+
             }
             setResepVerifikasi(resep.getNoRawat(), kdBangsal, resep.getNoResep(), resep.getJaminan());
 
@@ -1479,9 +1500,63 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 if (resep.getStatus().equals(Resep.STATUS_SUDAH_VERIFIKASI)) {
                     boolean isHapus = ResepDao.deleteDataObatValidasiFarmasi(resep.getNoResep());
                     if (isHapus) {
+                        boolean isDel = PemberianObatDetailDao.deleteDetailPemberianObat(resep.getNoResep());
+                        if (isDel) {
+                            // update gudang
+                            for (RincianResepVerifikasi r : modelFarmasi.getAll()) {
+
+                                Obat obat = ObatDao.getObat(kdBangsal, r.getKodeObat());
+                                double stok = 0;
+                                double jumlah = 0;
+                                if(obat!=null){
+                                    stok = obat.getStok();
+                                }
+                                if(r.getRincian().length()>6){
+                                    jumlah = Double.parseDouble(r.getRincian().substring(0, r.getRincian().indexOf("x")).replaceAll("\\s", ""));
+                                }else{
+                                    jumlah = Double.parseDouble(r.getRincian().replaceAll("\\s", ""));
+                                }
+                                ResepDao.updateStokGudang(stok + jumlah, r.getKodeObat(), kdBangsal);
+                            }
+                        }
                         ResepDao.updateValidasiAfterHapus(resep.getNoResep());
+                        String jenisPasien = Konstan.PASIEN_RALAN;
+                        if (rdoRanap.isSelected()) {
+                            jenisPasien = Konstan.PASIEN_RANAP;
+                        }
+                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                        showResepData(dataList, dataRacikanList);
+                        panelSulapan.remove(panelResep);
+                        panelDetailTotal.setVisible(true);
+                        scrollDetail.setVisible(true);
+                        panelResep.setVisible(false);
+                        btnEdit.setVisible(false);
+                        btnHapus.setVisible(false);
+                        if (resep.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                            kategoriObat = "K01";
+                        } else {
+                            kategoriObat = "K02";
+                        }
+                        List<ObatResep> list = resep.getObatDetails();
+                        List<ObatResep> dataObats = getAllObatListByNoResep(list, resep.getNoResep());
+                        modelPilihan.removeAllElements();
+                        modelPilihan.add(dataObats);
+                        tblEditor.setModel(modelPilihan);
+                        double total = 0;
+                        double ppn = 0;
+                        double totalPpn = 0;
+
+                        for (ObatResep o : dataObats) {
+                            total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
+                        }
+                        ppn = (total * 10) / 100;
+                        totalPpn = total + ppn;
+                        lblTotal.setText("Total : " + Utils.format(total, 0));
+                        lblPpn.setText("PPN : " + Utils.format(ppn, 0));
+                        lblTotalPpn.setText("Total + PPN : " + Utils.format(totalPpn, 0));
                     }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Hanya data resep yang sudah divalidasi yang bisa dihapus!");
                 }
 
@@ -1489,6 +1564,23 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
         }
     }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void mnHapusObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnHapusObatActionPerformed
+        // TODO add your handling code here:
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int wkwkw = JOptionPane.showConfirmDialog(null, "Serius mau menghapus obat ini..?", "Perhatian", dialogButton);
+        if (wkwkw == 0) {
+            int baris = tblFarmasi.convertRowIndexToModel(tblFarmasi.getSelectedRow());
+            DataEResep resep = model.get(tblData.convertRowIndexToModel(tblData.getSelectedRow()));
+            if (baris > -1) {
+                RincianResepVerifikasi oresep = modelFarmasi.get(tblFarmasi.convertRowIndexToModel(baris));                
+                modelFarmasi.remove(baris);
+                ResepDao.deleteDataObatValidasiFarmasiSatuan(resep.getNoResep(),oresep.getKodeObat());
+            } else {
+                JOptionPane.showMessageDialog(null, "Silahkan pilih baris obat yang mau di hapus..");
+            }
+        }
+    }//GEN-LAST:event_mnHapusObatActionPerformed
 
     private void clean() {
         racikanList = new LinkedList<>();
@@ -1566,6 +1658,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.Label lblTotal;
     private widget.Label lblTotalPpn;
     private javax.swing.JMenuItem mnAturanPakai;
+    private javax.swing.JMenuItem mnHapusObat;
     private javax.swing.JMenuItem mnTerimaPasien;
     private widget.PanelBiasa panelBiasa1;
     private widget.PanelBiasa panelBiasa2;

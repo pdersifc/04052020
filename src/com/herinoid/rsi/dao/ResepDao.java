@@ -548,7 +548,7 @@ public class ResepDao {
                         psttmn.setString(11, sttRawat);
                         psttmn.setString(12, depo);
                         psttmn.setString(13, "");
-                        psttmn.setString(14, "");
+                        psttmn.setString(14, noResep);
                         psttmn.executeUpdate();
                         updateStokGudang(obat.getStok() - obat.getJumlah(), obat.getKodeObat(), depo);
                         saveObatValidasi(noResep, obat);
@@ -1270,6 +1270,31 @@ public class ResepDao {
                 pst.setString(1, noresep);
                 pst.execute();
             } catch (Exception e) {
+                sukses = false;
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+        } catch (Exception e) {
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+    
+    public static boolean deleteDataObatValidasiFarmasiSatuan(String noresep,String kodeObat) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("delete from obat_validasi_eresep_rsifc where no_resep = ? and kode_brng = ?");
+            try {
+                pst.setString(1, noresep);
+                pst.setString(2, kodeObat);
+                pst.execute();
+            } catch (Exception e) {
+                sukses = false;
                 System.out.println("Notifikasi : " + e);
             } finally {
                 if (pst != null) {
@@ -1289,7 +1314,7 @@ public class ResepDao {
         try {
             pst = koneksi.prepareStatement("update e_resep_rsifc set validasi = ?, status = ? where no_resep = ?");
             try {
-                pst.setString(1, "");
+                pst.setString(1, null);
                 pst.setString(2, Resep.STATUS_BELUM_VERIFIKASI);
                 pst.setString(3, noresep);
                 pst.executeUpdate();
@@ -1319,7 +1344,7 @@ public class ResepDao {
         try {
             pst = koneksi.prepareStatement("update e_resep_racikan_rsifc set validasi = ?, status = ? where no_resep = ?");
             try {
-                pst.setString(1, "");
+                pst.setString(1, null);
                 pst.setString(2, Resep.STATUS_BELUM_VERIFIKASI);
                 pst.setString(3, noresep);
                 pst.executeUpdate();

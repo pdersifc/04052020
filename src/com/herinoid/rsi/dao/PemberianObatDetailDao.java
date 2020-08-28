@@ -233,5 +233,28 @@ public class PemberianObatDetailDao {
         }
         return obat;
     }
+    
+    public static boolean deleteDetailPemberianObat(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("delete from detail_pemberian_obat where no_faktur = ?");
+            try {
+                pst.setString(1, noresep);
+                pst.execute();
+            } catch (Exception e) {
+                sukses = false;
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+        } catch (Exception e) {
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
 
 }
