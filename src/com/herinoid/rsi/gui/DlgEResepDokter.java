@@ -130,21 +130,25 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                         if (obatFromDialog.isEdit()) {
                             modelPilihan.remove(tblPilihan.getSelectedRow());
                         }
-                        
+
                         double marginPersen = 0;
                         if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                             MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obatFromDialog.getKodeObat());
-                            marginPersen = marginBpjs.getRalan();
+                             if(marginBpjs!=null){
+                                marginPersen = marginBpjs.getRalan();
+                            }
                         } else {
                             MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                            marginPersen = marginNon.getMargin();
+                            if(marginNon!=null){
+                                marginPersen = marginNon.getMargin();
+                            }                            
                         }
                         double margin = (obatFromDialog.getHargaBeli() * marginPersen) / 100;
                         double hpp = margin + obatFromDialog.getHargaBeli();
                         total = total + (hpp * obatFromDialog.getJumlah());
                         lblTotal.setText(Utils.format(total, 2));
-                       
-                       removeDuplicate(obatFromDialog);
+
+                        removeDuplicate(obatFromDialog);
                         tblPilihan.setModel(modelPilihan);
                     }
                 }
@@ -241,7 +245,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
             }
         });
         jam();
-        
+
         cekHistory.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -253,30 +257,31 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
 
             @Override
             public void windowClosed(WindowEvent e) {
-                List<ObatResep>  obats = cekHistory.getData();
-                if (obats != null && obats.size()>0) {
+                List<ObatResep> obats = cekHistory.getData();
+                if (obats != null && obats.size() > 0) {
                     modelPilihan.add(obats);
-//                    if (obatFromDialog.isFlag()) {
-//                        if (obatFromDialog.isEdit()) {
-//                            
-//                        }
-//                        
-//                        double marginPersen = 0;
-//                        if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
-//                            MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obatFromDialog.getKodeObat());
-//                            marginPersen = marginBpjs.getRalan();
-//                        } else {
-//                            MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-//                            marginPersen = marginNon.getMargin();
-//                        }
-//                        double margin = (obatFromDialog.getHargaBeli() * marginPersen) / 100;
-//                        double hpp = margin + obatFromDialog.getHargaBeli();
-//                        total = total + (hpp * obatFromDialog.getJumlah());
-//                        lblTotal.setText(Utils.format(total, 2));
-//                       
-//                       removeDuplicate(obatFromDialog);
-                        tblPilihan.setModel(modelPilihan);
-                    
+                    for (ObatResep o : obats) {
+                        double marginPersen = 0;
+                        if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                            MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
+                            if(marginBpjs!=null){
+                                marginPersen = marginBpjs.getRalan();
+                            }
+                            
+                        } else {
+                            MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                            if(marginNon!=null){
+                                marginPersen = marginNon.getMargin();
+                            }
+                            
+                        }
+                        double margin = (o.getHargaBeli() * marginPersen) / 100;
+                        double hpp = margin + o.getHargaBeli();
+                        total = total + (hpp * o.getJumlah());
+                        lblTotal.setText(Utils.format(total, 2));
+                    }
+                    tblPilihan.setModel(modelPilihan);
+
                 }
 
             }
@@ -333,9 +338,9 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lblPoli.setText(poli);
         this.jenisPasien = jenisPasien;
     }
-    
-    private void removeDuplicate(ObatResep obatResep){
-        for (Iterator<ObatResep> i = modelPilihan.getAll().iterator(); i.hasNext(); ) {
+
+    private void removeDuplicate(ObatResep obatResep) {
+        for (Iterator<ObatResep> i = modelPilihan.getAll().iterator(); i.hasNext();) {
             ObatResep obat = i.next();
             if (obat.getKodeObat().equals(obatResep.getKodeObat())) {
                 int index = modelPilihan.getAll().indexOf(obat);
@@ -1009,7 +1014,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         if (row > -1) {
             Obat obtTbl = model.get(tblObat.convertRowIndexToModel(row));
             Obat obat = ObatDao.getObat(depoKode, obtTbl.getKodeObat());
-            if (obat != null) {                
+            if (obat != null) {
                 obtTbl.setHargaBeli(obat.getHargaBeli());
                 addQty.setData(obtTbl, racikanList);
                 addQty.setVisible(true);
