@@ -1663,7 +1663,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 }
                 RincianResepVerifikasi totalan = new RincianResepVerifikasi();
                 totalan.setNamaObat("Total Biaya Resep : ");
-                totalan.setRincian(Utils.format(globalTot, 0));
+                totalan.setRincian("Rp "+Utils.format(globalTot, 0)+",-");
                 totalan.setAturanPakai("");
                 totalan.setRacikan(">>");
                 rincians.add(totalan);
@@ -1679,8 +1679,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             param.put("kontakrs", akses.getkontakrs());
             param.put("emailrs", akses.getemailrs());
             param.put("logo", Sequel.cariGambar("select logo from setting"));
-//             param.put("SUBREPORT_DIR", getRequest().getSession().getServletContext().getRealPath("/") + "/reports/");
-//            "E:\\Kontrak RSI Fatimah\\04052020\\report\\"
             String reportName = "notaEresep.jasper";
             String folder = "report";
             Utils.printWithSub(reportName, folder, ".:: Nota EResep ::.", notas, param);
