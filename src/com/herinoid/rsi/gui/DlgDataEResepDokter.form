@@ -211,26 +211,6 @@
               </Constraints>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
-              <SubComponents>
-                <Component class="widget.Label" name="label8">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Depo : "/>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Tahoma" size="12" style="1"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="label8" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="widget.Label" name="lblDepoResep">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="isi depo"/>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Tahoma" size="12" style="1"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="lblDepoResep" noResource="true"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
             </Container>
             <Container class="widget.ScrollPane" name="scrollPane3">
               <Properties>
@@ -288,24 +268,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnAturanPakaiActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="mnHapusObat">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-            </Property>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="12" style="0"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/picture/cross.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Hapus Obat"/>
-            <Property name="name" type="java.lang.String" value="mnHapusObat" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnHapusObatActionPerformed"/>
           </Events>
         </MenuItem>
       </SubComponents>
@@ -936,6 +898,35 @@
                 </Constraint>
               </Constraints>
             </Component>
+            <Component class="widget.Label" name="lblDepoResep">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="2"/>
+                <Property name="text" type="java.lang.String" value="isi depo"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="12" style="1"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="lblDepoResep" noResource="true"/>
+              </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="450" y="10" width="280" height="20"/>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Component class="widget.Label" name="label10">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Depo : "/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="11" style="1"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="label10" noResource="true"/>
+              </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="390" y="10" width="50" height="20"/>
+                </Constraint>
+              </Constraints>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel1">
@@ -1132,7 +1123,6 @@
                     <Component class="widget.Label" name="lblDepo">
                       <Properties>
                         <Property name="horizontalAlignment" type="int" value="0"/>
-                        <Property name="text" type="java.lang.String" value="Depo : "/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="12" style="1"/>
                         </Property>
