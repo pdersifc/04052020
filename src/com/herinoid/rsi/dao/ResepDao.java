@@ -1232,5 +1232,111 @@ public class ResepDao {
         }
         return sukses;
     }
+    
+    public static boolean updateAturanPakaiRacikan(String aturanPakai,String noresep,String kodeObat) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("update obat_racikan_eresep_rsifc set aturan_pakai = ? where no_resep = ? and kd_racik = ?");
+            try {
+                pst.setString(1, aturanPakai);
+                pst.setString(2, noresep);
+                pst.setString(3, kodeObat);
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                sukses = false;
+                e.printStackTrace();
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+    
+    public static boolean deleteDataObatValidasiFarmasi(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("delete from obat_validasi_eresep_rsifc where no_resep = ?");
+            try {
+                pst.setString(1, noresep);
+                pst.execute();
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+        } catch (Exception e) {
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+    
+    public static boolean updateValidasiAfterHapus(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("update e_resep_rsifc set validasi = ?, status = ? where no_resep = ?");
+            try {
+                pst.setString(1, "");
+                pst.setString(2, Resep.STATUS_BELUM_VERIFIKASI);
+                pst.setString(3, noresep);
+                pst.executeUpdate();
+            } catch (Exception e) {
+                sukses = false;
+                e.printStackTrace();
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+            if (isResepRacikanExist(noresep)) {
+                updateValidasiResepRacikanAfterHapus(noresep);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+    
+    public static boolean updateValidasiResepRacikanAfterHapus(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("update e_resep_racikan_rsifc set validasi = ?, status = ? where no_resep = ?");
+            try {
+                pst.setString(1, "");
+                pst.setString(2, Resep.STATUS_BELUM_VERIFIKASI);
+                pst.setString(3, noresep);
+                pst.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
 
 }

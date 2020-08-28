@@ -794,6 +794,11 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         btnHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Delete.png"))); // NOI18N
         btnHapus.setText("Hapus");
         btnHapus.setName("btnHapus"); // NOI18N
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
         panelisi3.add(btnHapus);
 
         btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/peminjaman.png"))); // NOI18N
@@ -1449,16 +1454,41 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
         int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
-        if(baris>-1){
+        if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
-            for(RincianResepVerifikasi r:modelFarmasi.getAll()){
-                ResepDao.updateAturanPakaiFarmasi(r.getAturanPakai(),resep.getNoResep(),r.getKodeObat());
+            for (RincianResepVerifikasi r : modelFarmasi.getAll()) {
+                ResepDao.updateAturanPakaiFarmasi(r.getAturanPakai(), resep.getNoResep(), r.getKodeObat());
+                if(!Utils.isBlank(r.getRacikan())){
+                    ResepDao.updateAturanPakaiRacikan(r.getAturanPakai(), resep.getNoResep(), r.getKodeObat());
+                }
+                
             }
             setResepVerifikasi(resep.getNoRawat(), kdBangsal, resep.getNoResep(), resep.getJaminan());
-        
+
         }
-        
+
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+        int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+        if (baris > -1) {
+            int nguiknguik = JOptionPane.showConfirmDialog(null, "Apakah anda akan menghapus data validasi resep..?", "PERHATIAN", JOptionPane.YES_NO_OPTION);
+            if (nguiknguik == 0) {
+                DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
+                if (resep.getStatus().equals(Resep.STATUS_SUDAH_VERIFIKASI)) {
+                    boolean isHapus = ResepDao.deleteDataObatValidasiFarmasi(resep.getNoResep());
+                    if (isHapus) {
+                        ResepDao.updateValidasiAfterHapus(resep.getNoResep());
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Hanya data resep yang sudah divalidasi yang bisa dihapus!");
+                }
+
+            }
+
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
 
     private void clean() {
         racikanList = new LinkedList<>();

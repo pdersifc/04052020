@@ -360,6 +360,9 @@
                 <Property name="text" type="java.lang.String" value="Hapus"/>
                 <Property name="name" type="java.lang.String" value="btnHapus" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHapusActionPerformed"/>
+              </Events>
             </Component>
             <Component class="widget.Button" name="btnEdit">
               <Properties>
