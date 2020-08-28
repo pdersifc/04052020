@@ -195,7 +195,45 @@ public class Utils {
             } // end for i
         } // end if
 
+        try {            
+            String namafile = "./" + reportDirName + "/" + reportName;            
+            JRDataSource dataSource = new JRBeanCollectionDataSource(list);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(namafile, parameters, dataSource);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setTitle(judul);
+            Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+            jasperViewer.setSize(screen.width - 50, screen.height - 50);
+            jasperViewer.setModalExclusionType(Dialog.ModalExclusionType.TOOLKIT_EXCLUDE);
+            jasperViewer.setLocationRelativeTo(null);
+            jasperViewer.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Report Can't view because : " + e);
+            JOptionPane.showMessageDialog(null, "Report Can't view because : " + e);
+        }
+
+    }
+    
+    public static void printWithSub(String reportName, String reportDirName, String judul, Collection<?> list, Map parameters) {
+        Properties systemProp = System.getProperties();
+        String currentDir = systemProp.getProperty("user.dir");
+        File dir = new File(currentDir);
+        File fileRpt;
+        String fullPath = "";
+        if (dir.isDirectory()) {
+            String[] isiDir = dir.list();
+            for (String iDir : isiDir) {
+                fileRpt = new File(currentDir + File.separatorChar + iDir + File.separatorChar + reportDirName + File.separatorChar + reportName);
+                if (fileRpt.isFile()) { // Cek apakah file RptMaster.jrxml ada
+                    fullPath = fileRpt.toString();
+                    System.out.println("Found Report File at : " + fullPath);
+                } // end if
+            } // end for i
+        } // end if
+
         try {
+            String subReport = "./" + reportDirName + "/";
+            parameters.put("SUBREPORT_DIR", subReport);
             String namafile = "./" + reportDirName + "/" + reportName;            
             JRDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperPrint jasperPrint = JasperFillManager.fillReport(namafile, parameters, dataSource);

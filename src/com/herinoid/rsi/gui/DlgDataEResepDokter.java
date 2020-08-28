@@ -52,6 +52,7 @@ import com.herinoid.rsi.model.RegPeriksa;
 import com.herinoid.rsi.dao.RegPeriksaDao;
 import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
+import com.herinoid.rsi.model.NotaResep;
 import fungsi.akses;
 import fungsi.sekuel;
 import java.util.Collection;
@@ -695,6 +696,11 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         MnNotaObat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/PrinterSettings.png"))); // NOI18N
         MnNotaObat.setText("Cetak Nota Obat");
         MnNotaObat.setName("MnNotaObat"); // NOI18N
+        MnNotaObat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnNotaObatActionPerformed(evt);
+            }
+        });
         printPopup.add(MnNotaObat);
 
         panelResep.setName("panelResep"); // NOI18N
@@ -1249,8 +1255,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 } else {
                     JOptionPane.showMessageDialog(null, "Data sudah diverifikasi, anda tidak dapat memverifikasi ulang..");
                 }
-            }else{
-                JOptionPane.showMessageDialog(null, "Stok obat "+obatName+" tidak mencukupi, silahkan edit lagi..");
+            } else {
+                JOptionPane.showMessageDialog(null, "Stok obat " + obatName + " tidak mencukupi, silahkan edit lagi..");
             }
 
         }
@@ -1564,7 +1570,125 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_mnEditAturanPakeActionPerformed
 
-    private void deleteObatSatuan(){
+    private void MnNotaObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnNotaObatActionPerformed
+        // TODO add your handling code here:
+        int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+        if (baris > -1) {
+            DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
+            double globalTot = 0;
+            RegPeriksa reg = RegPeriksaDao.get(resep.getNoRawat());
+            List<ObatResep> farmasis = PemberianObatDetailDao.getObatValidasiByNoResep(resep.getNoResep(), kdBangsal, resep.getJaminan(), reg.getKdPj());
+            List<NotaResep> notas = new LinkedList<>();
+            NotaResep nota = new NotaResep();
+            nota.setNoresep(resep.getNoResep());
+            nota.setDokter(resep.getDokter());
+            nota.setPasien(resep.getPasien());
+            nota.setTglResep(resep.getTglResep());
+
+            List<RincianResepVerifikasi> rincians = new LinkedList<>();
+
+            if (farmasis.size() > 0) {
+                List<ObatResep> farmasiNonRaciks = new LinkedList<>();
+                List<ObatResep> farmasiRaciks = new LinkedList<>();
+                for (ObatResep f : farmasis) {
+                    if (Utils.isBlank(f.getKodeRacikan())) {
+                        if (!farmasiNonRaciks.contains(f)) {
+                            farmasiNonRaciks.add(f);
+                        }
+                    } else {
+                        if (!farmasiRaciks.contains(f)) {
+                            farmasiRaciks.add(f);
+                        }
+                    }
+                }
+
+                if (farmasiNonRaciks.size() > 0) {
+                    farmasiNonRaciks.stream().map((f) -> {
+                        RincianResepVerifikasi r = new RincianResepVerifikasi();
+                        r.setKodeObat(f.getKodeObat());
+                        r.setNamaObat(f.getNamaObat());
+                        double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
+                        r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
+                        r.setAturanPakai(f.getAturanPakai());
+                        return r;
+                    }).forEachOrdered((r) -> {
+                        rincians.add(r);
+                    });
+
+                }
+
+                if (farmasiRaciks.size() > 0) {
+                    Collections.sort(farmasiRaciks, Comparator.comparing(ObatResep::getKodeRacikan));
+                    String rck = null;
+                    int urut = 0;
+                    for (ObatResep f : farmasiRaciks) {
+                        urut++;
+                        if (Utils.isBlank(rck)) {
+                            rck = f.getRacikan();
+                            RincianResepVerifikasi r = new RincianResepVerifikasi();
+                            ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(resep.getNoResep(), f.getKodeRacikan());
+                            r.setKodeObat(f.getKodeRacikan());
+                            r.setRacikan(f.getRacikan());
+                            r.setNamaObat(obatRck.getMetodeRacik());
+                            r.setRincian(String.valueOf(obatRck.getJmlRacik()));
+                            r.setAturanPakai(obatRck.getAturanPakai());
+                            r.setUrutan(urut);
+                            rincians.add(r);
+                        } else {
+                            if (!rck.equals(f.getRacikan())) {
+                                RincianResepVerifikasi r = new RincianResepVerifikasi();
+                                ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(resep.getNoResep(), f.getKodeRacikan());
+                                r.setKodeObat(f.getKodeRacikan());
+                                r.setNamaObat(obatRck.getMetodeRacik());
+                                r.setRacikan(f.getRacikan());
+                                r.setRincian(String.valueOf(obatRck.getJmlRacik()));
+                                r.setAturanPakai(obatRck.getAturanPakai());
+                                r.setUrutan(urut);
+                                rincians.add(r);
+                                rck = f.getRacikan();
+                            }
+                        }
+                        RincianResepVerifikasi r = new RincianResepVerifikasi();
+                        r.setKodeObat(f.getKodeObat());
+                        r.setNamaObat(f.getNamaObat());
+                        double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
+                        globalTot = globalTot + total;
+                        r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
+                        r.setAturanPakai(f.getAturanPakai());
+                        r.setUrutan(urut);
+                        rincians.add(r);
+                    }
+                    Collections.sort(rincians, Comparator
+                            .comparing(RincianResepVerifikasi::getUrutan));
+                }
+                RincianResepVerifikasi totalan = new RincianResepVerifikasi();
+                totalan.setNamaObat("Total Biaya Resep : ");
+                totalan.setRincian(Utils.format(globalTot, 0));
+                totalan.setAturanPakai("");
+                totalan.setRacikan(">>");
+                rincians.add(totalan);
+                nota.setDetails(rincians);
+                notas.add(nota);
+
+            }
+            Map<String, Object> param = new HashMap<>();
+            param.put("namars", akses.getnamars());
+            param.put("alamatrs", akses.getalamatrs());
+            param.put("kotars", akses.getkabupatenrs());
+            param.put("propinsirs", akses.getpropinsirs());
+            param.put("kontakrs", akses.getkontakrs());
+            param.put("emailrs", akses.getemailrs());
+            param.put("logo", Sequel.cariGambar("select logo from setting"));
+//             param.put("SUBREPORT_DIR", getRequest().getSession().getServletContext().getRealPath("/") + "/reports/");
+//            "E:\\Kontrak RSI Fatimah\\04052020\\report\\"
+            String reportName = "notaEresep.jasper";
+            String folder = "report";
+            Utils.printWithSub(reportName, folder, ".:: Nota EResep ::.", notas, param);
+        }
+
+    }//GEN-LAST:event_MnNotaObatActionPerformed
+
+    private void deleteObatSatuan() {
 //        int dialogButton = JOptionPane.YES_NO_OPTION;
 //        int wkwkw = JOptionPane.showConfirmDialog(null, "Serius mau menghapus obat ini..?", "Perhatian", dialogButton);
 //        if (wkwkw == 0) {
@@ -1579,8 +1703,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 //            }
 //        }
     }
-    
-    private void deleteObatValidasi(){
+
+    private void deleteObatValidasi() {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int baris = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
         if (baris > -1) {
@@ -1599,8 +1723,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Silahkan pilih baris obat yang mau di hapus..");
         }
     }
-    
-    
+
     private void clean() {
         racikanList = new LinkedList<>();
         model.removeAllElements();

@@ -119,6 +119,9 @@
             <Property name="text" type="java.lang.String" value="Cetak Nota Obat"/>
             <Property name="name" type="java.lang.String" value="MnNotaObat" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MnNotaObatActionPerformed"/>
+          </Events>
         </MenuItem>
       </SubComponents>
     </Container>
