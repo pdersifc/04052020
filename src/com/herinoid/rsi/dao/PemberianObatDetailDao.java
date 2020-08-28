@@ -6,6 +6,8 @@
 package com.herinoid.rsi.dao;
 
 import com.herinoid.rsi.model.Bangsal;
+import com.herinoid.rsi.model.MarginBpjs;
+import com.herinoid.rsi.model.MarginObatNonBpjs;
 import com.herinoid.rsi.model.Obat;
 import com.herinoid.rsi.model.ObatBhp;
 import com.herinoid.rsi.model.ObatResep;
@@ -33,7 +35,7 @@ public class PemberianObatDetailDao {
     private static PreparedStatement ps;
     private static ResultSet rs;
 
-    public static List<ObatResep> getPemberianObatDetailByNorawat(String norawat,String kdBangsal) {
+    public static List<ObatResep> getPemberianObatDetailByNorawat(String norawat, String kdBangsal) {
         List<ObatResep> obatList = new LinkedList<>();
         try {
             ps = koneksi.prepareStatement("SELECT d.no_rawat,o.kode_brng,o.nama_brng,d.jml,s.satuan,d.embalase,d.tuslah,g.stok,o.h_beli,d.biaya_obat,j.nama AS jenis,k.nama AS kategori "
@@ -79,7 +81,7 @@ public class PemberianObatDetailDao {
         return obatList;
     }
 
-    public static List<ObatResep> getResepByNoresep(String noResep, String depo) {
+    public static List<ObatResep> getResepByNoresep(String noResep, String depo,String jaminan,String kdJaminan) {
         List<ObatResep> obatDetailList = new LinkedList<>();
         PreparedStatement psttmn = null;
         ResultSet rset = null;
@@ -106,8 +108,17 @@ public class PemberianObatDetailDao {
                 obat.setEmbalase(rset.getDouble("embalase"));
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
-                double harga = rset.getDouble("ralan");                
-                obat.setHarga(harga);
+                double marginPersen = 0;
+                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                    MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
+                    marginPersen = marginBpjs.getRalan();
+                } else {
+                    MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                    marginPersen = marginNon.getMargin();
+                }
+                double margin = (obat.getHargaBeli() * marginPersen) / 100;
+                double hpp = margin + obat.getHargaBeli();
+                obat.setHarga(hpp);
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
@@ -128,9 +139,8 @@ public class PemberianObatDetailDao {
         }
         return obatDetailList;
     }
-    
-    
-    public static List<ObatResep> getObatValidasiByNoResep(String noResep, String depo) {
+
+    public static List<ObatResep> getObatValidasiByNoResep(String noResep, String depo,String jaminan,String kdJaminan) {
         List<ObatResep> obatDetailList = new LinkedList<>();
         PreparedStatement psttmn = null;
         ResultSet rset = null;
@@ -159,8 +169,17 @@ public class PemberianObatDetailDao {
                 obat.setStok(rset.getDouble("stok"));
                 obat.setKodeRacikan(rset.getString("kode_racikan"));
                 obat.setRacikan(rset.getString("nama_racikan"));
-                double harga = rset.getDouble("ralan");                
-                obat.setHarga(harga);
+                double marginPersen = 0;
+                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                    MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
+                    marginPersen = marginBpjs.getRalan();
+                } else {
+                    MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                    marginPersen = marginNon.getMargin();
+                }
+                double margin = (obat.getHargaBeli() * marginPersen) / 100;
+                double hpp = margin + obat.getHargaBeli();
+                obat.setHarga(hpp);
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
@@ -181,7 +200,7 @@ public class PemberianObatDetailDao {
         }
         return obatDetailList;
     }
-    
+
     public static ObatResep getObatRacikanByNoResep(String noResep, String kdRacikan) {
         ObatResep obat = new ObatResep();
         PreparedStatement psttmn = null;

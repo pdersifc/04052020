@@ -44,9 +44,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
 
     public void setData(Obat obat, List<ObatResep> racikans) {
         this.racikanList = racikans;
-        this.obatResep = new ObatResep(obat.getKodeObat(), obat.getNamaObat(), obat.getKapasitas(), obat.getSatuan(), obat.getKategori(), obat.getJenisObat(), obat.getStok());
+        this.obatResep = new ObatResep(obat.getKodeObat(), obat.getNamaObat(), obat.getKapasitas(), obat.getSatuan(), obat.getKategori(), obat.getJenisObat(), obat.getStok(),obat.getHargaBeli());
         lblObat.setText(obat.getNamaObat());
         obatResep.setEdit(false);
+        racikanList.sort((f1, f2) -> Integer.compare(f2.getUrutan(), f1.getUrutan()));
         if (racikanList.size() > 0) {
             cekRacikan.setSelected(true);
             cekRacikan.setText("Iya");

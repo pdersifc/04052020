@@ -15,6 +15,7 @@ public class RegPeriksa {
     private String noRawat;
     private Date tanggalRawat;
     private String jamRawat;
+    private String kdPj;
     
     public RegPeriksa(){}
 
@@ -58,6 +59,20 @@ public class RegPeriksa {
      */
     public void setJamRawat(String jamRawat) {
         this.jamRawat = jamRawat;
+    }
+
+    /**
+     * @return the kdPj
+     */
+    public String getKdPj() {
+        return kdPj;
+    }
+
+    /**
+     * @param kdPj the kdPj to set
+     */
+    public void setKdPj(String kdPj) {
+        this.kdPj = kdPj;
     }
     
     

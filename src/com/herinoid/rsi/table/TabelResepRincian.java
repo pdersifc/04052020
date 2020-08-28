@@ -4,7 +4,6 @@
  */
 package com.herinoid.rsi.table;
 
-
 import com.herinoid.rsi.model.RincianResepVerifikasi;
 import com.herinoid.rsi.model.RincianResepVerifikasi;
 import java.util.List;
@@ -63,6 +62,10 @@ public class TabelResepRincian extends AbstractTableModel {
     public synchronized RincianResepVerifikasi get(int index) {
         return row.get(index);
     }
+    
+    public synchronized List<RincianResepVerifikasi> getAll() {
+        return row;
+    }
 
     public synchronized boolean add(RincianResepVerifikasi e) {
         int index = row.size();
@@ -96,8 +99,27 @@ public class TabelResepRincian extends AbstractTableModel {
             return row.get(rowIndex).getRincian();
         } else if (columnIndex == 3) {
             return row.get(rowIndex).getAturanPakai();
-        } 
+        }
         return null;
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return true;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        if (rowIndex > -1) {
+            RincianResepVerifikasi i = row.get(rowIndex);
+            switch (columnIndex) {
+                case 3:
+                    i.setAturanPakai(aValue.toString());
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
 }

@@ -20,6 +20,7 @@ public class DataEResep {
     private String status;
     private String pasien;
     private String dokter;
+    private String kdDokter;
     private String jaminan;
     private String validasi;
     private String diterima;
@@ -232,6 +233,20 @@ public class DataEResep {
      */
     public void setNorm(String norm) {
         this.norm = norm;
+    }
+
+    /**
+     * @return the kdDokter
+     */
+    public String getKdDokter() {
+        return kdDokter;
+    }
+
+    /**
+     * @param kdDokter the kdDokter to set
+     */
+    public void setKdDokter(String kdDokter) {
+        this.kdDokter = kdDokter;
     }
     
     

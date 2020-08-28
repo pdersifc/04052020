@@ -54,33 +54,6 @@
         </MenuItem>
       </SubComponents>
     </Container>
-    <Component class="widget.TextBox" name="TNoRw">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tahoma" size="12" style="0"/>
-        </Property>
-        <Property name="highlighter" type="javax.swing.text.Highlighter" editor="org.netbeans.modules.form.ComponentChooserEditor">
-          <ComponentRef name="null"/>
-        </Property>
-        <Property name="name" type="java.lang.String" value="TNoRw" noResource="true"/>
-      </Properties>
-    </Component>
-    <Component class="widget.TextBox" name="KdPj">
-      <Properties>
-        <Property name="highlighter" type="javax.swing.text.Highlighter" editor="org.netbeans.modules.form.ComponentChooserEditor">
-          <ComponentRef name="null"/>
-        </Property>
-        <Property name="name" type="java.lang.String" value="KdPj" noResource="true"/>
-      </Properties>
-    </Component>
-    <Component class="widget.TextBox" name="kelas">
-      <Properties>
-        <Property name="highlighter" type="javax.swing.text.Highlighter" editor="org.netbeans.modules.form.ComponentChooserEditor">
-          <ComponentRef name="null"/>
-        </Property>
-        <Property name="name" type="java.lang.String" value="kelas" noResource="true"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.ButtonGroup" name="perawatanGrup">
     </Component>
     <Container class="javax.swing.JPopupMenu" name="printPopup">
@@ -202,8 +175,14 @@
                         <Column editable="true" title="Title 4" type="java.lang.Object"/>
                       </Table>
                     </Property>
+                    <Property name="componentPopupMenu" type="javax.swing.JPopupMenu" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                      <ComponentRef name="PopupEditorFarmasi"/>
+                    </Property>
                     <Property name="name" type="java.lang.String" value="tblFarmasi" noResource="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblFarmasiMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -245,6 +224,35 @@
             </Container>
           </SubComponents>
         </Container>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPopupMenu" name="PopupEditorFarmasi">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="PopupEditorFarmasi" noResource="true"/>
+      </Properties>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="mnAturanPakai">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="0"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/picture/EDIT2.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Edit Aturan Pakai"/>
+            <Property name="name" type="java.lang.String" value="mnAturanPakai" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnAturanPakaiActionPerformed"/>
+          </Events>
+        </MenuItem>
       </SubComponents>
     </Container>
   </NonVisualComponents>
@@ -338,6 +346,33 @@
                 </Property>
               </Properties>
             </Component>
+            <Component class="widget.Label" name="label2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="  "/>
+                <Property name="name" type="java.lang.String" value="label2" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="widget.Button" name="btnHapus">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/picture/Delete.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Hapus"/>
+                <Property name="name" type="java.lang.String" value="btnHapus" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="widget.Button" name="btnEdit">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/picture/peminjaman.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Edit"/>
+                <Property name="name" type="java.lang.String" value="btnEdit" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditActionPerformed"/>
+              </Events>
+            </Component>
             <Component class="widget.Button" name="btnSimpan">
               <Properties>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -352,12 +387,6 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSimpanActionPerformed"/>
               </Events>
-            </Component>
-            <Component class="widget.Label" name="label2">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="  "/>
-                <Property name="name" type="java.lang.String" value="label2" noResource="true"/>
-              </Properties>
             </Component>
             <Component class="widget.Button" name="BtnKeluar">
               <Properties>
@@ -425,7 +454,7 @@
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="1">
-                    <StringItem index="0" value="27-08-2020"/>
+                    <StringItem index="0" value="28-08-2020"/>
                   </StringArray>
                 </Property>
                 <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -542,7 +571,7 @@
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="1">
-                    <StringItem index="0" value="27-08-2020"/>
+                    <StringItem index="0" value="28-08-2020"/>
                   </StringArray>
                 </Property>
                 <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>

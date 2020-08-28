@@ -14,6 +14,9 @@ import com.herinoid.rsi.model.Resep;
 import com.herinoid.rsi.model.RincianResepVerifikasi;
 import com.herinoid.rsi.util.Konstan;
 import com.herinoid.rsi.util.NumberUtils;
+import com.herinoid.rsi.dao.MarginDao;
+import com.herinoid.rsi.model.MarginBpjs;
+import com.herinoid.rsi.model.MarginObatNonBpjs;
 import static com.herinoid.rsi.util.NumberUtils.DATE_FORMAT_NUMBERING;
 import com.herinoid.rsi.util.Utils;
 import fungsi.koneksiDB;
@@ -348,7 +351,7 @@ public class ResepDao {
         List<DataEResep> obatList = new LinkedList<>();
         try {
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
-                    + "e.`status` FROM e_resep_rsifc e "
+                    + "e.`status`,r.`kd_pj` FROM e_resep_rsifc e "
                     + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
                     + "INNER JOIN poliklinik p ON p.`kd_poli`=r.`kd_poli` "
                     + "INNER JOIN penjab j ON j.`kd_pj`=r.`kd_pj` "
@@ -373,7 +376,7 @@ public class ResepDao {
                 obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
-                List<ObatResep> obatDetails = getObatResepDetail(obat.getNoResep(), depo, tarif);
+                List<ObatResep> obatDetails = getObatResepDetail(obat.getNoResep(), depo, obat.getJaminan(),rs.getString("kd_pj"));
                 Collections.sort(obatDetails, Comparator
                         .comparing(ObatResep::getNamaObat)
                         .thenComparing(ObatResep::getNamaObat));
@@ -400,7 +403,7 @@ public class ResepDao {
         return obatList;
     }
 
-    public static List<ObatResep> getObatResepDetail(String noResep, String depo, String tarif) {
+    public static List<ObatResep> getObatResepDetail(String noResep, String depo, String jaminan,String kdJaminan) {
         List<ObatResep> obatDetailList = new LinkedList<>();
         PreparedStatement psttmn = null;
         ResultSet rset = null;
@@ -428,23 +431,18 @@ public class ResepDao {
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
                 obat.setParent(false);
-                double harga = rset.getDouble("ralan");
-                if (tarif.equals(Konstan.PASIEN_KARYAWAN)) {
-                    harga = rset.getDouble("karyawan");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS_VVIP)) {
-                    harga = rset.getDouble("vvip");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS_VIP)) {
-                    harga = rset.getDouble("vip");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS1)) {
-                    harga = rset.getDouble("kelas1");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS2)) {
-                    harga = rset.getDouble("kelas2");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS3)) {
-                    harga = rset.getDouble("kelas3");
-                } else if (tarif.equals(Konstan.PASIEN_BELILUAR)) {
-                    harga = rset.getDouble("beliluar");
+                
+                double marginPersen = 0;
+                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                    MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
+                    marginPersen = marginBpjs.getRalan();
+                } else {
+                    MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                    marginPersen = marginNon.getMargin();
                 }
-                obat.setHarga(harga);
+                double margin = (obat.getHargaBeli() * marginPersen) / 100;
+                double hpp = margin + obat.getHargaBeli();
+                obat.setHarga(hpp);
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
@@ -686,7 +684,7 @@ public class ResepDao {
         List<DataEResep> obatList = new LinkedList<>();
         try {
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
-                    + "e.`status` FROM e_resep_racikan_rsifc e "
+                    + "e.`status`,r.`kd_pj` FROM e_resep_racikan_rsifc e "
                     + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
                     + "INNER JOIN poliklinik p ON p.`kd_poli`=r.`kd_poli` "
                     + "INNER JOIN penjab j ON j.`kd_pj`=r.`kd_pj` "
@@ -711,7 +709,7 @@ public class ResepDao {
                 obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
-                List<ObatResep> obatDetails = getObatResepRacikanDetail(obat.getNoResep(), depo, tarif);
+                List<ObatResep> obatDetails = getObatResepRacikanDetail(obat.getNoResep(), depo, obat.getJaminan(),rs.getString("kd_pj"));
                 Collections.sort(obatDetails, Comparator
                         .comparing(ObatResep::getKodeRacikan)
                         .thenComparing(ObatResep::getNamaObat));
@@ -798,7 +796,7 @@ public class ResepDao {
         return isExist;
     }
 
-    public static List<ObatResep> getObatResepRacikanDetail(String noResep, String depo, String tarif) {
+    public static List<ObatResep> getObatResepRacikanDetail(String noResep, String depo, String jaminan,String kdJaminan) {
         List<ObatResep> obatDetailList = new LinkedList<>();
         PreparedStatement psttmn = null;
         ResultSet rset = null;
@@ -830,23 +828,34 @@ public class ResepDao {
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
                 obat.setParent(false);
-                double harga = rset.getDouble("ralan");
-                if (tarif.equals(Konstan.PASIEN_KARYAWAN)) {
-                    harga = rset.getDouble("karyawan");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS_VVIP)) {
-                    harga = rset.getDouble("vvip");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS_VIP)) {
-                    harga = rset.getDouble("vip");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS1)) {
-                    harga = rset.getDouble("kelas1");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS2)) {
-                    harga = rset.getDouble("kelas2");
-                } else if (tarif.equals(Konstan.PASIEN_KELAS3)) {
-                    harga = rset.getDouble("kelas3");
-                } else if (tarif.equals(Konstan.PASIEN_BELILUAR)) {
-                    harga = rset.getDouble("beliluar");
+                double marginPersen = 0;
+                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                    MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
+                    marginPersen = marginBpjs.getRalan();
+                } else {
+                    MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                    marginPersen = marginNon.getMargin();
                 }
-                obat.setHarga(harga);
+                double margin = (obat.getHargaBeli() * marginPersen) / 100;
+                double hpp = margin + obat.getHargaBeli();
+                obat.setHarga(hpp);
+//                double harga = rset.getDouble("ralan");
+//                if (tarif.equals(Konstan.PASIEN_KARYAWAN)) {
+//                    harga = rset.getDouble("karyawan");
+//                } else if (tarif.equals(Konstan.PASIEN_KELAS_VVIP)) {
+//                    harga = rset.getDouble("vvip");
+//                } else if (tarif.equals(Konstan.PASIEN_KELAS_VIP)) {
+//                    harga = rset.getDouble("vip");
+//                } else if (tarif.equals(Konstan.PASIEN_KELAS1)) {
+//                    harga = rset.getDouble("kelas1");
+//                } else if (tarif.equals(Konstan.PASIEN_KELAS2)) {
+//                    harga = rset.getDouble("kelas2");
+//                } else if (tarif.equals(Konstan.PASIEN_KELAS3)) {
+//                    harga = rset.getDouble("kelas3");
+//                } else if (tarif.equals(Konstan.PASIEN_BELILUAR)) {
+//                    harga = rset.getDouble("beliluar");
+//                }
+//                obat.setHarga(harga);
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
@@ -1084,6 +1093,144 @@ public class ResepDao {
             }
         }
         return obatList;
+    }
+
+    public static List<DataEResep> getResepByDokterAndPasien(String kodeDokter, String norm, String depo) {
+        List<DataEResep> obatList = new LinkedList<>();
+        try {
+            ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
+                    + "e.`status`,r.`kd_pj` FROM e_resep_rsifc e "
+                    + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
+                    + "INNER JOIN poliklinik p ON p.`kd_poli`=r.`kd_poli` "
+                    + "INNER JOIN penjab j ON j.`kd_pj`=r.`kd_pj` "
+                    + "INNER JOIN dokter d ON e.`kd_dokter_peresep`=d.`kd_dokter` "
+                    + "INNER JOIN pasien s ON r.`no_rkm_medis` =s.`no_rkm_medis` "
+                    + "WHERE e.kd_dokter_peresep = ? AND r.no_rkm_medis = ? ORDER BY e.`tgl_resep`");
+            ps.setString(1, kodeDokter);
+            ps.setString(2, norm);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                DataEResep obat = new DataEResep();
+                obat.setNoResep(rs.getString("no_resep"));
+                obat.setTglResep(Utils.formatDateSql(rs.getDate("tgl_resep")) + " " + rs.getString("jam_resep"));
+                obat.setPoli(rs.getString("nm_poli"));
+                obat.setDokter(rs.getString("nm_dokter"));
+                obat.setJaminan(rs.getString("png_jawab"));
+                obat.setNorm(rs.getString("no_rkm_medis"));
+                obat.setPasien(rs.getString("no_rawat") + " :: " + rs.getString("no_rkm_medis") + " :: " + rs.getString("nm_pasien"));
+                obat.setValidasi(rs.getString("validasi"));
+                obat.setDiterima(rs.getString("sampai_pasien"));
+                obat.setPacking(rs.getString("packing"));
+                obat.setStatus(rs.getString("status"));
+                obat.setNoRawat(rs.getString("no_rawat"));
+                List<ObatResep> obatDetails = getObatResepDetail(obat.getNoResep(), depo, obat.getJaminan(),rs.getString("kd_pj"));
+                Collections.sort(obatDetails, Comparator
+                        .comparing(ObatResep::getNamaObat)
+                        .thenComparing(ObatResep::getNamaObat));
+                obat.setObatDetails(obatDetails);
+
+                obatList.add(obat);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obatList;
+    }
+
+    public static List<DataEResep> getResepRacikanByDokterAndPasien(String kdDokter, String norm, String depo) {
+        List<DataEResep> obatList = new LinkedList<>();
+        try {
+            ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
+                    + "e.`status`,r.`kd_pj` FROM e_resep_racikan_rsifc e "
+                    + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
+                    + "INNER JOIN poliklinik p ON p.`kd_poli`=r.`kd_poli` "
+                    + "INNER JOIN penjab j ON j.`kd_pj`=r.`kd_pj` "
+                    + "INNER JOIN dokter d ON e.`kd_dokter_peresep`=d.`kd_dokter` "
+                    + "INNER JOIN pasien s ON r.`no_rkm_medis` =s.`no_rkm_medis` "
+                    + "WHERE e.kd_dokter_peresep = ? AND r.no_rkm_medis = ? ORDER BY e.`tgl_resep`");
+            ps.setString(1, kdDokter);
+            ps.setString(2, norm);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                DataEResep obat = new DataEResep();
+                obat.setNoResep(rs.getString("no_resep"));
+                obat.setTglResep(Utils.formatDateSql(rs.getDate("tgl_resep")) + " " + rs.getString("jam_resep"));
+                obat.setPoli(rs.getString("nm_poli"));
+                obat.setDokter(rs.getString("nm_dokter"));
+                obat.setJaminan(rs.getString("png_jawab"));
+                obat.setNorm(rs.getString("no_rkm_medis"));
+                obat.setPasien(rs.getString("no_rawat") + " :: " + rs.getString("no_rkm_medis") + " :: " + rs.getString("nm_pasien"));
+                obat.setValidasi(rs.getString("validasi"));
+                obat.setDiterima(rs.getString("sampai_pasien"));
+                obat.setPacking(rs.getString("packing"));
+                obat.setStatus(rs.getString("status"));
+                obat.setNoRawat(rs.getString("no_rawat"));
+                List<ObatResep> obatDetails = getObatResepRacikanDetail(obat.getNoResep(), depo, obat.getJaminan(),rs.getString("kd_pj"));
+                Collections.sort(obatDetails, Comparator
+                        .comparing(ObatResep::getKodeRacikan)
+                        .thenComparing(ObatResep::getNamaObat));
+                obat.setObatDetails(obatDetails);
+
+                obatList.add(obat);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obatList;
+    }
+    
+    public static boolean updateAturanPakaiFarmasi(String aturanPakai,String noresep,String kodeObat) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("update obat_validasi_eresep_rsifc set aturan_pakai = ? where no_resep = ? and kode_brng = ?");
+            try {
+                pst.setString(1, aturanPakai);
+                pst.setString(2, noresep);
+                pst.setString(3, kodeObat);
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                sukses = false;
+                e.printStackTrace();
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
     }
 
 }

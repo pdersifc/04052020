@@ -39,7 +39,7 @@ public class ObatResep {
     
     
     public ObatResep(){}
-    public ObatResep(String kodeObat,String namaObat,double kapasitas,String satuan,String kategori,String jenisObat,double stok){
+    public ObatResep(String kodeObat,String namaObat,double kapasitas,String satuan,String kategori,String jenisObat,double stok,double hargaBeli){
         this.kodeObat = kodeObat;
         this.namaObat = namaObat;
         this.kapasitas = kapasitas;
@@ -47,6 +47,7 @@ public class ObatResep {
         this.kategori = kategori;
         this.jenisObat = jenisObat;
         this.stok = stok;
+        this.hargaBeli = hargaBeli;
     }
 
     /**

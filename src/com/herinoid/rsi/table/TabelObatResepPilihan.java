@@ -39,7 +39,7 @@ public class TabelObatResepPilihan extends AbstractTableModel {
         row = new Vector<ObatResep>();
     }
 
-    public synchronized void add(Set<ObatResep> list) {
+    public synchronized void add(List<ObatResep> list) {
         for (ObatResep o : list) {
             row.add(o);
         }

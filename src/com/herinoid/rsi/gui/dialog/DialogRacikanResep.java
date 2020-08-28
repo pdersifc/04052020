@@ -231,6 +231,7 @@ public class DialogRacikanResep extends javax.swing.JDialog {
         obatResep.setTuslah(0);
         obatResep.setParent(true);
         obatResep.setFlag(true);
+        obatResep.setUrutan(countCode);
         clean();
         dispose();
 

@@ -12,6 +12,8 @@ import com.herinoid.rsi.model.Obat;
 import com.herinoid.rsi.model.ObatResep;
 import com.herinoid.rsi.model.PemeriksaanRalan;
 import com.herinoid.rsi.model.Resep;
+import com.herinoid.rsi.model.RegPeriksa;
+import com.herinoid.rsi.dao.RegPeriksaDao;
 import com.herinoid.rsi.table.TabelCariObatResep;
 import com.herinoid.rsi.table.TabelObatResepPilihan;
 import com.herinoid.rsi.util.Konstan;
@@ -36,7 +38,13 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import kepegawaian.DlgCariDokter;
 import com.herinoid.rsi.dao.BangsalDao;
+import com.herinoid.rsi.dao.MarginDao;
+import com.herinoid.rsi.gui.dialog.DlgHistoriResepPasien;
 import com.herinoid.rsi.model.Bangsal;
+import com.herinoid.rsi.model.MarginBpjs;
+import com.herinoid.rsi.model.MarginObatNonBpjs;
+import com.herinoid.rsi.util.Utils;
+import java.util.Iterator;
 
 /**
  *
@@ -48,6 +56,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
     private TabelObatResepPilihan modelPilihan;
     private TableRowSorter<TableModel> rowSorter;
     private DialogAddQtyResepDokter addQty = new DialogAddQtyResepDokter(null, false);
+    private DlgHistoriResepPasien cekHistory = new DlgHistoriResepPasien(null, false);
     private ObatResep obatFromDialog;
     private ObatResep obatRacikan;
     private List<ObatResep> racikanList;
@@ -55,6 +64,8 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
     private DlgCariDokter dokter = new DlgCariDokter(null, false);
     private validasi Valid = new validasi();
     private String jenisPasien;
+    private String depoKode, kdJaminan, jaminan;
+    private double total;
 
     /**
      * Creates new form DlgPenyakit
@@ -119,7 +130,21 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                         if (obatFromDialog.isEdit()) {
                             modelPilihan.remove(tblPilihan.getSelectedRow());
                         }
-                        modelPilihan.add(obatFromDialog);
+                        
+                        double marginPersen = 0;
+                        if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                            MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obatFromDialog.getKodeObat());
+                            marginPersen = marginBpjs.getRalan();
+                        } else {
+                            MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                            marginPersen = marginNon.getMargin();
+                        }
+                        double margin = (obatFromDialog.getHargaBeli() * marginPersen) / 100;
+                        double hpp = margin + obatFromDialog.getHargaBeli();
+                        total = total + (hpp * obatFromDialog.getJumlah());
+                        lblTotal.setText(Utils.format(total, 2));
+                       
+                       removeDuplicate(obatFromDialog);
                         tblPilihan.setModel(modelPilihan);
                     }
                 }
@@ -216,10 +241,67 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
             }
         });
         jam();
+        
+        cekHistory.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                List<ObatResep>  obats = cekHistory.getData();
+                if (obats != null && obats.size()>0) {
+                    modelPilihan.add(obats);
+//                    if (obatFromDialog.isFlag()) {
+//                        if (obatFromDialog.isEdit()) {
+//                            
+//                        }
+//                        
+//                        double marginPersen = 0;
+//                        if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+//                            MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obatFromDialog.getKodeObat());
+//                            marginPersen = marginBpjs.getRalan();
+//                        } else {
+//                            MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+//                            marginPersen = marginNon.getMargin();
+//                        }
+//                        double margin = (obatFromDialog.getHargaBeli() * marginPersen) / 100;
+//                        double hpp = margin + obatFromDialog.getHargaBeli();
+//                        total = total + (hpp * obatFromDialog.getJumlah());
+//                        lblTotal.setText(Utils.format(total, 2));
+//                       
+//                       removeDuplicate(obatFromDialog);
+                        tblPilihan.setModel(modelPilihan);
+                    
+                }
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
+        });
     }
 
     public void setData(String kdDokter, String nmDokter, String kodeDepo, String kategoriObat, String jenisPasien, PemeriksaanRalan periksa) {
         Bangsal bangsal = BangsalDao.get(kodeDepo);
+        this.depoKode = kodeDepo;
         lblDepo.setText(bangsal.getNama());
         model.removeAllElements();
         if (kategoriObat.equals("K01")) {
@@ -240,14 +322,28 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lbAlergi.setText(periksa.getAlergi());
     }
 
-    public void setPasien(String norawat, String norm, String nmPasien, String jaminan, String jenisPasien,String poli) {
+    public void setPasien(String norawat, String norm, String nmPasien, String jaminan, String jenisPasien, String poli) {
+        RegPeriksa reg = RegPeriksaDao.get(norawat);
         LblNoRawat.setText(norawat);
         LblNoRM.setText(norm);
         LblNamaPasien.setText(nmPasien);
         lblJaminan.setText(jaminan);
-        
+        this.jaminan = jaminan;
+        this.kdJaminan = reg.getKdPj();
         lblPoli.setText(poli);
         this.jenisPasien = jenisPasien;
+    }
+    
+    private void removeDuplicate(ObatResep obatResep){
+        for (Iterator<ObatResep> i = modelPilihan.getAll().iterator(); i.hasNext(); ) {
+            ObatResep obat = i.next();
+            if (obat.getKodeObat().equals(obatResep.getKodeObat())) {
+                int index = modelPilihan.getAll().indexOf(obat);
+                modelPilihan.remove(index);
+                break;
+            }
+        }
+        modelPilihan.add(obatResep);
     }
 
     private void jam() {
@@ -319,15 +415,13 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         ppBersihkan = new javax.swing.JMenuItem();
         ppStok = new javax.swing.JMenuItem();
         ppStok1 = new javax.swing.JMenuItem();
-        TNoRw = new widget.TextBox();
-        KdPj = new widget.TextBox();
-        kelas = new widget.TextBox();
         popObatPilihan = new javax.swing.JPopupMenu();
         mnEditObat = new javax.swing.JMenuItem();
         mnHapusItem = new javax.swing.JMenuItem();
         internalFrame1 = new widget.InternalFrame();
         panelisi3 = new widget.panelisi();
         BtnTambah = new widget.Button();
+        btnHistory = new widget.Button();
         label13 = new widget.Label();
         btnSimpan = new widget.Button();
         BtnKeluar = new widget.Button();
@@ -362,6 +456,8 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lbSuhuBadan = new widget.Label();
         jLabel20 = new widget.Label();
         lblPoli = new widget.Label();
+        jLabel21 = new widget.Label();
+        lblTotal = new widget.Label();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         scrollPane1 = new widget.ScrollPane();
@@ -423,26 +519,6 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         });
         Popup.add(ppStok1);
 
-        TNoRw.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        TNoRw.setHighlighter(null);
-        TNoRw.setName("TNoRw"); // NOI18N
-
-        KdPj.setHighlighter(null);
-        KdPj.setName("KdPj"); // NOI18N
-        KdPj.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                KdPjKeyPressed(evt);
-            }
-        });
-
-        kelas.setHighlighter(null);
-        kelas.setName("kelas"); // NOI18N
-        kelas.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                kelasKeyPressed(evt);
-            }
-        });
-
         popObatPilihan.setName("popObatPilihan"); // NOI18N
 
         mnEditObat.setBackground(new java.awt.Color(255, 255, 255));
@@ -500,6 +576,16 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         });
         panelisi3.add(BtnTambah);
 
+        btnHistory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/History.png"))); // NOI18N
+        btnHistory.setText("History Resep");
+        btnHistory.setName("btnHistory"); // NOI18N
+        btnHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistoryActionPerformed(evt);
+            }
+        });
+        panelisi3.add(btnHistory);
+
         label13.setName("label13"); // NOI18N
         label13.setPreferredSize(new java.awt.Dimension(500, 23));
         panelisi3.add(label13);
@@ -544,49 +630,29 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(10, 40, 68, 23);
 
         cmbTanggal.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-08-2020" }));
+        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "28-08-2020" }));
         cmbTanggal.setDisplayFormat("dd-MM-yyyy");
         cmbTanggal.setName("cmbTanggal"); // NOI18N
         cmbTanggal.setOpaque(false);
         cmbTanggal.setPreferredSize(new java.awt.Dimension(100, 23));
-        cmbTanggal.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                cmbTanggalKeyPressed(evt);
-            }
-        });
         FormInput.add(cmbTanggal);
         cmbTanggal.setBounds(80, 40, 90, 23);
 
         cmbJam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
         cmbJam.setName("cmbJam"); // NOI18N
         cmbJam.setPreferredSize(new java.awt.Dimension(50, 23));
-        cmbJam.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                cmbJamKeyPressed(evt);
-            }
-        });
         FormInput.add(cmbJam);
         cmbJam.setBounds(180, 40, 62, 23);
 
         cmbMnt.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
         cmbMnt.setName("cmbMnt"); // NOI18N
         cmbMnt.setPreferredSize(new java.awt.Dimension(50, 23));
-        cmbMnt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                cmbMntKeyPressed(evt);
-            }
-        });
         FormInput.add(cmbMnt);
         cmbMnt.setBounds(250, 40, 62, 23);
 
         cmbDtk.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
         cmbDtk.setName("cmbDtk"); // NOI18N
         cmbDtk.setPreferredSize(new java.awt.Dimension(50, 23));
-        cmbDtk.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                cmbDtkKeyPressed(evt);
-            }
-        });
         FormInput.add(cmbDtk);
         cmbDtk.setBounds(320, 40, 62, 23);
 
@@ -601,11 +667,6 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         txtKodeDokter.setForeground(new java.awt.Color(0, 0, 0));
         txtKodeDokter.setName("txtKodeDokter"); // NOI18N
         txtKodeDokter.setPreferredSize(new java.awt.Dimension(80, 23));
-        txtKodeDokter.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtKodeDokterKeyPressed(evt);
-            }
-        });
         FormInput.add(txtKodeDokter);
         txtKodeDokter.setBounds(80, 70, 100, 23);
 
@@ -677,7 +738,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lblJaminan.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblJaminan.setName("lblJaminan"); // NOI18N
         FormInput.add(lblJaminan);
-        lblJaminan.setBounds(510, 70, 300, 20);
+        lblJaminan.setBounds(510, 60, 290, 20);
 
         ChkJln.setBorder(null);
         ChkJln.setSelected(true);
@@ -779,7 +840,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel20.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel20.setName("jLabel20"); // NOI18N
         FormInput.add(jLabel20);
-        jLabel20.setBounds(430, 70, 70, 23);
+        jLabel20.setBounds(430, 60, 60, 23);
 
         lblPoli.setForeground(new java.awt.Color(0, 0, 0));
         lblPoli.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -788,6 +849,21 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lblPoli.setName("lblPoli"); // NOI18N
         FormInput.add(lblPoli);
         lblPoli.setBounds(540, 40, 270, 20);
+
+        jLabel21.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel21.setText("Total  :");
+        jLabel21.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel21.setName("jLabel21"); // NOI18N
+        FormInput.add(jLabel21);
+        jLabel21.setBounds(430, 80, 60, 23);
+
+        lblTotal.setForeground(new java.awt.Color(0, 0, 0));
+        lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblTotal.setText("0.0");
+        lblTotal.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTotal.setName("lblTotal"); // NOI18N
+        FormInput.add(lblTotal);
+        lblTotal.setBounds(510, 80, 290, 20);
 
         internalFrame1.add(FormInput, java.awt.BorderLayout.PAGE_START);
 
@@ -907,42 +983,14 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
 }//GEN-LAST:event_ppBersihkanActionPerformed
 
-private void cmbTanggalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbTanggalKeyPressed
-
-}//GEN-LAST:event_cmbTanggalKeyPressed
-
-private void cmbJamKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbJamKeyPressed
-
-}//GEN-LAST:event_cmbJamKeyPressed
-
-private void cmbMntKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbMntKeyPressed
-
-}//GEN-LAST:event_cmbMntKeyPressed
-
-private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbDtkKeyPressed
-
-}//GEN-LAST:event_cmbDtkKeyPressed
-
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
 
         label13.setPreferredSize(new Dimension(65, 23));
     }//GEN-LAST:event_formWindowActivated
 
-    private void KdPjKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KdPjKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_KdPjKeyPressed
-
-    private void kelasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_kelasKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_kelasKeyPressed
-
     private void ppStokActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ppStokActionPerformed
 
     }//GEN-LAST:event_ppStokActionPerformed
-
-    private void txtKodeDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKodeDokterKeyPressed
-
-    }//GEN-LAST:event_txtKodeDokterKeyPressed
 
     private void BtnPilihDokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPilihDokterActionPerformed
         dokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
@@ -958,8 +1006,16 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
     private void tblObatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblObatMouseClicked
         // TODO add your handling code here:
         int row = tblObat.getSelectedRow();
-        addQty.setData(model.get(tblObat.convertRowIndexToModel(row)), racikanList);
-        addQty.setVisible(true);
+        if (row > -1) {
+            Obat obtTbl = model.get(tblObat.convertRowIndexToModel(row));
+            Obat obat = ObatDao.getObat(depoKode, obtTbl.getKodeObat());
+            if (obat != null) {                
+                obtTbl.setHargaBeli(obat.getHargaBeli());
+                addQty.setData(obtTbl, racikanList);
+                addQty.setVisible(true);
+            }
+        }
+
     }//GEN-LAST:event_tblObatMouseClicked
 
     private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChkJlnActionPerformed
@@ -1024,8 +1080,22 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
         int wkwkw = JOptionPane.showConfirmDialog(null, "Serius mau menghapus obat ini..?", "Perhatian", dialogButton);
         if (wkwkw == 0) {
             int baris = tblPilihan.convertRowIndexToModel(tblPilihan.getSelectedRow());
+
             if (baris > -1) {
+                ObatResep oresep = modelPilihan.get(tblPilihan.convertRowIndexToModel(baris));
+                double marginPersen = 0;
+                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                    MarginBpjs marginBpjs = MarginDao.getMarginBpjs(oresep.getKodeObat());
+                    marginPersen = marginBpjs.getRalan();
+                } else {
+                    MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                    marginPersen = marginNon.getMargin();
+                }
+                double margin = (oresep.getHargaBeli() * marginPersen) / 100;
+                double hpp = margin + oresep.getHargaBeli();
+                total = total - (hpp * oresep.getJumlah());
                 modelPilihan.remove(baris);
+                lblTotal.setText(Utils.format(total, 2));
             } else {
                 JOptionPane.showMessageDialog(null, "Silahkan pilih baris obat yang mau di hapus..");
             }
@@ -1042,6 +1112,14 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
 
     }//GEN-LAST:event_mnEditObatActionPerformed
 
+    private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
+        // TODO add your handling code here:
+        cekHistory.setData(txtKodeDokter.getText(), LblNoRM.getText(), depoKode);
+        cekHistory.setSize(internalFrame1.getWidth() - 30, internalFrame1.getHeight() - 30);
+        cekHistory.setLocationRelativeTo(internalFrame1);
+        cekHistory.setVisible(true);
+    }//GEN-LAST:event_btnHistoryActionPerformed
+
     private void clean() {
         racikanList = new LinkedList<>();
         model.removeAllElements();
@@ -1051,6 +1129,8 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
         LblNoRM.setText(null);
         LblNamaPasien.setText(null);
         lblJaminan.setText(null);
+        total = 0;
+        lblTotal.setText(null);
     }
 
     /**
@@ -1075,12 +1155,11 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
     private widget.Button BtnTambah;
     private widget.CekBox ChkJln;
     private widget.PanelBiasa FormInput;
-    private widget.TextBox KdPj;
     private widget.TextBox LblNamaPasien;
     private widget.TextBox LblNoRM;
     private widget.TextBox LblNoRawat;
     private javax.swing.JPopupMenu Popup;
-    private widget.TextBox TNoRw;
+    private widget.Button btnHistory;
     private widget.Button btnSimpan;
     private widget.ComboBox cmbDtk;
     private widget.ComboBox cmbJam;
@@ -1097,10 +1176,10 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
     private widget.Label jLabel18;
     private widget.Label jLabel19;
     private widget.Label jLabel20;
+    private widget.Label jLabel21;
     private widget.Label jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private widget.TextBox kelas;
     private widget.Label label1;
     private widget.Label label13;
     private widget.Label label2;
@@ -1113,6 +1192,7 @@ private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cm
     private widget.Label lblDepo;
     private widget.Label lblJaminan;
     private widget.Label lblPoli;
+    private widget.Label lblTotal;
     private javax.swing.JMenuItem mnEditObat;
     private javax.swing.JMenuItem mnHapusItem;
     private widget.PanelBiasa panelBiasa1;
