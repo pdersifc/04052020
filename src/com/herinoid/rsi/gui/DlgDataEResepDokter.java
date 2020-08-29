@@ -1439,21 +1439,24 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
-            Map<String, Object> param = new HashMap<>();
-            param.put("namars", akses.getnamars());
-            param.put("alamatrs", akses.getalamatrs());
-            param.put("kotars", akses.getkabupatenrs());
-            param.put("propinsirs", akses.getpropinsirs());
-            param.put("kontakrs", akses.getkontakrs());
-            param.put("emailrs", akses.getemailrs());
-            param.put("logo", Sequel.cariGambar("select logo from setting"));
-            List<EtiketObat> data = ResepDao.getEtiketByNoResep(resep.getNoResep(), depo);
-            if (data != null) {
-                String reportName = "etiketEResep.jasper";
-                String folder = "report";
-                Utils.print(reportName, folder, ".:: Etiket EResep ::.", data, param);
+            if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
+                JOptionPane.showMessageDialog(null, "Tidak bisa mencetak etiket karena Resep dengan No. " + resep.getNoResep() + " belum divalidasi");
+            } else {
+                Map<String, Object> param = new HashMap<>();
+                param.put("namars", akses.getnamars());
+                param.put("alamatrs", akses.getalamatrs());
+                param.put("kotars", akses.getkabupatenrs());
+                param.put("propinsirs", akses.getpropinsirs());
+                param.put("kontakrs", akses.getkontakrs());
+                param.put("emailrs", akses.getemailrs());
+                param.put("logo", Sequel.cariGambar("select logo from setting"));
+                List<EtiketObat> data = ResepDao.getEtiketByNoResep(resep.getNoResep(), depo);
+                if (data != null) {
+                    String reportName = "etiketEResep.jasper";
+                    String folder = "report";
+                    Utils.print(reportName, folder, ".:: Etiket EResep ::.", data, param);
+                }
             }
-
         }
 
     }//GEN-LAST:event_MnEtiketActionPerformed
@@ -1589,118 +1592,123 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
             double globalTot = 0;
-            RegPeriksa reg = RegPeriksaDao.get(resep.getNoRawat());
-            List<ObatResep> farmasis = PemberianObatDetailDao.getObatValidasiByNoResep(resep.getNoResep(), kdBangsal, resep.getJaminan(), reg.getKdPj());
-            List<NotaResep> notas = new LinkedList<>();
-            NotaResep nota = new NotaResep();
-            nota.setNoresep(resep.getNoResep());
-            nota.setDokter(resep.getDokter());
-            nota.setPasien(resep.getPasien());
-            nota.setTglResep(resep.getTglResep());
+            if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
+                JOptionPane.showMessageDialog(null, "Tidak bisa mencetak Nota Resep karena Resep dengan No. " + resep.getNoResep() + " belum divalidasi");
+            } else {
+                RegPeriksa reg = RegPeriksaDao.get(resep.getNoRawat());
+                List<ObatResep> farmasis = PemberianObatDetailDao.getObatValidasiByNoResep(resep.getNoResep(), kdBangsal, resep.getJaminan(), reg.getKdPj());
+                List<NotaResep> notas = new LinkedList<>();
+                NotaResep nota = new NotaResep();
+                nota.setNoresep(resep.getNoResep());
+                nota.setDokter(resep.getDokter());
+                nota.setPasien(resep.getPasien());
+                nota.setTglResep(resep.getTglResep());
 
-            List<RincianResepVerifikasi> rincians = new LinkedList<>();
+                List<RincianResepVerifikasi> rincians = new LinkedList<>();
 
-            if (farmasis.size() > 0) {
-                List<ObatResep> farmasiNonRaciks = new LinkedList<>();
-                List<ObatResep> farmasiRaciks = new LinkedList<>();
-                for (ObatResep f : farmasis) {
-                    if (Utils.isBlank(f.getKodeRacikan())) {
-                        if (!farmasiNonRaciks.contains(f)) {
-                            farmasiNonRaciks.add(f);
-                        }
-                    } else {
-                        if (!farmasiRaciks.contains(f)) {
-                            farmasiRaciks.add(f);
-                        }
-                    }
-                }
-
-                if (farmasiNonRaciks.size() > 0) {
-                    for(ObatResep f:farmasiNonRaciks){
-                        RincianResepVerifikasi r = new RincianResepVerifikasi();
-                        r.setKodeObat(f.getKodeObat());
-                        r.setNamaObat(f.getNamaObat());
-                        double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
-                        globalTot = globalTot + total;
-                        r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
-                        r.setAturanPakai(f.getAturanPakai());
-                        rincians.add(r);
-                    }
-
-                }
-
-                if (farmasiRaciks.size() > 0) {
-                    Collections.sort(farmasiRaciks, Comparator.comparing(ObatResep::getKodeRacikan));
-                    String rck = null;
-                    int urut = 0;
-                    for (ObatResep f : farmasiRaciks) {
-                        urut++;
-                        if (Utils.isBlank(rck)) {
-                            rck = f.getRacikan();
-                            RincianResepVerifikasi r = new RincianResepVerifikasi();
-                            ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(resep.getNoResep(), f.getKodeRacikan());
-                            r.setKodeObat(f.getKodeRacikan());
-                            r.setRacikan(f.getRacikan());
-                            r.setNamaObat(obatRck.getMetodeRacik());
-                            r.setRincian(String.valueOf(obatRck.getJmlRacik()));
-                            r.setAturanPakai(obatRck.getAturanPakai());
-                            r.setUrutan(urut);
-                            rincians.add(r);
+                if (farmasis.size() > 0) {
+                    List<ObatResep> farmasiNonRaciks = new LinkedList<>();
+                    List<ObatResep> farmasiRaciks = new LinkedList<>();
+                    for (ObatResep f : farmasis) {
+                        if (Utils.isBlank(f.getKodeRacikan())) {
+                            if (!farmasiNonRaciks.contains(f)) {
+                                farmasiNonRaciks.add(f);
+                            }
                         } else {
-                            if (!rck.equals(f.getRacikan())) {
+                            if (!farmasiRaciks.contains(f)) {
+                                farmasiRaciks.add(f);
+                            }
+                        }
+                    }
+
+                    if (farmasiNonRaciks.size() > 0) {
+                        for (ObatResep f : farmasiNonRaciks) {
+                            RincianResepVerifikasi r = new RincianResepVerifikasi();
+                            r.setKodeObat(f.getKodeObat());
+                            r.setNamaObat(f.getNamaObat());
+                            double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
+                            globalTot = globalTot + total;
+                            r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
+                            r.setAturanPakai(f.getAturanPakai());
+                            rincians.add(r);
+                        }
+
+                    }
+
+                    if (farmasiRaciks.size() > 0) {
+                        Collections.sort(farmasiRaciks, Comparator.comparing(ObatResep::getKodeRacikan));
+                        String rck = null;
+                        int urut = 0;
+                        for (ObatResep f : farmasiRaciks) {
+                            urut++;
+                            if (Utils.isBlank(rck)) {
+                                rck = f.getRacikan();
                                 RincianResepVerifikasi r = new RincianResepVerifikasi();
                                 ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(resep.getNoResep(), f.getKodeRacikan());
                                 r.setKodeObat(f.getKodeRacikan());
-                                r.setNamaObat(obatRck.getMetodeRacik());
                                 r.setRacikan(f.getRacikan());
+                                r.setNamaObat(obatRck.getMetodeRacik());
                                 r.setRincian(String.valueOf(obatRck.getJmlRacik()));
                                 r.setAturanPakai(obatRck.getAturanPakai());
                                 r.setUrutan(urut);
                                 rincians.add(r);
-                                rck = f.getRacikan();
+                            } else {
+                                if (!rck.equals(f.getRacikan())) {
+                                    RincianResepVerifikasi r = new RincianResepVerifikasi();
+                                    ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(resep.getNoResep(), f.getKodeRacikan());
+                                    r.setKodeObat(f.getKodeRacikan());
+                                    r.setNamaObat(obatRck.getMetodeRacik());
+                                    r.setRacikan(f.getRacikan());
+                                    r.setRincian(String.valueOf(obatRck.getJmlRacik()));
+                                    r.setAturanPakai(obatRck.getAturanPakai());
+                                    r.setUrutan(urut);
+                                    rincians.add(r);
+                                    rck = f.getRacikan();
+                                }
                             }
+                            RincianResepVerifikasi r = new RincianResepVerifikasi();
+                            r.setKodeObat(f.getKodeObat());
+                            r.setNamaObat(f.getNamaObat());
+                            double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
+                            globalTot = globalTot + total;
+                            r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
+                            r.setAturanPakai(f.getAturanPakai());
+                            r.setUrutan(urut);
+                            rincians.add(r);
                         }
-                        RincianResepVerifikasi r = new RincianResepVerifikasi();
-                        r.setKodeObat(f.getKodeObat());
-                        r.setNamaObat(f.getNamaObat());
-                        double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
-                        globalTot = globalTot + total;
-                        r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
-                        r.setAturanPakai(f.getAturanPakai());
-                        r.setUrutan(urut);
-                        rincians.add(r);
+                        Collections.sort(rincians, Comparator
+                                .comparing(RincianResepVerifikasi::getUrutan));
                     }
-                    Collections.sort(rincians, Comparator
-                            .comparing(RincianResepVerifikasi::getUrutan));
-                }
-                RincianResepVerifikasi totalan = new RincianResepVerifikasi();
-                totalan.setNamaObat("Total Biaya Resep : ");
-                totalan.setRincian("Rp "+Utils.format(globalTot, 0)+",-");
-                totalan.setAturanPakai("");
-                totalan.setRacikan(">>");
-                rincians.add(totalan);
-                nota.setDetails(rincians);
-                notas.add(nota);
+                    RincianResepVerifikasi totalan = new RincianResepVerifikasi();
+                    totalan.setNamaObat("Total Biaya Resep : ");
+                    totalan.setRincian("Rp " + Utils.format(globalTot, 0) + ",-");
+                    totalan.setAturanPakai("");
+                    totalan.setRacikan(">>");
+                    rincians.add(totalan);
+                    nota.setDetails(rincians);
+                    notas.add(nota);
 
+                }
+                Map<String, Object> param = new HashMap<>();
+                param.put("namars", akses.getnamars());
+                param.put("alamatrs", akses.getalamatrs());
+                param.put("kotars", akses.getkabupatenrs());
+                param.put("propinsirs", akses.getpropinsirs());
+                param.put("kontakrs", akses.getkontakrs());
+                param.put("emailrs", akses.getemailrs());
+                param.put("logo", Sequel.cariGambar("select logo from setting"));
+                String reportName = "notaEresep.jasper";
+                String folder = "report";
+                Utils.printWithSub(reportName, folder, ".:: Nota EResep ::.", notas, param);
             }
-            Map<String, Object> param = new HashMap<>();
-            param.put("namars", akses.getnamars());
-            param.put("alamatrs", akses.getalamatrs());
-            param.put("kotars", akses.getkabupatenrs());
-            param.put("propinsirs", akses.getpropinsirs());
-            param.put("kontakrs", akses.getkontakrs());
-            param.put("emailrs", akses.getemailrs());
-            param.put("logo", Sequel.cariGambar("select logo from setting"));
-            String reportName = "notaEresep.jasper";
-            String folder = "report";
-            Utils.printWithSub(reportName, folder, ".:: Nota EResep ::.", notas, param);
+
         }
 
     }//GEN-LAST:event_MnNotaObatActionPerformed
 
     private void mnHapusObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnHapusObatActionPerformed
         // TODO add your handling code here:
-         int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogButton = JOptionPane.YES_NO_OPTION;
         int baris = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(row));
@@ -1734,7 +1742,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 //            }
 //        }
     }
- 
 
     private void clean() {
         racikanList = new LinkedList<>();
