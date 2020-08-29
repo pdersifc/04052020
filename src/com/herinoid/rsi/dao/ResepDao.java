@@ -376,7 +376,7 @@ public class ResepDao {
                 obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
-                List<ObatResep> obatDetails = getObatResepDetail(obat.getNoResep(), depo, obat.getJaminan(),rs.getString("kd_pj"));
+                List<ObatResep> obatDetails = getObatResepDetail(obat.getNoResep(), depo, obat.getJaminan(), rs.getString("kd_pj"));
                 Collections.sort(obatDetails, Comparator
                         .comparing(ObatResep::getNamaObat)
                         .thenComparing(ObatResep::getNamaObat));
@@ -403,7 +403,7 @@ public class ResepDao {
         return obatList;
     }
 
-    public static List<ObatResep> getObatResepDetail(String noResep, String depo, String jaminan,String kdJaminan) {
+    public static List<ObatResep> getObatResepDetail(String noResep, String depo, String jaminan, String kdJaminan) {
         List<ObatResep> obatDetailList = new LinkedList<>();
         PreparedStatement psttmn = null;
         ResultSet rset = null;
@@ -431,7 +431,7 @@ public class ResepDao {
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
                 obat.setParent(false);
-                
+
                 double marginPersen = 0;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
@@ -709,7 +709,7 @@ public class ResepDao {
                 obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
-                List<ObatResep> obatDetails = getObatResepRacikanDetail(obat.getNoResep(), depo, obat.getJaminan(),rs.getString("kd_pj"));
+                List<ObatResep> obatDetails = getObatResepRacikanDetail(obat.getNoResep(), depo, obat.getJaminan(), rs.getString("kd_pj"));
                 Collections.sort(obatDetails, Comparator
                         .comparing(ObatResep::getKodeRacikan)
                         .thenComparing(ObatResep::getNamaObat));
@@ -796,7 +796,7 @@ public class ResepDao {
         return isExist;
     }
 
-    public static List<ObatResep> getObatResepRacikanDetail(String noResep, String depo, String jaminan,String kdJaminan) {
+    public static List<ObatResep> getObatResepRacikanDetail(String noResep, String depo, String jaminan, String kdJaminan) {
         List<ObatResep> obatDetailList = new LinkedList<>();
         PreparedStatement psttmn = null;
         ResultSet rset = null;
@@ -1046,13 +1046,14 @@ public class ResepDao {
     public static List<EtiketObat> getEtiketByNoResep(String noResep, String depo) {
         List<EtiketObat> obatList = new LinkedList<>();
         try {
-            ps = koneksi.prepareStatement("SELECT e.`no_resep`,e.`no_rawat`,e.`tgl_resep`,e.`jam_resep`,p.`no_rkm_medis`,p.`nm_pasien`,b.`nama_brng`,d.`jml`,s.`satuan`,b.`expire`,d.`aturan_pakai`,l.`nm_bangsal` FROM e_resep_rsifc_detail d "
+            ps = koneksi.prepareStatement("SELECT e.`no_resep`,e.`no_rawat`,e.`tgl_resep`,e.`jam_resep`,p.`no_rkm_medis`,p.`nm_pasien`,b.`nama_brng`,d.`jml`,s.`satuan`,b.`expire`,d.`aturan_pakai`,l.`nm_bangsal`,k.`nm_poli` FROM obat_validasi_eresep_rsifc d "
                     + "JOIN e_resep_rsifc e ON e.`no_resep`=d.`no_resep` "
                     + "JOIN databarang b ON d.kode_brng = b.kode_brng "
                     + "JOIN gudangbarang g ON b.`kode_brng`=g.`kode_brng` "
                     + "JOIN bangsal l ON l.`kd_bangsal`= g.`kd_bangsal` "
                     + "JOIN kodesatuan s ON s.`kode_sat` = b.`kode_sat` "
                     + "JOIN reg_periksa r ON r.`no_rawat` = e.`no_rawat` "
+                    + "JOIN poliklinik k ON r.`kd_poli`= k.`kd_poli` "
                     + "JOIN pasien p ON p.`no_rkm_medis` = r.`no_rkm_medis` "
                     + "WHERE d.`no_resep` = ? AND g.`kd_bangsal` = ?");
             ps.setString(1, noResep);
@@ -1069,9 +1070,9 @@ public class ResepDao {
                 obat.setObat(rs.getString("nama_brng"));
                 obat.setSatuan(rs.getString("satuan"));
                 obat.setJml(rs.getInt("jml"));
-                obat.setExpire(rs.getDate("expire")==null?"00:00:00":Utils.formatDateSql(rs.getDate("expire")));
+                obat.setExpire(rs.getDate("expire") == null ? "00:00:00" : Utils.formatDateSql(rs.getDate("expire")));
                 obat.setAturanPakai(rs.getString("aturan_pakai"));
-                obat.setLokasi(rs.getString("nm_bangsal"));
+                obat.setLokasi(rs.getString("nm_poli"));
                 obatList.add(obat);
             }
         } catch (SQLException ex) {
@@ -1123,7 +1124,7 @@ public class ResepDao {
                 obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
-                List<ObatResep> obatDetails = getObatResepDetail(obat.getNoResep(), depo, obat.getJaminan(),rs.getString("kd_pj"));
+                List<ObatResep> obatDetails = getObatResepDetail(obat.getNoResep(), depo, obat.getJaminan(), rs.getString("kd_pj"));
                 Collections.sort(obatDetails, Comparator
                         .comparing(ObatResep::getNamaObat)
                         .thenComparing(ObatResep::getNamaObat));
@@ -1178,7 +1179,7 @@ public class ResepDao {
                 obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
-                List<ObatResep> obatDetails = getObatResepRacikanDetail(obat.getNoResep(), depo, obat.getJaminan(),rs.getString("kd_pj"));
+                List<ObatResep> obatDetails = getObatResepRacikanDetail(obat.getNoResep(), depo, obat.getJaminan(), rs.getString("kd_pj"));
                 Collections.sort(obatDetails, Comparator
                         .comparing(ObatResep::getKodeRacikan)
                         .thenComparing(ObatResep::getNamaObat));
@@ -1204,8 +1205,8 @@ public class ResepDao {
         }
         return obatList;
     }
-    
-    public static boolean updateAturanPakaiFarmasi(String aturanPakai,String noresep,String kodeObat) {
+
+    public static boolean updateAturanPakaiFarmasi(String aturanPakai, String noresep, String kodeObat) {
         boolean sukses = true;
         PreparedStatement pst = null;
         try {
@@ -1232,8 +1233,8 @@ public class ResepDao {
         }
         return sukses;
     }
-    
-    public static boolean updateAturanPakaiRacikan(String aturanPakai,String noresep,String kodeObat) {
+
+    public static boolean updateAturanPakaiRacikan(String aturanPakai, String noresep, String kodeObat) {
         boolean sukses = true;
         PreparedStatement pst = null;
         try {
@@ -1260,7 +1261,7 @@ public class ResepDao {
         }
         return sukses;
     }
-    
+
     public static boolean deleteDataObatValidasiFarmasi(String noresep) {
         boolean sukses = true;
         PreparedStatement pst = null;
@@ -1283,8 +1284,8 @@ public class ResepDao {
         }
         return sukses;
     }
-    
-    public static boolean deleteDataObatValidasiFarmasiSatuan(String noresep,String kodeObat) {
+
+    public static boolean deleteDataObatValidasiFarmasiSatuan(String noresep, String kodeObat) {
         boolean sukses = true;
         PreparedStatement pst = null;
         try {
@@ -1307,7 +1308,7 @@ public class ResepDao {
         }
         return sukses;
     }
-    
+
     public static boolean updateValidasiAfterHapus(String noresep) {
         boolean sukses = true;
         PreparedStatement pst = null;
@@ -1337,7 +1338,7 @@ public class ResepDao {
         }
         return sukses;
     }
-    
+
     public static boolean updateValidasiResepRacikanAfterHapus(String noresep) {
         boolean sukses = true;
         PreparedStatement pst = null;
