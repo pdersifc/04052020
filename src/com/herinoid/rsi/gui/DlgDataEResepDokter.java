@@ -672,7 +672,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         MnPackaging.setBackground(new java.awt.Color(255, 255, 255));
         MnPackaging.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         MnPackaging.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Vial-Pills.png"))); // NOI18N
-        MnPackaging.setText("Pengepakan");
+        MnPackaging.setText("Dispensing");
         MnPackaging.setName("MnPackaging"); // NOI18N
         MnPackaging.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

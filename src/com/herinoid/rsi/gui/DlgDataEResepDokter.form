@@ -80,7 +80,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/picture/Vial-Pills.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Pengepakan"/>
+            <Property name="text" type="java.lang.String" value="Dispensing"/>
             <Property name="name" type="java.lang.String" value="MnPackaging" noResource="true"/>
           </Properties>
           <Events>
