@@ -559,6 +559,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         Popup = new javax.swing.JPopupMenu();
         mnEditAturanPake = new javax.swing.JMenuItem();
         MnAllStock = new javax.swing.JMenuItem();
+        mnHapusObat = new javax.swing.JMenuItem();
         perawatanGrup = new javax.swing.ButtonGroup();
         printPopup = new javax.swing.JPopupMenu();
         MnPackaging = new javax.swing.JMenuItem();
@@ -652,6 +653,18 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             }
         });
         Popup.add(MnAllStock);
+
+        mnHapusObat.setBackground(new java.awt.Color(255, 255, 255));
+        mnHapusObat.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        mnHapusObat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/101.png"))); // NOI18N
+        mnHapusObat.setText("Hapus Obat");
+        mnHapusObat.setName("mnHapusObat"); // NOI18N
+        mnHapusObat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnHapusObatActionPerformed(evt);
+            }
+        });
+        Popup.add(mnHapusObat);
 
         printPopup.setName("printPopup"); // NOI18N
 
@@ -864,7 +877,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(370, 40, 60, 23);
 
         cmbTanggalTo.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "28-08-2020" }));
+        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-08-2020" }));
         cmbTanggalTo.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalTo.setName("cmbTanggalTo"); // NOI18N
         cmbTanggalTo.setOpaque(false);
@@ -924,7 +937,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         rdoRanap.setBounds(261, 10, 130, 23);
 
         cmbTanggalfrom.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "28-08-2020" }));
+        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-08-2020" }));
         cmbTanggalfrom.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalfrom.setName("cmbTanggalfrom"); // NOI18N
         cmbTanggalfrom.setOpaque(false);
@@ -1603,17 +1616,16 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 }
 
                 if (farmasiNonRaciks.size() > 0) {
-                    farmasiNonRaciks.stream().map((f) -> {
+                    for(ObatResep f:farmasiNonRaciks){
                         RincianResepVerifikasi r = new RincianResepVerifikasi();
                         r.setKodeObat(f.getKodeObat());
                         r.setNamaObat(f.getNamaObat());
                         double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
+                        globalTot = globalTot + total;
                         r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
                         r.setAturanPakai(f.getAturanPakai());
-                        return r;
-                    }).forEachOrdered((r) -> {
                         rincians.add(r);
-                    });
+                    }
 
                 }
 
@@ -1686,24 +1698,9 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     }//GEN-LAST:event_MnNotaObatActionPerformed
 
-    private void deleteObatSatuan() {
-//        int dialogButton = JOptionPane.YES_NO_OPTION;
-//        int wkwkw = JOptionPane.showConfirmDialog(null, "Serius mau menghapus obat ini..?", "Perhatian", dialogButton);
-//        if (wkwkw == 0) {
-//            int baris = tblFarmasi.convertRowIndexToModel(tblFarmasi.getSelectedRow());
-//            DataEResep resep = model.get(tblData.convertRowIndexToModel(tblData.getSelectedRow()));
-//            if (baris > -1) {
-//                RincianResepVerifikasi oresep = modelFarmasi.get(tblFarmasi.convertRowIndexToModel(baris));
-//                modelFarmasi.remove(baris);
-//                ResepDao.deleteDataObatValidasiFarmasiSatuan(resep.getNoResep(), oresep.getKodeObat());
-//            } else {
-//                JOptionPane.showMessageDialog(null, "Silahkan pilih baris obat yang mau di hapus..");
-//            }
-//        }
-    }
-
-    private void deleteObatValidasi() {
-        int dialogButton = JOptionPane.YES_NO_OPTION;
+    private void mnHapusObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnHapusObatActionPerformed
+        // TODO add your handling code here:
+         int dialogButton = JOptionPane.YES_NO_OPTION;
         int baris = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(row));
@@ -1720,7 +1717,24 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         } else {
             JOptionPane.showMessageDialog(null, "Silahkan pilih baris obat yang mau di hapus..");
         }
+    }//GEN-LAST:event_mnHapusObatActionPerformed
+
+    private void deleteObatSatuan() {
+//        int dialogButton = JOptionPane.YES_NO_OPTION;
+//        int wkwkw = JOptionPane.showConfirmDialog(null, "Serius mau menghapus obat ini..?", "Perhatian", dialogButton);
+//        if (wkwkw == 0) {
+//            int baris = tblFarmasi.convertRowIndexToModel(tblFarmasi.getSelectedRow());
+//            DataEResep resep = model.get(tblData.convertRowIndexToModel(tblData.getSelectedRow()));
+//            if (baris > -1) {
+//                RincianResepVerifikasi oresep = modelFarmasi.get(tblFarmasi.convertRowIndexToModel(baris));
+//                modelFarmasi.remove(baris);
+//                ResepDao.deleteDataObatValidasiFarmasiSatuan(resep.getNoResep(), oresep.getKodeObat());
+//            } else {
+//                JOptionPane.showMessageDialog(null, "Silahkan pilih baris obat yang mau di hapus..");
+//            }
+//        }
     }
+ 
 
     private void clean() {
         racikanList = new LinkedList<>();
@@ -1799,6 +1813,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.Label lblTotal;
     private javax.swing.JMenuItem mnAturanPakai;
     private javax.swing.JMenuItem mnEditAturanPake;
+    private javax.swing.JMenuItem mnHapusObat;
     private javax.swing.JMenuItem mnTerimaPasien;
     private widget.PanelBiasa panelBiasa1;
     private widget.PanelBiasa panelBiasa2;

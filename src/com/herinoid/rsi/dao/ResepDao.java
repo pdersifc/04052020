@@ -1069,7 +1069,7 @@ public class ResepDao {
                 obat.setObat(rs.getString("nama_brng"));
                 obat.setSatuan(rs.getString("satuan"));
                 obat.setJml(rs.getInt("jml"));
-                obat.setExpire(Utils.formatDateSql(rs.getDate("expire")));
+                obat.setExpire(rs.getDate("expire")==null?"00:00:00":Utils.formatDateSql(rs.getDate("expire")));
                 obat.setAturanPakai(rs.getString("aturan_pakai"));
                 obat.setLokasi(rs.getString("nm_bangsal"));
                 obatList.add(obat);
