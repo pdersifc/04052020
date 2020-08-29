@@ -10,6 +10,7 @@ import com.herinoid.rsi.model.ObatResep;
 import com.herinoid.rsi.model.Obat;
 import com.herinoid.rsi.table.TabelCariObatResep;
 import java.awt.Dimension;
+import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -23,7 +24,7 @@ import javax.swing.table.TableRowSorter;
 public class DlgCariObat extends javax.swing.JDialog {
 
     private TabelCariObatResep model;
-    private TableRowSorter<TableModel> rowSorter;
+    private TableRowSorter<TabelCariObatResep> rowSorter;
     private ObatResep obatResep;
 
     /**
@@ -74,12 +75,20 @@ public class DlgCariObat extends javax.swing.JDialog {
             model.add(ObatDao.getObatByDepo(kodeDepo, jenisPasien));
         }
         tblObat.setModel(model);
-        rowSorter = new TableRowSorter<>(tblObat.getModel());
+        rowSorter = new TableRowSorter<>(model);
         tblObat.setRowSorter(rowSorter);
     }
 
     public ObatResep getData() {
         return this.obatResep;
+    }
+    
+    public JTable getTable() {
+        return tblObat;
+    }
+    
+    public TabelCariObatResep getModel() {
+        return model;
     }
 
     /**
@@ -146,19 +155,22 @@ public class DlgCariObat extends javax.swing.JDialog {
     private void tblObatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblObatMouseClicked
         // TODO add your handling code here:
         int selected = tblObat.getSelectedRow();
-        Obat data = model.getAll().get(selected);
-        obatResep = new ObatResep();
-        obatResep.setKodeObat(data.getKodeObat());
-        obatResep.setNamaObat(data.getNamaObat());
-        obatResep.setJumlah(0);
-        obatResep.setSatuan(data.getSatuan());
-        obatResep.setJenisObat(data.getJenisObat());
-        obatResep.setKategori(data.getKategori());
-        obatResep.setEmbalase(0);
-        obatResep.setTuslah(0);
-        obatResep.setStok(data.getStok());
-        obatResep.setHarga(data.getHarga());
-        dispose();
+        if (selected > -1) {
+            Obat data = model.get(tblObat.convertRowIndexToModel(selected));
+            obatResep = new ObatResep();
+            obatResep.setKodeObat(data.getKodeObat());
+            obatResep.setNamaObat(data.getNamaObat());
+            obatResep.setJumlah(0);
+            obatResep.setSatuan(data.getSatuan());
+            obatResep.setJenisObat(data.getJenisObat());
+            obatResep.setKategori(data.getKategori());
+            obatResep.setEmbalase(0);
+            obatResep.setTuslah(0);
+            obatResep.setStok(data.getStok());
+            obatResep.setHarga(data.getHarga());
+            dispose();
+        }
+
     }//GEN-LAST:event_tblObatMouseClicked
 
     /**

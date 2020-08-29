@@ -159,7 +159,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 }
 
                 @Override
-                public void windowClosed(WindowEvent e) {
+                public void windowClosed(WindowEvent e) {                  
                     obatFromDialog = addObat.getData();
                     if (obatFromDialog != null) {
                         modelPilihan.add(obatFromDialog);
@@ -292,6 +292,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             public void windowDeactivated(WindowEvent e) {
             }
         });
+
     }
 
     private List<ObatResep> getAllObatListByNoResep(List<ObatResep> dataObats, String noResep) {
