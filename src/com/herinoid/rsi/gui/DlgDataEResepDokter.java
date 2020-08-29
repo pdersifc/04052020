@@ -159,7 +159,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 }
 
                 @Override
-                public void windowClosed(WindowEvent e) {                  
+                public void windowClosed(WindowEvent e) {
                     obatFromDialog = addObat.getData();
                     if (obatFromDialog != null) {
                         modelPilihan.add(obatFromDialog);
@@ -379,7 +379,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         tblData.setModel(model);
         rowSorter = new TableRowSorter<>(tblData.getModel());
         tblData.setRowSorter(rowSorter);
-        
+
     }
 
     private void setCmbData() {
@@ -547,8 +547,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         }
 
     }
-    
-    private void loadToday(){
+
+    private void loadToday() {
         String depo = pro.getProperty("DEPOOBAT");
         Bangsal bangsal = BangsalDao.get(depo);
         String jenisPasien = Konstan.PASIEN_RALAN;
@@ -1294,21 +1294,24 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void tblEditorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblEditorKeyReleased
         // TODO add your handling code here:
         ObatResep obat = modelPilihan.get(tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow()));
-        if (obat.getStok() > 0 && obat.getStok() >= obat.getJumlah()) {
-            total = total + (obat.getHarga() * obat.getJumlah()) + obat.getEmbalase() + obat.getTuslah();
-            lblTotal.setText("Total : " + Utils.format(total, 0));
-        } else {
-            JOptionPane.showMessageDialog(null, "Stok obat tidak mencukupi, silahkan cari obat di lokasi lain");
-            if (obat.getStok() > 0 && obat.getJumlah() > obat.getStok()) {
-                obat.setJumlah(obat.getStok());
-                removeDuplicate(obat);
-                for (ObatResep o : modelPilihan.getAll()) {
-                    total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
-                }
+        if (!obat.isParent()) {
+            if (obat.getStok() > 0 && obat.getStok() >= obat.getJumlah()) {
+                total = total + (obat.getHarga() * obat.getJumlah()) + obat.getEmbalase() + obat.getTuslah();
                 lblTotal.setText("Total : " + Utils.format(total, 0));
-            }
+            } else {
+                JOptionPane.showMessageDialog(null, "Stok obat tidak mencukupi, silahkan cari obat di lokasi lain");
+                if (obat.getStok() > 0 && obat.getJumlah() > obat.getStok()) {
+                    obat.setJumlah(obat.getStok());
+                    removeDuplicate(obat);
+                    for (ObatResep o : modelPilihan.getAll()) {
+                        total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
+                    }
+                    lblTotal.setText("Total : " + Utils.format(total, 0));
+                }
 
+            }
         }
+
 
     }//GEN-LAST:event_tblEditorKeyReleased
 

@@ -105,7 +105,7 @@ public class DlgCariObat extends javax.swing.JDialog {
         panelBiasa2 = new widget.PanelBiasa();
         label1 = new widget.Label();
         txtCari = new widget.TextBox();
-        scrollPane2 = new widget.ScrollPane();
+        scrollPane = new widget.ScrollPane();
         tblObat = new widget.Table();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -126,26 +126,27 @@ public class DlgCariObat extends javax.swing.JDialog {
 
         panelBiasa1.add(panelBiasa2, java.awt.BorderLayout.PAGE_START);
 
+        scrollPane.setAutoscrolls(true);
+
         tblObat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {},
-                {},
-                {},
-                {}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tblObat.setPreferredSize(new java.awt.Dimension(762, 474));
         tblObat.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblObatMouseClicked(evt);
             }
         });
-        scrollPane2.setViewportView(tblObat);
+        scrollPane.setViewportView(tblObat);
 
-        panelBiasa1.add(scrollPane2, java.awt.BorderLayout.CENTER);
+        panelBiasa1.add(scrollPane, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(panelBiasa1);
 
@@ -170,7 +171,6 @@ public class DlgCariObat extends javax.swing.JDialog {
             obatResep.setHarga(data.getHarga());
             dispose();
         }
-
     }//GEN-LAST:event_tblObatMouseClicked
 
     /**
@@ -220,7 +220,7 @@ public class DlgCariObat extends javax.swing.JDialog {
     private widget.Label label1;
     private widget.PanelBiasa panelBiasa1;
     private widget.PanelBiasa panelBiasa2;
-    private widget.ScrollPane scrollPane2;
+    private widget.ScrollPane scrollPane;
     private widget.Table tblObat;
     private widget.TextBox txtCari;
     // End of variables declaration//GEN-END:variables
