@@ -190,7 +190,6 @@ public class Utils {
                 fileRpt = new File(currentDir + File.separatorChar + iDir + File.separatorChar + reportDirName + File.separatorChar + reportName);
                 if (fileRpt.isFile()) { // Cek apakah file RptMaster.jrxml ada
                     fullPath = fileRpt.toString();
-                    System.out.println("Found Report File at : " + fullPath);
                 } // end if
             } // end for i
         } // end if
@@ -226,7 +225,6 @@ public class Utils {
                 fileRpt = new File(currentDir + File.separatorChar + iDir + File.separatorChar + reportDirName + File.separatorChar + reportName);
                 if (fileRpt.isFile()) { // Cek apakah file RptMaster.jrxml ada
                     fullPath = fileRpt.toString();
-                    System.out.println("Found Report File at : " + fullPath);
                 } // end if
             } // end for i
         } // end if
