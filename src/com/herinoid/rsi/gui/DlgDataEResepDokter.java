@@ -292,7 +292,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             public void windowDeactivated(WindowEvent e) {
             }
         });
-
+        loadToday();
     }
 
     private List<ObatResep> getAllObatListByNoResep(List<ObatResep> dataObats, String noResep) {
@@ -379,7 +379,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         tblData.setModel(model);
         rowSorter = new TableRowSorter<>(tblData.getModel());
         tblData.setRowSorter(rowSorter);
-
+        
     }
 
     private void setCmbData() {
@@ -546,6 +546,20 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             tblDokter.setModel(modelDokter);
         }
 
+    }
+    
+    private void loadToday(){
+        String depo = pro.getProperty("DEPOOBAT");
+        Bangsal bangsal = BangsalDao.get(depo);
+        String jenisPasien = Konstan.PASIEN_RALAN;
+        if (rdoRanap.isSelected()) {
+            jenisPasien = Konstan.PASIEN_RANAP;
+        }
+
+        lblDepoResep.setText(bangsal.getNama());
+        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(new Date()), Utils.formatDb(new Date()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(new Date()), Utils.formatDb(new Date()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+        showResepData(dataList, dataRacikanList);
     }
 
     /**
