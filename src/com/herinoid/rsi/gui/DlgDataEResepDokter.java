@@ -1249,11 +1249,11 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             boolean cekStok = true;
             String obatName = "";
             for (ObatResep o : newDetails) {
-                if (o.getStok() < 1) {
+                if (o.getStok() < 1 && !o.isParent()) {
                     cekStok = false;
                     obatName = o.getNamaObat();
                     break;
-                } else if (o.getStok() < o.getJumlah()) {
+                } else if (o.getStok() < o.getJumlah() && !o.isParent()) {
                     cekStok = false;
                     obatName = o.getNamaObat();
                     break;
