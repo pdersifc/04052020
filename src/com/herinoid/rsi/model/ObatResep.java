@@ -36,6 +36,7 @@ public class ObatResep {
     private double kapasitas;
     private boolean edit;
     private int urutan;
+    private String aturanPakaiFarmasi;
     
     
     public ObatResep(){}
@@ -412,6 +413,20 @@ public class ObatResep {
      */
     public void setUrutan(int urutan) {
         this.urutan = urutan;
+    }
+
+    /**
+     * @return the aturanPakaiFarmasi
+     */
+    public String getAturanPakaiFarmasi() {
+        return aturanPakaiFarmasi;
+    }
+
+    /**
+     * @param aturanPakaiFarmasi the aturanPakaiFarmasi to set
+     */
+    public void setAturanPakaiFarmasi(String aturanPakaiFarmasi) {
+        this.aturanPakaiFarmasi = aturanPakaiFarmasi;
     }
 
     

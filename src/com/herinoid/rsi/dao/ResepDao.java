@@ -251,7 +251,7 @@ public class ResepDao {
         PreparedStatement psttmn = null;
         try {
 
-            psttmn = koneksi.prepareStatement("insert into obat_racikan_eresep_rsifc(no_resep,tgl_perawatan,jam,no_rawat,no_racik,nama_racik,kd_racik,metode_racik,jml_dr,aturan_pakai,keterangan) values(?,?,?,?,?,?,?,?,?,?,?)");
+            psttmn = koneksi.prepareStatement("insert into obat_racikan_eresep_rsifc(no_resep,tgl_perawatan,jam,no_rawat,no_racik,nama_racik,kd_racik,metode_racik,jml_dr,aturan_pakai,aturan_pakai_farmasi,keterangan) values(?,?,?,?,?,?,?,?,?,?,?,?)");
             try {
                 psttmn.setString(1, noresep);
                 psttmn.setString(2, Utils.formatDb(new Date()));
@@ -263,7 +263,8 @@ public class ResepDao {
                 psttmn.setString(8, obat.getMetodeRacikKode());
                 psttmn.setDouble(9, obat.getJumlah());
                 psttmn.setString(10, obat.getAturanPakai());
-                psttmn.setDouble(11, obat.getKandungan());
+                psttmn.setString(11, obat.getAturanPakai());
+                psttmn.setDouble(12, obat.getKandungan());
                 psttmn.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
@@ -1238,7 +1239,7 @@ public class ResepDao {
         boolean sukses = true;
         PreparedStatement pst = null;
         try {
-            pst = koneksi.prepareStatement("update obat_racikan_eresep_rsifc set aturan_pakai = ? where no_resep = ? and kd_racik = ?");
+            pst = koneksi.prepareStatement("update obat_racikan_eresep_rsifc set aturan_pakai_farmasi = ? where no_resep = ? and kd_racik = ?");
             try {
                 pst.setString(1, aturanPakai);
                 pst.setString(2, noresep);

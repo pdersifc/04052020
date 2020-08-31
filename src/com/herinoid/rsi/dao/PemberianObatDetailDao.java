@@ -206,7 +206,7 @@ public class PemberianObatDetailDao {
         PreparedStatement psttmn = null;
         ResultSet rset = null;
         try {
-            psttmn = koneksi.prepareStatement("SELECT r.jml_dr,r.aturan_pakai,m.nm_racik FROM obat_racikan_eresep_rsifc r JOIN metode_racik m ON r.metode_racik = m.kd_racik where r.no_resep = ? and r.kd_racik = ?");
+            psttmn = koneksi.prepareStatement("SELECT r.nama_racik,r.jml_dr,r.aturan_pakai,r.aturan_pakai_farmasi,m.nm_racik FROM obat_racikan_eresep_rsifc r JOIN metode_racik m ON r.metode_racik = m.kd_racik where r.no_resep = ? and r.kd_racik = ?");
             psttmn.setString(1, noResep);
             psttmn.setString(2, kdRacikan);
             rset = psttmn.executeQuery();
@@ -214,6 +214,8 @@ public class PemberianObatDetailDao {
                 obat.setJmlRacik(rset.getDouble("jml_dr"));
                 obat.setAturanPakai(rset.getString("aturan_pakai"));
                 obat.setMetodeRacik(rset.getString("nm_racik"));
+                obat.setNamaObat(rset.getString("nama_racik"));
+                obat.setAturanPakaiFarmasi(rset.getString("aturan_pakai_farmasi"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);

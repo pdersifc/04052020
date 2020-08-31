@@ -15,15 +15,17 @@ public class Pasien {
     private String alamat;
     private String noTelp;
     private String namaIbu;
+    private String tglLahir;
     
     public Pasien(){}
     
-    public Pasien(String norm,String nama,String alamat,String noTelp,String namaIbu){
+    public Pasien(String norm,String nama,String alamat,String noTelp,String namaIbu,String tglLahir){
         this.norm = norm;
         this.nama = nama;
         this.alamat = alamat;
         this.noTelp = noTelp;
         this.namaIbu = namaIbu;
+        this.tglLahir = tglLahir;
     }
 
     /**
@@ -94,6 +96,20 @@ public class Pasien {
      */
     public void setNamaIbu(String namaIbu) {
         this.namaIbu = namaIbu;
+    }
+
+    /**
+     * @return the tglLahir
+     */
+    public String getTglLahir() {
+        return tglLahir;
+    }
+
+    /**
+     * @param tglLahir the tglLahir to set
+     */
+    public void setTglLahir(String tglLahir) {
+        this.tglLahir = tglLahir;
     }
     
     

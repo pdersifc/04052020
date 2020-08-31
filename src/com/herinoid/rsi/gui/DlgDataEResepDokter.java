@@ -50,9 +50,12 @@ import com.herinoid.rsi.dao.PemeriksaanDao;
 import com.herinoid.rsi.model.Pasien;
 import com.herinoid.rsi.model.RegPeriksa;
 import com.herinoid.rsi.dao.RegPeriksaDao;
+import com.herinoid.rsi.model.Age;
 import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
 import com.herinoid.rsi.model.NotaResep;
+import com.herinoid.rsi.model.report.ResepReport;
+import com.herinoid.rsi.util.AgeCalculator;
 import fungsi.akses;
 import fungsi.sekuel;
 import java.util.Collection;
@@ -65,6 +68,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import widget.ComboBox;
 import inventory.DlgAturanPakai;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -188,7 +192,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 public void valueChanged(ListSelectionEvent e) {
                     int selected = tblData.getSelectedRow();
                     if (selected != -1) {
-                        DataEResep data = model.getAll().get(selected);
+                        DataEResep data = model.getAll().get(tblData.convertRowIndexToModel(selected));
                         Pasien pasien = PasienDao.get(data.getNorm());
                         lblPasien.setText(data.getPasien());
                         lblTelp.setText(pasien.getNoTelp());
@@ -444,7 +448,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                         r.setRacikan(f.getRacikan());
                         r.setNamaObat(obatRck.getMetodeRacik());
                         r.setRincian(String.valueOf(obatRck.getJmlRacik()));
-                        r.setAturanPakai(obatRck.getAturanPakai());
+                        r.setAturanPakai(obatRck.getAturanPakaiFarmasi());
                         r.setUrutan(urut);
                         rincians.add(r);
                     } else {
@@ -455,7 +459,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             r.setNamaObat(obatRck.getMetodeRacik());
                             r.setRacikan(f.getRacikan());
                             r.setRincian(String.valueOf(obatRck.getJmlRacik()));
-                            r.setAturanPakai(obatRck.getAturanPakai());
+                            r.setAturanPakai(obatRck.getAturanPakaiFarmasi());
                             r.setUrutan(urut);
                             rincians.add(r);
                             rck = f.getRacikan();
@@ -581,6 +585,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         mnTerimaPasien = new javax.swing.JMenuItem();
         MnEtiket = new javax.swing.JMenuItem();
         MnNotaObat = new javax.swing.JMenuItem();
+        MnResepPrint = new javax.swing.JMenuItem();
         panelResep = new widget.PanelBiasa();
         panelBiasa4 = new widget.PanelBiasa();
         scrollPane1 = new widget.ScrollPane();
@@ -730,6 +735,18 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             }
         });
         printPopup.add(MnNotaObat);
+
+        MnResepPrint.setBackground(new java.awt.Color(255, 255, 255));
+        MnResepPrint.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MnResepPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/print.png"))); // NOI18N
+        MnResepPrint.setText("Print Resep");
+        MnResepPrint.setName("MnResepPrint"); // NOI18N
+        MnResepPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnResepPrintActionPerformed(evt);
+            }
+        });
+        printPopup.add(MnResepPrint);
 
         panelResep.setName("panelResep"); // NOI18N
         panelResep.setLayout(new java.awt.GridLayout(1, 2));
@@ -892,7 +909,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(370, 40, 60, 23);
 
         cmbTanggalTo.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-08-2020" }));
+        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "31-08-2020" }));
         cmbTanggalTo.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalTo.setName("cmbTanggalTo"); // NOI18N
         cmbTanggalTo.setOpaque(false);
@@ -952,7 +969,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         rdoRanap.setBounds(261, 10, 130, 23);
 
         cmbTanggalfrom.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-08-2020" }));
+        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "31-08-2020" }));
         cmbTanggalfrom.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalfrom.setName("cmbTanggalfrom"); // NOI18N
         cmbTanggalfrom.setOpaque(false);
@@ -1402,8 +1419,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         JOptionPane.showMessageDialog(null, cmDepo, "Silahkan pilih Depo", JOptionPane.QUESTION_MESSAGE);
         Bangsal depo = (Bangsal) cmDepo.getSelectedItem();
         if (cmDepo.getSelectedItem() != null) {
-            int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
-            int barisPilihan = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
+            int baris = tblData.getSelectedRow();
+            int barisPilihan = tblEditor.getSelectedRow();
             if (baris > -1) {
                 DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
                 if (barisPilihan > -1) {
@@ -1424,7 +1441,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         // TODO add your handling code here:
         int dialogButton = JOptionPane.YES_NO_OPTION;
         String depo = pro.getProperty("DEPOOBAT");
-        int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+        int baris = tblData.getSelectedRow();
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
             if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
@@ -1454,7 +1471,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void MnEtiketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnEtiketActionPerformed
         // TODO add your handling code here:
         String depo = pro.getProperty("DEPOOBAT");
-        int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+        int baris = tblData.getSelectedRow();
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
             if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
@@ -1487,7 +1504,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private void mnAturanPakaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnAturanPakaiActionPerformed
         // TODO add your handling code here:
-        int barisPilihan = tblFarmasi.convertRowIndexToModel(tblFarmasi.getSelectedRow());
+        int barisPilihan = tblFarmasi.getSelectedRow();
         if (barisPilihan > -1) {
             if (tblFarmasi.getSelectedColumn() == 3) {
                 aturanpakai.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
@@ -1500,7 +1517,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-        int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+        int baris = tblData.getSelectedRow();
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
             for (RincianResepVerifikasi r : modelFarmasi.getAll()) {
@@ -1518,7 +1535,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
-        int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+        int baris = tblData.getSelectedRow();
         if (baris > -1) {
             int nguiknguik = JOptionPane.showConfirmDialog(null, "Apakah anda akan menghapus data validasi resep..?", "PERHATIAN", JOptionPane.YES_NO_OPTION);
             if (nguiknguik == 0) {
@@ -1593,7 +1610,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private void mnEditAturanPakeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnEditAturanPakeActionPerformed
         // TODO add your handling code here:
-        int barisPilihan = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
+        int barisPilihan = tblEditor.getSelectedRow();
         if (barisPilihan > -1) {
             if (tblEditor.getSelectedColumn() == 11) {
                 aturanpakai.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
@@ -1606,7 +1623,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private void MnNotaObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnNotaObatActionPerformed
         // TODO add your handling code here:
-        int baris = tblData.convertRowIndexToModel(tblData.getSelectedRow());
+        int baris = tblData.getSelectedRow();
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
             double globalTot = 0;
@@ -1727,10 +1744,10 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void mnHapusObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnHapusObatActionPerformed
         // TODO add your handling code here:
         int dialogButton = JOptionPane.YES_NO_OPTION;
-        int baris = tblEditor.convertRowIndexToModel(tblEditor.getSelectedRow());
+        int baris = tblEditor.getSelectedRow();
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(row));
-            ObatResep obat = modelPilihan.get(baris);
+            ObatResep obat = modelPilihan.get(tblEditor.convertRowIndexToModel(baris));
             if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
                 int halo = JOptionPane.showConfirmDialog(null, "serius mau hapus obat : " + obat.getNamaObat(), "Perhatian", dialogButton);
                 if (halo == 0) {
@@ -1744,6 +1761,109 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Silahkan pilih baris obat yang mau di hapus..");
         }
     }//GEN-LAST:event_mnHapusObatActionPerformed
+
+    private void MnResepPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnResepPrintActionPerformed
+        // TODO add your handling code here:
+        DataEResep eresep = model.get(tblData.convertRowIndexToModel(row));
+        RegPeriksa reg = RegPeriksaDao.get(eresep.getNoRawat());
+
+        Pasien pasien = PasienDao.get(reg.getNorm());
+        Calendar cal = Calendar.getInstance();
+        int hari = cal.get(Calendar.DATE);
+        int bulan = cal.get(Calendar.MONTH);
+        int tahun = cal.get(Calendar.YEAR);
+        String nameBulan = Utils.monthName[bulan];
+        String tanggalReport = hari + " " + nameBulan + " " + tahun;
+        Age age = AgeCalculator.calculateAge(Utils.getDateFromString(pasien.getTglLahir()));
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("tanggal", "Cilacap, " + tanggalReport);
+        parameters.put("poli", eresep.getPoli());
+        parameters.put("dokter", eresep.getDokter());
+        parameters.put("isAlergi", "Tidak");
+        parameters.put("alergiName", "");
+        parameters.put("pasien", pasien.getNama());
+        parameters.put("tglLahir", Utils.format(Utils.getDateFromString(pasien.getTglLahir())) + " (" + age + ")");
+        parameters.put("noRm", pasien.getNorm());
+        parameters.put("beratBadan", "0 Kg");
+        parameters.put("jaminan", eresep.getJaminan());
+        List<ObatResep> dokters = PemberianObatDetailDao.getResepByNoresep(eresep.getNoResep(), kdBangsal, eresep.getJaminan(), reg.getKdPj());
+        List<ObatResep> dokterRacikans = ResepDao.getObatResepRacikanDetail(eresep.getNoResep(), kdBangsal, eresep.getJaminan(), reg.getKdPj());
+        List<ResepReport> list = new LinkedList<>();
+        List<ResepReport> lastList = new LinkedList<>();
+        Map<String, String> isiRacikanMap = new HashMap<>(); // isi racikan
+        for (ObatResep o : dokters) {
+            ResepReport r1 = new ResepReport();
+            r1.setNama("R/ "+o.getNamaObat() + " No." + Utils.toRoman(o.getJumlah()));
+            r1.setEtiket(o.getAturanPakai());
+            r1.setDosis(String.valueOf(o.getKandungan()));
+            r1.setRacikan("");
+            list.add(r1);
+        }
+        String rck = null;
+        for (ObatResep o : dokterRacikans) {
+            if (Utils.isBlank(rck)) {
+                System.out.println("racikan " + o.getRacikan());
+                RincianResepVerifikasi r = new RincianResepVerifikasi();
+                ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(eresep.getNoResep(), o.getKodeRacikan());
+                ResepReport r1 = new ResepReport();
+                r1.setKodeObat(obatRck.getKodeObat());
+                r1.setNama("R/ "+obatRck.getNamaObat()+"  "+obatRck.getMetodeRacik());
+                r1.setEtiket(obatRck.getAturanPakai());
+                r1.setDosis(String.valueOf(obatRck.getKandungan()));
+                r1.setRacikan("");
+                list.add(r1);
+                rck = o.getRacikan();
+            } else {
+                if (!rck.equals(o.getRacikan())) {
+                    System.out.println("racikan " + o.getRacikan());
+                    rck = o.getRacikan();
+                    ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(eresep.getNoResep(), o.getKodeRacikan());
+                    ResepReport r1 = new ResepReport();
+                    r1.setKodeObat(obatRck.getKodeObat());
+                    r1.setNama("R/ "+obatRck.getNamaObat()+"  "+obatRck.getMetodeRacik());
+                    r1.setEtiket(obatRck.getAturanPakai());
+                    r1.setDosis(String.valueOf(obatRck.getKandungan()));
+                    r1.setRacikan("");
+                    list.add(r1);
+                }
+            }
+            ResepReport r1 = new ResepReport();
+            r1.setKodeObat(o.getKodeObat());
+            r1.setNama(o.getNamaObat());
+            r1.setEtiket(o.getAturanPakai());
+            r1.setDosis(String.valueOf(o.getKandungan()));
+            r1.setRacikan("");
+            list.add(r1);
+
+            String isiRacikan = isiRacikanMap.get(o.getKodeObat());
+            if (isiRacikan == null) {
+                isiRacikan = o.getNamaObat() + "  No.  " + Utils.toRoman(o.getJumlah());
+            } else {
+                isiRacikan += "\n" + o.getNamaObat() + o.getKandungan();
+            }
+            isiRacikanMap.put(o.getKodeObat(), isiRacikan);
+
+        }
+        for (ResepReport r : list) {
+            String isiRacikan = isiRacikanMap.get(r.getKodeObat());
+            if (isiRacikan == null) {
+                continue;
+            }
+            String[] ss = isiRacikan.split("\\n");
+            r.setNama(ss[0]);
+            isiRacikan = "";
+            for (int i = 1; i < ss.length; i++) {
+                isiRacikan += (isiRacikan.length() == 0 ? "" : "\n") + ss[i];
+            }
+            r.setRacikan(isiRacikan);
+           
+        }
+
+        String reportName = "resep.jasper";
+        String folder = "report";
+        Utils.print(reportName, folder, ".:: Nota EResep ::.", list, parameters);
+
+    }//GEN-LAST:event_MnResepPrintActionPerformed
 
     private void deleteObatSatuan() {
 //        int dialogButton = JOptionPane.YES_NO_OPTION;
@@ -1793,6 +1913,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private javax.swing.JMenuItem MnEtiket;
     private javax.swing.JMenuItem MnNotaObat;
     private javax.swing.JMenuItem MnPackaging;
+    private javax.swing.JMenuItem MnResepPrint;
     private javax.swing.JPopupMenu Popup;
     private javax.swing.JPopupMenu PopupEditorFarmasi;
     private widget.Button btnAddObat;

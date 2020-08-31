@@ -16,6 +16,7 @@ public class RegPeriksa {
     private Date tanggalRawat;
     private String jamRawat;
     private String kdPj;
+    private String norm;
     
     public RegPeriksa(){}
 
@@ -73,6 +74,20 @@ public class RegPeriksa {
      */
     public void setKdPj(String kdPj) {
         this.kdPj = kdPj;
+    }
+
+    /**
+     * @return the norm
+     */
+    public String getNorm() {
+        return norm;
+    }
+
+    /**
+     * @param norm the norm to set
+     */
+    public void setNorm(String norm) {
+        this.norm = norm;
     }
     
     

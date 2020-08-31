@@ -253,5 +253,33 @@ public class Utils {
     public static String TSID(Date date) {
         return convertDate(date, TSID_FORMAT_LONG);
     }
+    
+    public static String toRoman(Double jumlah)
+    {
+        int num = jumlah.intValue();
+        String[] romanCharacters = { "M", "CM", "D", "C", "XC", "L", "X", "IX", "V", "I" };
+        int[] romanValues = { 1000, 900, 500, 100, 90, 50, 10, 9, 5, 1 };
+        String result = "";
+
+        for (int i = 0; i < romanValues.length; i++)
+        {
+            int numberInPlace = num / romanValues[i];
+            if (numberInPlace == 0) continue;
+            result += numberInPlace == 4 && i > 0? romanCharacters[i] + romanCharacters[i - 1]:
+                    new String(new char[numberInPlace]).replace("\0",romanCharacters[i]);
+            num = num % romanValues[i];
+        }
+        return result;
+    }
+    
+    public static Date getDateFromString(String strDate) {
+        Date tglLahirr= null;
+        try {
+            tglLahirr = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return tglLahirr;
+    }
 
 }
