@@ -561,6 +561,10 @@ public class ResepDao {
                             psttmn.close();
                         }
                     }
+                }else{
+                    if(isResepRacikanExist(noResep)){
+                        updateAturanPakaiRacikan(obat.getAturanPakai(), noResep, obat.getKodeObat());
+                    }
                 }
 
             }
