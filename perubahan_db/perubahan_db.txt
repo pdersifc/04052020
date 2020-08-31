@@ -156,3 +156,8 @@ CREATE TABLE `e_resep_racikan_rsifc_detail` (
   CONSTRAINT `e_resep_racikan_rsifc_detail_kode_barang_ibfk_2` FOREIGN KEY (`kode_brng`) REFERENCES `databarang` (`kode_brng`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `e_resep_racikan_rsifc_detail_noresep_ibfk_1` FOREIGN KEY (`no_resep`) REFERENCES `e_resep_racikan_rsifc` (`no_resep`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=latin1
+
+
+----------------------------------- tgl 31/08/2020 -----------------------------------------------------------
+ALTER TABLE `rsifc_db`.`obat_racikan_eresep_rsifc`   
+  ADD COLUMN `aturan_pakai_farmasi` VARCHAR(150) NULL AFTER `aturan_pakai`;
