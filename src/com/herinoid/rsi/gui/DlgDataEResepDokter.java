@@ -1380,7 +1380,9 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "Resep belum divalidasi, silahkan di validasi terlebih dahulu..");
             } else if (resep.getStatus().equals(Resep.STATUS_SAMPAI_PASIEN)) {
                 JOptionPane.showMessageDialog(null, "Resep sudah diambil pasien..");
-            } else {
+            } else if (resep.getStatus().equals(Resep.STATUS_SUDAH_VERIFIKASI)) {
+                JOptionPane.showMessageDialog(null, "Resep menunggu dispensing selesai..");                
+            } else if (resep.getStatus().equals(Resep.STATUS_PACKING)){
                 int halo = JOptionPane.showConfirmDialog(null, "Apa benar obat sudah diambil pasien?? ", "Perhatian", dialogButton);
                 if (halo == 0) {
                     boolean berhatsil = ResepDao.updateDiterimaPasien(resep.getNoResep());
