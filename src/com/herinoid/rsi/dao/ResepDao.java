@@ -545,13 +545,13 @@ public class ResepDao {
                         psttmn.setDouble(7, obat.getJumlah());
                         psttmn.setDouble(8, obat.getEmbalase());
                         psttmn.setDouble(9, obat.getTuslah());
-                        psttmn.setDouble(10, (obat.getHarga() * obat.getJumlah()) + obat.getEmbalase() + obat.getTuslah());
+                        psttmn.setDouble(10, (obat.getHarga() * Utils.rounding(obat.getJumlah())) + obat.getEmbalase() + obat.getTuslah());
                         psttmn.setString(11, sttRawat);
                         psttmn.setString(12, depo);
                         psttmn.setString(13, "");
                         psttmn.setString(14, noResep);
-                        psttmn.executeUpdate();
-                        updateStokGudang(obat.getStok() - obat.getJumlah(), obat.getKodeObat(), depo);
+                        psttmn.executeUpdate();                        
+                        updateStokGudang(obat.getStok() - Utils.rounding(obat.getJumlah()), obat.getKodeObat(), depo);
                         saveObatValidasi(noResep, obat);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -956,7 +956,7 @@ public class ResepDao {
                 psttmn.setBoolean(3, !Utils.isBlank(obat.getRacikan()));
                 psttmn.setString(4, !Utils.isBlank(obat.getRacikan()) ? obat.getKodeRacikan() : "");
                 psttmn.setString(5, !Utils.isBlank(obat.getRacikan()) ? obat.getRacikan() : "");
-                psttmn.setDouble(6, obat.getJumlah());
+                psttmn.setDouble(6, Utils.rounding(obat.getJumlah()));
                 psttmn.setDouble(7, obat.getEmbalase());
                 psttmn.setDouble(8, obat.getTuslah());
                 psttmn.setString(9, obat.getAturanPakai());
