@@ -287,5 +287,18 @@ public class Utils {
          double d = 1.0 * y; 
          return d;
      }
+     
+     public static String getNextMonthDate(java.sql.Date sqlDate) {
+        try {
+            java.util.Date utilDate = new java.util.Date(sqlDate.getTime());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(utilDate);
+            cal.add(Calendar.MONTH, 1);
+            return convertDate(cal.getTime(), DATE_FORMAT2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

@@ -550,7 +550,7 @@ public class ResepDao {
                         psttmn.setString(12, depo);
                         psttmn.setString(13, "");
                         psttmn.setString(14, noResep);
-                        psttmn.executeUpdate();                        
+                        psttmn.executeUpdate();
                         updateStokGudang(obat.getStok() - Utils.rounding(obat.getJumlah()), obat.getKodeObat(), depo);
                         saveObatValidasi(noResep, obat);
                     } catch (Exception e) {
@@ -561,8 +561,8 @@ public class ResepDao {
                             psttmn.close();
                         }
                     }
-                }else{
-                    if(isResepRacikanExist(noResep)){
+                } else {
+                    if (isResepRacikanExist(noResep)) {
                         updateAturanPakaiRacikan(obat.getAturanPakai(), noResep, obat.getKodeObat());
                     }
                 }
@@ -1051,7 +1051,7 @@ public class ResepDao {
     public static List<EtiketObat> getEtiketByNoResep(String noResep, String depo) {
         List<EtiketObat> obatList = new LinkedList<>();
         try {
-            ps = koneksi.prepareStatement("SELECT e.`no_resep`,e.`no_rawat`,e.`tgl_resep`,e.`jam_resep`,p.`no_rkm_medis`,p.`nm_pasien`,b.`nama_brng`,d.`jml`,s.`satuan`,b.`expire`,d.`aturan_pakai`,l.`nm_bangsal`,k.`nm_poli` FROM obat_validasi_eresep_rsifc d "
+            ps = koneksi.prepareStatement("SELECT e.`no_resep`,e.`no_rawat`,e.`tgl_resep`,e.`jam_resep`,p.`no_rkm_medis`,p.`nm_pasien`,b.`nama_brng`,d.`jml`,s.`satuan`,b.`expire`,d.`aturan_pakai`,l.`nm_bangsal`,k.`nm_poli`,d.kode_racikan FROM obat_validasi_eresep_rsifc d "
                     + "JOIN e_resep_rsifc e ON e.`no_resep`=d.`no_resep` "
                     + "JOIN databarang b ON d.kode_brng = b.kode_brng "
                     + "JOIN gudangbarang g ON b.`kode_brng`=g.`kode_brng` "
@@ -1065,20 +1065,22 @@ public class ResepDao {
             ps.setString(2, depo);
             rs = ps.executeQuery();
             while (rs.next()) {
-                EtiketObat obat = new EtiketObat();
-                obat.setNoResep(rs.getString("no_resep"));
-                obat.setNoRawat(rs.getString("no_rawat"));
-                obat.setTanggal(Utils.formatDateSql(rs.getDate("tgl_resep")));
-                obat.setJam(rs.getString("jam_resep"));
-                obat.setNoRekamMedis(rs.getString("no_rkm_medis"));
-                obat.setPasien(rs.getString("nm_pasien"));
-                obat.setObat(rs.getString("nama_brng"));
-                obat.setSatuan(rs.getString("satuan"));
-                obat.setJml(rs.getInt("jml"));
-                obat.setExpire(rs.getDate("expire") == null ? "00:00:00" : Utils.formatDateSql(rs.getDate("expire")));
-                obat.setAturanPakai(rs.getString("aturan_pakai"));
-                obat.setLokasi(rs.getString("nm_poli"));
-                obatList.add(obat);
+                if (Utils.isBlank(rs.getString("kode_racikan"))) {
+                    EtiketObat obat = new EtiketObat();
+                    obat.setNoResep(rs.getString("no_resep"));
+                    obat.setNoRawat(rs.getString("no_rawat"));
+                    obat.setTanggal(Utils.formatDateSql(rs.getDate("tgl_resep")));
+                    obat.setJam(rs.getString("jam_resep"));
+                    obat.setNoRekamMedis(rs.getString("no_rkm_medis"));
+                    obat.setPasien(rs.getString("nm_pasien"));
+                    obat.setObat(rs.getString("nama_brng"));
+                    obat.setSatuan(rs.getString("satuan"));
+                    obat.setJml(rs.getInt("jml"));
+                    obat.setExpire(rs.getDate("expire") == null ? "00:00:00" : Utils.formatDateSql(rs.getDate("expire")));
+                    obat.setAturanPakai(rs.getString("aturan_pakai"));
+                    obat.setLokasi(rs.getString("nm_poli"));
+                    obatList.add(obat);
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -1368,6 +1370,54 @@ public class ResepDao {
             System.out.println("Notifikasi : " + e);
         }
         return sukses;
+    }
+
+    public static List<EtiketObat> getEtiketRacikanByNoResep(String noResep) {
+        List<EtiketObat> obatList = new LinkedList<>();
+        try {
+            ps = koneksi.prepareStatement("SELECT r.`no_rawat`,r.`no_resep`,r.`kd_racik`,r.`nama_racik`,r.`aturan_pakai_farmasi`,r.`jml_dr`,m.`nm_racik`,r.`tgl_perawatan`,r.`jam`,k.`nm_poli`,s.`nm_pasien`,s.`no_rkm_medis` FROM obat_racikan_eresep_rsifc r  "
+                    + "JOIN metode_racik m ON r.`metode_racik`=m.`kd_racik` "
+                    + "JOIN reg_periksa p ON p.`no_rawat` = r.`no_rawat`  "
+                    + "JOIN poliklinik k ON p.`kd_poli`= k.`kd_poli`  "
+                    + "JOIN pasien s ON s.`no_rkm_medis` = p.`no_rkm_medis`  "
+                    + "WHERE r.`no_resep` = ?");
+            ps.setString(1, noResep);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                EtiketObat obat = new EtiketObat();
+                obat.setNoResep(rs.getString("no_resep"));
+                obat.setNoRawat(rs.getString("no_rawat"));
+                obat.setTanggal(Utils.formatDateSql(rs.getDate("tgl_perawatan")));
+                obat.setJam(rs.getString("jam"));
+                obat.setPasien(rs.getString("nm_pasien"));
+                obat.setObat(rs.getString("nama_racik"));
+                obat.setSatuan(rs.getString("nm_racik"));
+                obat.setJml(rs.getInt("jml_dr"));
+                obat.setExpire(Utils.getNextMonthDate(rs.getDate("tgl_perawatan")));
+                obat.setAturanPakai(rs.getString("aturan_pakai_farmasi"));
+                obat.setLokasi(rs.getString("nm_poli"));
+                obat.setNoRekamMedis(rs.getString("no_rkm_medis"));
+                obatList.add(obat);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obatList;
     }
 
 }

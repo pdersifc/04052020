@@ -1486,6 +1486,13 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 param.put("emailrs", akses.getemailrs());
                 param.put("logo", Sequel.cariGambar("select logo from setting"));
                 List<EtiketObat> data = ResepDao.getEtiketByNoResep(resep.getNoResep(), depo);
+                if(ResepDao.isResepRacikanExist(resep.getNoResep())){
+                    if(data==null){
+                        data = new LinkedList<>();
+                    }
+                    List<EtiketObat> data2 = ResepDao.getEtiketRacikanByNoResep(resep.getNoResep());
+                    data.addAll(data2);
+                }
                 if (data != null) {
                     String reportName = "etiketEResep.jasper";
                     String folder = "report";
@@ -1664,7 +1671,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
                             globalTot = globalTot + total;
                             r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
-                            r.setAturanPakai(f.getAturanPakai());
+                            r.setAturanPakai(f.getAturanPakaiFarmasi());
                             rincians.add(r);
                         }
 
@@ -1684,7 +1691,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                 r.setRacikan(f.getRacikan());
                                 r.setNamaObat(obatRck.getMetodeRacik());
                                 r.setRincian(String.valueOf(obatRck.getJmlRacik()));
-                                r.setAturanPakai(obatRck.getAturanPakai());
+                                r.setAturanPakai(obatRck.getAturanPakaiFarmasi());
                                 r.setUrutan(urut);
                                 rincians.add(r);
                             } else {
@@ -1695,7 +1702,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                     r.setNamaObat(obatRck.getMetodeRacik());
                                     r.setRacikan(f.getRacikan());
                                     r.setRincian(String.valueOf(obatRck.getJmlRacik()));
-                                    r.setAturanPakai(obatRck.getAturanPakai());
+                                    r.setAturanPakai(obatRck.getAturanPakaiFarmasi());
                                     r.setUrutan(urut);
                                     rincians.add(r);
                                     rck = f.getRacikan();
@@ -1707,7 +1714,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
                             globalTot = globalTot + total;
                             r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
-                            r.setAturanPakai(f.getAturanPakai());
+                            r.setAturanPakai(f.getAturanPakaiFarmasi());
                             r.setUrutan(urut);
                             rincians.add(r);
                         }
