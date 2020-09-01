@@ -433,7 +433,7 @@ public class ResepDao {
                 obat.setStok(rset.getDouble("stok"));
                 obat.setParent(false);
 
-                double marginPersen = 20;
+                double marginPersen = 28;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
                     if(marginBpjs!=null){
@@ -842,7 +842,7 @@ public class ResepDao {
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
                 obat.setParent(false);
-                double marginPersen = 20;
+                double marginPersen = 28;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
                     if(marginBpjs!=null){
