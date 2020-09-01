@@ -1069,13 +1069,13 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
                 if(sukses==true){
 //                    if(!formvalid.equals("No")){
                         Sequel.queryu("delete from tampjurnal");
-                        Sequel.menyimpan2("tampjurnal","'"+Sequel.cariIsi("select Retur_Dari_pembeli from set_akun")+"','RETUR PENJUALAN','"+ttlretur+"','0'","Rekening");    
-                        Sequel.menyimpan2("tampjurnal","'"+Sequel.cariIsi("select Kontra_Retur_Dari_Pembeli from set_akun")+"','KAS DI TANGAN','0','"+ttlretur+"'","Rekening"); 
+                        Sequel.menyimpan2("tampjurnal","'"+Sequel.cariIsi("select Retur_Dari_pembeli from set_akun")+"','RETUR PENJUALAN','"+Utils.rounding(ttlretur)+"','0'","Rekening");    
+                        Sequel.menyimpan2("tampjurnal","'"+Sequel.cariIsi("select Kontra_Retur_Dari_Pembeli from set_akun")+"','KAS DI TANGAN','0','"+Utils.rounding(ttlretur)+"'","Rekening"); 
                         sukses=jur.simpanJurnal(NoRetur.getText(),Valid.SetTgl(TglRetur.getSelectedItem()+""),"U","RETUR PENJUALAN DI "+nmgudang.getText().toUpperCase()+", OLEH "+akses.getkode());
                         
                         // edited by herinoid, simpan 7,5% dari retur ke jurnal. masuk ke rekening pendapatan rawat inap
-                        Sequel.menyimpan2("tampjurnal","'"+Sequel.cariIsi("select Retur_Dari_pembeli from set_akun")+"','RETUR PENJUALAN','"+totalPengurang+"','0'","Rekening");    
-                        Sequel.menyimpan2("tampjurnal","'"+Sequel.cariIsi("select Kontra_Retur_Dari_Pembeli from set_akun")+"','PENDAPATAN OBAT RAWAT INAP','0','"+totalPengurang+"'","Rekening"); 
+                        Sequel.menyimpan2("tampjurnal","'"+Sequel.cariIsi("select Retur_Dari_pembeli from set_akun")+"','RETUR PENJUALAN','"+Utils.rounding(totalPengurang)+"','0'","Rekening");    
+                        Sequel.menyimpan2("tampjurnal","'"+Sequel.cariIsi("select Kontra_Retur_Dari_Pembeli from set_akun")+"','PENDAPATAN OBAT RAWAT INAP','0','"+Utils.rounding(totalPengurang)+"'","Rekening"); 
                         sukses=jur.simpanJurnal(NoRetur.getText(),Valid.SetTgl(TglRetur.getSelectedItem()+""),"U","7,5% DARI RETUR PENJUALAN RI DI "+nmgudang.getText().toUpperCase()+", OLEH "+akses.getkode());
                         
                         
