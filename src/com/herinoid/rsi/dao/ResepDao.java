@@ -371,7 +371,7 @@ public class ResepDao {
                 obat.setDokter(rs.getString("nm_dokter"));
                 obat.setJaminan(rs.getString("png_jawab"));
                 obat.setNorm(rs.getString("no_rkm_medis"));
-                obat.setPasien(rs.getString("no_rawat") + " :: " + rs.getString("no_rkm_medis") + " :: " + rs.getString("nm_pasien"));
+                obat.setPasien(rs.getString("nm_pasien") +" ("+rs.getString("no_rkm_medis")+")");
                 obat.setValidasi(rs.getString("validasi"));
                 obat.setDiterima(rs.getString("sampai_pasien"));
                 obat.setPacking(rs.getString("packing"));
@@ -452,7 +452,7 @@ public class ResepDao {
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
 //                System.out.println("margin persen = "+marginPersen+" || margin rupiah = "+margin+" || harga beli obat = "+obat.getHargaBeli()+ " || hpp = "+hpp);
-                obat.setHarga(Utils.rounding(hpp));
+                obat.setHarga(Utils.roundUp(hpp));
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
@@ -717,7 +717,7 @@ public class ResepDao {
                 obat.setDokter(rs.getString("nm_dokter"));
                 obat.setJaminan(rs.getString("png_jawab"));
                 obat.setNorm(rs.getString("no_rkm_medis"));
-                obat.setPasien(rs.getString("no_rawat") + " :: " + rs.getString("no_rkm_medis") + " :: " + rs.getString("nm_pasien"));
+                obat.setPasien(rs.getString("nm_pasien") +" ("+rs.getString("no_rkm_medis")+")");
                 obat.setValidasi(rs.getString("validasi"));
                 obat.setDiterima(rs.getString("sampai_pasien"));
                 obat.setPacking(rs.getString("packing"));
@@ -858,7 +858,7 @@ public class ResepDao {
                 }
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
-                obat.setHarga(Utils.rounding(hpp));
+                obat.setHarga(Utils.roundUp(hpp));
 //                double harga = rset.getDouble("ralan");
 //                if (tarif.equals(Konstan.PASIEN_KARYAWAN)) {
 //                    harga = rset.getDouble("karyawan");
@@ -1140,7 +1140,7 @@ public class ResepDao {
                 obat.setDokter(rs.getString("nm_dokter"));
                 obat.setJaminan(rs.getString("png_jawab"));
                 obat.setNorm(rs.getString("no_rkm_medis"));
-                obat.setPasien(rs.getString("no_rawat") + " :: " + rs.getString("no_rkm_medis") + " :: " + rs.getString("nm_pasien"));
+                obat.setPasien(rs.getString("nm_pasien"));
                 obat.setValidasi(rs.getString("validasi"));
                 obat.setDiterima(rs.getString("sampai_pasien"));
                 obat.setPacking(rs.getString("packing"));
@@ -1195,7 +1195,7 @@ public class ResepDao {
                 obat.setDokter(rs.getString("nm_dokter"));
                 obat.setJaminan(rs.getString("png_jawab"));
                 obat.setNorm(rs.getString("no_rkm_medis"));
-                obat.setPasien(rs.getString("no_rawat") + " :: " + rs.getString("no_rkm_medis") + " :: " + rs.getString("nm_pasien"));
+                obat.setPasien(rs.getString("nm_pasien"));
                 obat.setValidasi(rs.getString("validasi"));
                 obat.setDiterima(rs.getString("sampai_pasien"));
                 obat.setPacking(rs.getString("packing"));

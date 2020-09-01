@@ -1684,7 +1684,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
                             globalTot = globalTot + total;
                             r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
-                            r.setAturanPakai(f.getAturanPakaiFarmasi());
+                            r.setAturanPakai(f.getAturanPakai());
                             rincians.add(r);
                         }
 
@@ -1704,7 +1704,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                 r.setRacikan(f.getRacikan());
                                 r.setNamaObat(obatRck.getMetodeRacik());
                                 r.setRincian(String.valueOf(obatRck.getJmlRacik()));
-                                r.setAturanPakai(obatRck.getAturanPakaiFarmasi());
+                                r.setAturanPakai(obatRck.getAturanPakai());
                                 r.setUrutan(urut);
                                 rincians.add(r);
                             } else {
@@ -1715,7 +1715,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                     r.setNamaObat(obatRck.getMetodeRacik());
                                     r.setRacikan(f.getRacikan());
                                     r.setRincian(String.valueOf(obatRck.getJmlRacik()));
-                                    r.setAturanPakai(obatRck.getAturanPakaiFarmasi());
+                                    r.setAturanPakai(obatRck.getAturanPakai());
                                     r.setUrutan(urut);
                                     rincians.add(r);
                                     rck = f.getRacikan();
@@ -1727,7 +1727,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             double total = (f.getJumlah() * f.getHarga()) + f.getEmbalase() + f.getTuslah();
                             globalTot = globalTot + total;
                             r.setRincian(Utils.format(f.getJumlah(), 0) + " x ( " + Utils.format(f.getHarga(), 0) + " + " + Utils.format(f.getEmbalase(), 0) + " + " + Utils.format(f.getTuslah(), 0) + " ) = " + Utils.format(total, 0));
-                            r.setAturanPakai(f.getAturanPakaiFarmasi());
+                            r.setAturanPakai(f.getAturanPakai());
                             r.setUrutan(urut);
                             rincians.add(r);
                         }

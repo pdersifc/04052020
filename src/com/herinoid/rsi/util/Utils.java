@@ -12,6 +12,8 @@ import java.awt.Toolkit;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -194,8 +196,8 @@ public class Utils {
             } // end for i
         } // end if
 
-        try {            
-            String namafile = "./" + reportDirName + "/" + reportName;            
+        try {
+            String namafile = "./" + reportDirName + "/" + reportName;
             JRDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperPrint jasperPrint = JasperFillManager.fillReport(namafile, parameters, dataSource);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -212,7 +214,7 @@ public class Utils {
         }
 
     }
-    
+
     public static void printWithSub(String reportName, String reportDirName, String judul, Collection<?> list, Map parameters) {
         Properties systemProp = System.getProperties();
         String currentDir = systemProp.getProperty("user.dir");
@@ -232,7 +234,7 @@ public class Utils {
         try {
             String subReport = "./" + reportDirName + "/";
             parameters.put("SUBREPORT_DIR", subReport);
-            String namafile = "./" + reportDirName + "/" + reportName;            
+            String namafile = "./" + reportDirName + "/" + reportName;
             JRDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperPrint jasperPrint = JasperFillManager.fillReport(namafile, parameters, dataSource);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -249,31 +251,31 @@ public class Utils {
         }
 
     }
-    
+
     public static String TSID(Date date) {
         return convertDate(date, TSID_FORMAT_LONG);
     }
-    
-    public static String toRoman(Double jumlah)
-    {
+
+    public static String toRoman(Double jumlah) {
         int num = jumlah.intValue();
-        String[] romanCharacters = { "M", "CM", "D", "C", "XC", "L", "X", "IX", "V", "I" };
-        int[] romanValues = { 1000, 900, 500, 100, 90, 50, 10, 9, 5, 1 };
+        String[] romanCharacters = {"M", "CM", "D", "C", "XC", "L", "X", "IX", "V", "I"};
+        int[] romanValues = {1000, 900, 500, 100, 90, 50, 10, 9, 5, 1};
         String result = "";
 
-        for (int i = 0; i < romanValues.length; i++)
-        {
+        for (int i = 0; i < romanValues.length; i++) {
             int numberInPlace = num / romanValues[i];
-            if (numberInPlace == 0) continue;
-            result += numberInPlace == 4 && i > 0? romanCharacters[i] + romanCharacters[i - 1]:
-                    new String(new char[numberInPlace]).replace("\0",romanCharacters[i]);
+            if (numberInPlace == 0) {
+                continue;
+            }
+            result += numberInPlace == 4 && i > 0 ? romanCharacters[i] + romanCharacters[i - 1]
+                    : new String(new char[numberInPlace]).replace("\0", romanCharacters[i]);
             num = num % romanValues[i];
         }
         return result;
     }
-    
+
     public static Date getDateFromString(String strDate) {
-        Date tglLahirr= null;
+        Date tglLahirr = null;
         try {
             tglLahirr = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
         } catch (ParseException e) {
@@ -281,14 +283,21 @@ public class Utils {
         }
         return tglLahirr;
     }
-     public static double rounding(double value){
-         String basicVal = format(value, 0);
-         int y = Integer.parseInt(basicVal.replace(".", ""));
-         double d = 1.0 * y; 
-         return d;
-     }
-     
-     public static String getNextMonthDate(java.sql.Date sqlDate) {
+
+    public static double rounding(double value) {
+        String basicVal = format(value, 0);
+        int y = Integer.parseInt(basicVal.replace(".", ""));
+        double d = 1.0 * y;
+        return d;
+    }
+
+    public static double roundUp(double value) {
+        BigDecimal bd = new BigDecimal(value);
+        BigDecimal bdRounded = bd.setScale(0, RoundingMode.CEILING);
+        return bdRounded.doubleValue();
+    }
+
+    public static String getNextMonthDate(java.sql.Date sqlDate) {
         try {
             java.util.Date utilDate = new java.util.Date(sqlDate.getTime());
             Calendar cal = Calendar.getInstance();

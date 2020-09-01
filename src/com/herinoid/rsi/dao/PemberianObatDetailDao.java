@@ -125,7 +125,7 @@ public class PemberianObatDetailDao {
                 }
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
-                obat.setHarga(Utils.rounding(hpp));
+                obat.setHarga(Utils.roundUp(hpp));
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
@@ -192,7 +192,7 @@ public class PemberianObatDetailDao {
                 }
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
-                obat.setHarga(Utils.rounding(hpp));
+                obat.setHarga(Utils.roundUp(hpp));
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
