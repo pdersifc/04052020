@@ -68,10 +68,19 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import widget.ComboBox;
 import inventory.DlgAturanPakai;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.TrayIcon.MessageType;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import javax.swing.Timer;
 import org.json.JSONObject;
 
 /**
@@ -98,6 +107,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private sekuel Sequel = new sekuel();
     private DlgAturanPakai aturanpakai = new DlgAturanPakai(null, false);
     private double total = 0;
+    private int baruAda = 0;
 
     /**
      * Creates new form DlgPenyakit
@@ -297,6 +307,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             }
         });
         loadToday();
+        reloadLiveData();
     }
 
     private List<ObatResep> getAllObatListByNoResep(List<ObatResep> dataObats, String noResep) {
@@ -1381,8 +1392,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             } else if (resep.getStatus().equals(Resep.STATUS_SAMPAI_PASIEN)) {
                 JOptionPane.showMessageDialog(null, "Resep sudah diambil pasien..");
             } else if (resep.getStatus().equals(Resep.STATUS_SUDAH_VERIFIKASI)) {
-                JOptionPane.showMessageDialog(null, "Resep menunggu dispensing selesai..");                
-            } else if (resep.getStatus().equals(Resep.STATUS_PACKING)){
+                JOptionPane.showMessageDialog(null, "Resep menunggu dispensing selesai..");
+            } else if (resep.getStatus().equals(Resep.STATUS_PACKING)) {
                 int halo = JOptionPane.showConfirmDialog(null, "Apa benar obat sudah diambil pasien?? ", "Perhatian", dialogButton);
                 if (halo == 0) {
                     boolean berhatsil = ResepDao.updateDiterimaPasien(resep.getNoResep());
@@ -1488,8 +1499,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 param.put("emailrs", akses.getemailrs());
                 param.put("logo", Sequel.cariGambar("select logo from setting"));
                 List<EtiketObat> data = ResepDao.getEtiketByNoResep(resep.getNoResep(), depo);
-                if(ResepDao.isResepRacikanExist(resep.getNoResep())){
-                    if(data==null){
+                if (ResepDao.isResepRacikanExist(resep.getNoResep())) {
+                    if (data == null) {
                         data = new LinkedList<>();
                     }
                     List<EtiketObat> data2 = ResepDao.getEtiketRacikanByNoResep(resep.getNoResep());
@@ -1802,7 +1813,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         Map<String, String> isiRacikanMap = new HashMap<>(); // isi racikan
         for (ObatResep o : dokters) {
             ResepReport r1 = new ResepReport();
-            r1.setNama("R/ "+o.getNamaObat() + " No." + Utils.toRoman(o.getJumlah()));
+            r1.setNama("R/ " + o.getNamaObat() + " No." + Utils.toRoman(o.getJumlah()));
             r1.setEtiket(o.getAturanPakai());
             r1.setDosis(String.valueOf(o.getKandungan()));
             r1.setRacikan("");
@@ -1816,7 +1827,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(eresep.getNoResep(), o.getKodeRacikan());
                 ResepReport r1 = new ResepReport();
                 r1.setKodeObat(obatRck.getKodeObat());
-                r1.setNama("R/ "+obatRck.getNamaObat()+"  "+obatRck.getMetodeRacik());
+                r1.setNama("R/ " + obatRck.getNamaObat() + "  " + obatRck.getMetodeRacik());
                 r1.setEtiket(obatRck.getAturanPakai());
                 r1.setDosis(String.valueOf(obatRck.getKandungan()));
                 r1.setRacikan("");
@@ -1829,7 +1840,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                     ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(eresep.getNoResep(), o.getKodeRacikan());
                     ResepReport r1 = new ResepReport();
                     r1.setKodeObat(obatRck.getKodeObat());
-                    r1.setNama("R/ "+obatRck.getNamaObat()+"  "+obatRck.getMetodeRacik());
+                    r1.setNama("R/ " + obatRck.getNamaObat() + "  " + obatRck.getMetodeRacik());
                     r1.setEtiket(obatRck.getAturanPakai());
                     r1.setDosis(String.valueOf(obatRck.getKandungan()));
                     r1.setRacikan("");
@@ -1865,7 +1876,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 isiRacikan += (isiRacikan.length() == 0 ? "" : "\n") + ss[i];
             }
             r.setRacikan(isiRacikan);
-           
+
         }
 
         String reportName = "resep.jasper";
@@ -2037,5 +2048,38 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             }
         }
         modelPilihan.add(obatResep);
+    }
+
+    private void reloadLiveData() {
+        Timer timer = new Timer(0, new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int x = ResepDao.getNewRecordEResep();
+                if(x>baruAda){
+                    try {
+                        loadToday();
+                        displayTray();
+                        baruAda = x;
+                    } catch (AWTException ex) {
+                        Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }                
+            }
+        });
+
+        timer.setDelay(30000); 
+        timer.start();
+    }
+    
+    private void displayTray() throws AWTException {
+        SystemTray tray = SystemTray.getSystemTray();
+        Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
+        //Image image = Toolkit.getDefaultToolkit().createImage(getClass().getResource("icon.png"));
+        TrayIcon trayIcon = new TrayIcon(image, "Info Resep");
+        trayIcon.setImageAutoSize(true);
+        trayIcon.setToolTip("E-Resep Baru");
+        tray.add(trayIcon);
+        trayIcon.displayMessage("E-Resep Notif", "Ada Resep Baru masuk....", MessageType.INFO);
     }
 }

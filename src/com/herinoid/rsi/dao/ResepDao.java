@@ -1422,5 +1422,33 @@ public class ResepDao {
         }
         return obatList;
     }
+    
+    public static int getNewRecordEResep() {
+        int x = 0;
+        try {
+            ps = koneksi.prepareStatement("SELECT COUNT(*) as jumlah FROM e_resep_rsifc WHERE tgl_resep = CURRENT_DATE");
+           
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                x = rs.getInt("jumlah");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return x;
+    }
 
 }
