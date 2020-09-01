@@ -433,13 +433,19 @@ public class ResepDao {
                 obat.setStok(rset.getDouble("stok"));
                 obat.setParent(false);
 
-                double marginPersen = 0;
+                double marginPersen = 20;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
-                    marginPersen = marginBpjs.getRalan();
+                    if(marginBpjs!=null){
+                        marginPersen = marginBpjs.getRalan();
+                    }
+                    
                 } else {
                     MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                    marginPersen = marginNon.getMargin();
+                    if(marginNon!=null){
+                        marginPersen = marginNon.getMargin();
+                    }
+                    
                 }
                 
                 
@@ -836,13 +842,19 @@ public class ResepDao {
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
                 obat.setParent(false);
-                double marginPersen = 0;
+                double marginPersen = 20;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
-                    marginPersen = marginBpjs.getRalan();
+                    if(marginBpjs!=null){
+                        marginPersen = marginBpjs.getRalan();
+                    }
+                    
                 } else {
                     MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                    marginPersen = marginNon.getMargin();
+                    if(marginNon!=null){
+                        marginPersen = marginNon.getMargin();
+                    }
+                    
                 }
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();

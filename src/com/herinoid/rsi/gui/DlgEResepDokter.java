@@ -131,7 +131,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                             modelPilihan.remove(tblPilihan.getSelectedRow());
                         }
 
-                        double marginPersen = 0;
+                        double marginPersen = 20;
                         if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                             MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obatFromDialog.getKodeObat());
                              if(marginBpjs!=null){
@@ -261,7 +261,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                 if (obats != null && obats.size() > 0) {
                     modelPilihan.add(obats);
                     for (ObatResep o : obats) {
-                        double marginPersen = 0;
+                        double marginPersen = 20;
                         if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                             MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
                             if(marginBpjs!=null){
@@ -1088,13 +1088,19 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
             if (baris > -1) {
                 ObatResep oresep = modelPilihan.get(tblPilihan.convertRowIndexToModel(baris));
-                double marginPersen = 0;
+                double marginPersen = 20;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(oresep.getKodeObat());
-                    marginPersen = marginBpjs.getRalan();
+                    if(marginBpjs!=null){
+                        marginPersen = marginBpjs.getRalan();
+                    }
+                    
                 } else {
                     MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                    marginPersen = marginNon.getMargin();
+                    if(marginNon!=null){
+                        marginPersen = marginNon.getMargin();
+                    }
+                    
                 }
                 double margin = (oresep.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + oresep.getHargaBeli();
