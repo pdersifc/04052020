@@ -441,9 +441,12 @@ public class ResepDao {
                     MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
                     marginPersen = marginNon.getMargin();
                 }
+                
+                
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
-                obat.setHarga(hpp);
+//                System.out.println("margin persen = "+marginPersen+" || margin rupiah = "+margin+" || harga beli obat = "+obat.getHargaBeli()+ " || hpp = "+hpp);
+                obat.setHarga(Utils.rounding(hpp));
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
@@ -843,7 +846,7 @@ public class ResepDao {
                 }
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
-                obat.setHarga(hpp);
+                obat.setHarga(Utils.rounding(hpp));
 //                double harga = rset.getDouble("ralan");
 //                if (tarif.equals(Konstan.PASIEN_KARYAWAN)) {
 //                    harga = rset.getDouble("karyawan");

@@ -14,6 +14,7 @@ import com.herinoid.rsi.model.ObatResep;
 import com.herinoid.rsi.model.TarifObat;
 import com.herinoid.rsi.util.Konstan;
 import static com.herinoid.rsi.util.Konstan.PASIEN_RALAN;
+import com.herinoid.rsi.util.Utils;
 import fungsi.koneksiDB;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -118,7 +119,7 @@ public class PemberianObatDetailDao {
                 }
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
-                obat.setHarga(hpp);
+                obat.setHarga(Utils.rounding(hpp));
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
@@ -179,7 +180,7 @@ public class PemberianObatDetailDao {
                 }
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
-                obat.setHarga(hpp);
+                obat.setHarga(Utils.rounding(hpp));
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
