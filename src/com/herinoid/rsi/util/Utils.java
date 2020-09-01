@@ -282,9 +282,8 @@ public class Utils {
         return tglLahirr;
     }
      public static double rounding(double value){
-         Double dval = value;
-//         String basicVal = format(value, 0);
-         int y = dval.intValue();
+         String basicVal = format(value, 0);
+         int y = Integer.parseInt(basicVal.replace(".", ""));
          double d = 1.0 * y; 
          return d;
      }
