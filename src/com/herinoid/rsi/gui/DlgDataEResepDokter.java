@@ -307,7 +307,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             }
         });
         loadToday();
-        reloadLiveData();
+//        reloadLiveData();
     }
 
     private List<ObatResep> getAllObatListByNoResep(List<ObatResep> dataObats, String noResep) {
@@ -2050,27 +2050,27 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         modelPilihan.add(obatResep);
     }
 
-    private void reloadLiveData() {
-        Timer timer = new Timer(0, new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int x = ResepDao.getNewRecordEResep();
-                if(x>baruAda){
-                    try {
-                        loadToday();
-                        displayTray();
-                        baruAda = x;
-                    } catch (AWTException ex) {
-                        Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }                
-            }
-        });
-
-        timer.setDelay(30000); 
-        timer.start();
-    }
+//    private void reloadLiveData() {
+//        Timer timer = new Timer(0, new ActionListener() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                int x = ResepDao.getNewRecordEResep();
+//                if(x>baruAda){
+//                    try {
+//                        loadToday();
+//                        displayTray();
+//                        baruAda = x;
+//                    } catch (AWTException ex) {
+//                        Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }                
+//            }
+//        });
+//
+//        timer.setDelay(30000); 
+//        timer.start();
+//    }
     
     private void displayTray() throws AWTException {
         SystemTray tray = SystemTray.getSystemTray();
