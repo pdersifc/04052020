@@ -351,6 +351,7 @@ public class ResepDao {
     public static List<DataEResep> getResepByDateAndDepo(String fromDate, String toDate, String depo, String tarif, String jenisPasien) {
         List<DataEResep> obatList = new LinkedList<>();
         try {
+            
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
                     + "e.`status`,r.`kd_pj` FROM e_resep_rsifc e "
                     + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
@@ -377,6 +378,8 @@ public class ResepDao {
                 obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
+                RegPeriksa reg = RegPeriksaDao.get(rs.getString("no_rawat"));
+                obat.setStatusBayar(reg.getStatusBayar());
                 List<ObatResep> obatDetails = getObatResepDetail(obat.getNoResep(), depo, obat.getJaminan(), rs.getString("kd_pj"));
                 Collections.sort(obatDetails, Comparator
                         .comparing(ObatResep::getNamaObat)
@@ -723,6 +726,8 @@ public class ResepDao {
                 obat.setPacking(rs.getString("packing"));
                 obat.setStatus(rs.getString("status"));
                 obat.setNoRawat(rs.getString("no_rawat"));
+                RegPeriksa reg = RegPeriksaDao.get(rs.getString("no_rawat"));
+                obat.setStatusBayar(reg.getStatusBayar());
                 List<ObatResep> obatDetails = getObatResepRacikanDetail(obat.getNoResep(), depo, obat.getJaminan(), rs.getString("kd_pj"));
                 Collections.sort(obatDetails, Comparator
                         .comparing(ObatResep::getKodeRacikan)

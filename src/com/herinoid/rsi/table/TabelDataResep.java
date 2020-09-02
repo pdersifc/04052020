@@ -37,6 +37,7 @@ public class TabelDataResep extends AbstractTableModel {
         column.add("Waktu Validasi");
         column.add("Dispansing ");
         column.add("Sampai Pasien");
+        column.add("Status Bayar");
         row = new Vector<DataEResep>();
     }
 
@@ -121,6 +122,8 @@ public class TabelDataResep extends AbstractTableModel {
             return row.get(rowIndex).getPacking();
         } else if (columnIndex == 9) {
             return row.get(rowIndex).getDiterima();
+        } else if (columnIndex == 10) {
+            return row.get(rowIndex).getStatusBayar();
         } 
         return null;
     }

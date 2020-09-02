@@ -26,6 +26,7 @@ public class DataEResep {
     private String diterima;
     private String packing;
     private List<ObatResep> obatDetails;
+    private String statusBayar;
 
     public DataEResep() {
     }
@@ -247,6 +248,20 @@ public class DataEResep {
      */
     public void setKdDokter(String kdDokter) {
         this.kdDokter = kdDokter;
+    }
+
+    /**
+     * @return the statusBayar
+     */
+    public String getStatusBayar() {
+        return statusBayar;
+    }
+
+    /**
+     * @param statusBayar the statusBayar to set
+     */
+    public void setStatusBayar(String statusBayar) {
+        this.statusBayar = statusBayar;
     }
     
     
