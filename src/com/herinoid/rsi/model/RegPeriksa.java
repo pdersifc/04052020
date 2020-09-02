@@ -17,6 +17,7 @@ public class RegPeriksa {
     private String jamRawat;
     private String kdPj;
     private String norm;
+    private String statusBayar;
     
     public RegPeriksa(){}
 
@@ -88,6 +89,20 @@ public class RegPeriksa {
      */
     public void setNorm(String norm) {
         this.norm = norm;
+    }
+
+    /**
+     * @return the statusBayar
+     */
+    public String getStatusBayar() {
+        return statusBayar;
+    }
+
+    /**
+     * @param statusBayar the statusBayar to set
+     */
+    public void setStatusBayar(String statusBayar) {
+        this.statusBayar = statusBayar;
     }
     
     

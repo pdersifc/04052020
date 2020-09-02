@@ -809,6 +809,66 @@ public class ResepDao {
         }
         return isExist;
     }
+    
+    public static boolean isResepRacikanExistByNorawat(String norawat) {
+        boolean isExist = false;
+        PreparedStatement pre = null;
+        ResultSet rset = null;
+        try {
+            pre = koneksi.prepareStatement("SELECT * FROM e_resep_racikan_rsifc WHERE no_rawat = ?");
+            pre.setString(1, norawat);
+            rset = pre.executeQuery();
+            while (rset.next()) {
+                isExist = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rset != null) {
+
+                    rset.close();
+
+                }
+                if (pre != null) {
+                    pre.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return isExist;
+    }
+
+    public static boolean isResepExistByNorawat(String norawat) {
+        boolean isExist = false;
+        PreparedStatement pre = null;
+        ResultSet rset = null;
+        try {
+            pre = koneksi.prepareStatement("SELECT * FROM e_resep_rsifc WHERE no_rawat = ?");
+            pre.setString(1, norawat);
+            rset = pre.executeQuery();
+            while (rset.next()) {
+                isExist = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rset != null) {
+
+                    rset.close();
+
+                }
+                if (pre != null) {
+                    pre.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return isExist;
+    }
 
     public static List<ObatResep> getObatResepRacikanDetail(String noResep, String depo, String jaminan, String kdJaminan) {
         List<ObatResep> obatDetailList = new LinkedList<>();

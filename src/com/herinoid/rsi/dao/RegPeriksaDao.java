@@ -31,7 +31,7 @@ public class RegPeriksaDao {
     public static RegPeriksa get(String norawat) {
         RegPeriksa regPeriksa =  null;
         try {
-            ps = koneksi.prepareStatement("SELECT no_rawat,tgl_registrasi,jam_reg,kd_pj,no_rkm_medis from reg_periksa where no_rawat = ?");
+            ps = koneksi.prepareStatement("SELECT no_rawat,tgl_registrasi,jam_reg,kd_pj,no_rkm_medis,status_bayar from reg_periksa where no_rawat = ?");
             ps.setString(1, norawat);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -41,6 +41,7 @@ public class RegPeriksaDao {
                 regPeriksa.setJamRawat(rs.getString("jam_reg"));
                 regPeriksa.setKdPj(rs.getString("kd_pj"));
                 regPeriksa.setNorm(rs.getString("no_rkm_medis"));
+                regPeriksa.setStatusBayar(rs.getString("status_bayar"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);

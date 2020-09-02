@@ -10,6 +10,7 @@ import bridging.INACBGPerawatanCorona;
 import bridging.InhealthDataSJP;
 import bridging.SisruteRujukanKeluar;
 import com.herinoid.rsi.dao.PemeriksaanDao;
+import com.herinoid.rsi.dao.ResepDao;
 import com.herinoid.rsi.gui.DlgEResepDokter;
 import com.herinoid.rsi.model.PemeriksaanRalan;
 import com.herinoid.rsi.util.Konstan;
@@ -8471,26 +8472,52 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 depoObat = "KMOBT";
             }
             if (tbKasirRalan.getSelectedRow() != -1) {
-                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                DlgEResepDokter resep = new DlgEResepDokter(null, false);
-                String jenisBayar = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 9).toString();
-                String norawat = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 11).toString();
-                String norm = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 2).toString();
-                String nmPasien = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 3).toString();
-                String kdDokter = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 0).toString();
-                String nmDokter = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 1).toString();
-                String poli = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 4).toString();
-                String kategoriObat = "K02";
-                if (jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
-                    kategoriObat = "K01";
+                if (tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 15).toString().equals("Belum Bayar")) {
+                    
+                    DlgEResepDokter resep = new DlgEResepDokter(null, false);
+                    String jenisBayar = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 9).toString();
+                    String norawat = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 11).toString();
+                    String norm = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 2).toString();
+                    String nmPasien = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 3).toString();
+                    String kdDokter = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 0).toString();
+                    String nmDokter = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 1).toString();
+                    String poli = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 4).toString();
+                    if (ResepDao.isResepExistByNorawat(norawat) || ResepDao.isResepRacikanExistByNorawat(norawat)) {
+                        int halo = JOptionPane.showConfirmDialog(null, "Pasien " + nmPasien + " sudah dibuatkan resep, apakah mau buat resep lagi?", "Perhatian", JOptionPane.YES_NO_OPTION);
+                        if (halo == 0) {
+                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                            String kategoriObat = "K02";
+                            if (jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
+                                kategoriObat = "K01";
+                            }
+                            PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRalanByNoRawat(norawat);
+                            resep.setData(kdDokter, nmDokter, depoObat, kategoriObat, Konstan.PASIEN_RALAN, periksaRalan);
+                            resep.setPasien(norawat, norm, nmPasien, jenisBayar, Konstan.PASIEN_RALAN, poli);
+                            resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                            resep.setLocationRelativeTo(internalFrame1);
+                            resep.setVisible(true);
+                            this.setCursor(Cursor.getDefaultCursor());
+                        }
+                    } else {
+                        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                        String kategoriObat = "K02";
+                        if (jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
+                            kategoriObat = "K01";
+                        }
+                        
+                        PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRalanByNoRawat(norawat);
+                        resep.setData(kdDokter, nmDokter, depoObat, kategoriObat, Konstan.PASIEN_RALAN, periksaRalan);
+                        resep.setPasien(norawat, norm, nmPasien, jenisBayar, Konstan.PASIEN_RALAN, poli);
+                        resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                        resep.setLocationRelativeTo(internalFrame1);
+                        resep.setVisible(true);
+                        this.setCursor(Cursor.getDefaultCursor());
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Data billing sudah terverifikasi, silahkan hubungi bagian kasir/keuangan.. ");
                 }
-                PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRalanByNoRawat(norawat);
-                resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RALAN,periksaRalan);
-                resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RALAN,poli);
-                resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                resep.setLocationRelativeTo(internalFrame1);
-                resep.setVisible(true);
-                this.setCursor(Cursor.getDefaultCursor());
+
             }
         }        // TODO 
     }//GEN-LAST:event_MnEResepActionPerformed

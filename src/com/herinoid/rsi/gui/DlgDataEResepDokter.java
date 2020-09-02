@@ -214,34 +214,40 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                         lbTekanDarah.setText(periksa.getTekanDarah());
                         lbAlergi.setText(periksa.getAlergi());
                         if (Utils.isBlank(data.getValidasi())) {
-                            panelSulapan.remove(panelResep);
-                            panelDetailTotal.setVisible(true);
-                            scrollDetail.setVisible(true);
-                            panelResep.setVisible(false);
-                            btnEdit.setVisible(false);
-                            btnHapus.setVisible(false);
-                            if (data.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                                kategoriObat = "K01";
-                            } else {
-                                kategoriObat = "K02";
-                            }
-                            List<ObatResep> list = data.getObatDetails();
-                            List<ObatResep> dataObats = getAllObatListByNoResep(list, data.getNoResep());
-                            modelPilihan.removeAllElements();
-                            modelPilihan.add(dataObats);
-                            tblEditor.setModel(modelPilihan);
-                            total = 0;
-                            double ppn = 0;
-                            double totalPpn = 0;
+                            RegPeriksa reg = RegPeriksaDao.get(data.getNoRawat());
+                            if (reg.getStatusBayar().equals("Belum Bayar")) {
+                                panelSulapan.remove(panelResep);
+                                panelDetailTotal.setVisible(true);
+                                scrollDetail.setVisible(true);
+                                panelResep.setVisible(false);
+                                btnEdit.setVisible(false);
+                                btnHapus.setVisible(false);
+                                if (data.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                                    kategoriObat = "K01";
+                                } else {
+                                    kategoriObat = "K02";
+                                }
+                                List<ObatResep> list = data.getObatDetails();
+                                List<ObatResep> dataObats = getAllObatListByNoResep(list, data.getNoResep());
+                                modelPilihan.removeAllElements();
+                                modelPilihan.add(dataObats);
+                                tblEditor.setModel(modelPilihan);
+                                total = 0;
+                                double ppn = 0;
+                                double totalPpn = 0;
 
-                            for (ObatResep o : dataObats) {
-                                total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
-                            }
-                            ppn = (total * 10) / 100;
-                            totalPpn = total + ppn;
-                            lblTotal.setText("Total : " + Utils.format(total, 0));
+                                for (ObatResep o : dataObats) {
+                                    total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
+                                }
+                                ppn = (total * 10) / 100;
+                                totalPpn = total + ppn;
+                                lblTotal.setText("Total : " + Utils.format(total, 0));
 //                            lblPpn.setText("PPN : " + Utils.format(ppn, 0));
 //                            lblTotalPpn.setText("Total + PPN : " + Utils.format(totalPpn, 0));
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Data billing sudah terverifikasi, silahkan hubungi kasir/bagian keuangan.");
+                            }
+
                         } else {
 //                            panelSulapan.remove(Popup);
 
@@ -1273,46 +1279,51 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         if (row > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(row));
-            List<ObatResep> newDetails = modelPilihan.getAll();
-            boolean cekStok = true;
-            String obatName = "";
-            for (ObatResep o : newDetails) {
-                if (o.getStok() < 1 && !o.isParent()) {
-                    cekStok = false;
-                    obatName = o.getNamaObat();
-                    break;
-                } else if (o.getStok() < o.getJumlah() && !o.isParent()) {
-                    cekStok = false;
-                    obatName = o.getNamaObat();
-                    break;
+            RegPeriksa reg = RegPeriksaDao.get(resep.getNoRawat());
+            if (reg.getStatusBayar().equals("Belum Bayar")) {
+                List<ObatResep> newDetails = modelPilihan.getAll();
+                boolean cekStok = true;
+                String obatName = "";
+                for (ObatResep o : newDetails) {
+                    if (o.getStok() < 1 && !o.isParent()) {
+                        cekStok = false;
+                        obatName = o.getNamaObat();
+                        break;
+                    } else if (o.getStok() < o.getJumlah() && !o.isParent()) {
+                        cekStok = false;
+                        obatName = o.getNamaObat();
+                        break;
+                    }
                 }
-            }
-            if (cekStok) {
-                if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
-                    int emmmm = JOptionPane.showConfirmDialog(null, "Anda akan memverifikasi data resep, data yang sudah di verifikasi tidak dapat di verifikasi ulang. silahkan teliti kembali", "Perhatian", dialogButton);
-                    if (emmmm == 0) {
-                        if (resep.getObatDetails().size() > 0) {
-                            boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep());
-                            if (sukses) {
-                                String jenisPasien = Konstan.PASIEN_RALAN;
-                                if (rdoRanap.isSelected()) {
-                                    jenisPasien = Konstan.PASIEN_RANAP;
+                if (cekStok) {
+                    if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
+                        int emmmm = JOptionPane.showConfirmDialog(null, "Anda akan memverifikasi data resep, data yang sudah di verifikasi tidak dapat di verifikasi ulang. silahkan teliti kembali", "Perhatian", dialogButton);
+                        if (emmmm == 0) {
+                            if (resep.getObatDetails().size() > 0) {
+                                boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep());
+                                if (sukses) {
+                                    String jenisPasien = Konstan.PASIEN_RALAN;
+                                    if (rdoRanap.isSelected()) {
+                                        jenisPasien = Konstan.PASIEN_RANAP;
+                                    }
+                                    ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);
+                                    List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                    List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                    showResepData(dataList, dataRacikanList);
                                 }
-                                ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);
-                                List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-                                List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-                                showResepData(dataList, dataRacikanList);
-                            }
 
-                        } else {
-                            JOptionPane.showMessageDialog(null, "data obat kosong");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "data obat kosong");
+                            }
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Data sudah diverifikasi, anda tidak dapat memverifikasi ulang..");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Data sudah diverifikasi, anda tidak dapat memverifikasi ulang..");
+                    JOptionPane.showMessageDialog(null, "Stok obat " + obatName + " tidak mencukupi, silahkan edit lagi..");
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "Stok obat " + obatName + " tidak mencukupi, silahkan edit lagi..");
+            }else{
+                JOptionPane.showMessageDialog(null, "Data billing sudah terverifikasi, silahkan hubungi kasir/bagian keuangan.");
             }
 
         }
@@ -2071,7 +2082,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 //        timer.setDelay(30000); 
 //        timer.start();
 //    }
-    
     private void displayTray() throws AWTException {
         SystemTray tray = SystemTray.getSystemTray();
         Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
