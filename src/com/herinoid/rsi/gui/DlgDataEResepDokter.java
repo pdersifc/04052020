@@ -214,39 +214,39 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                         lbTekanDarah.setText(periksa.getTekanDarah());
                         lbAlergi.setText(periksa.getAlergi());
                         if (Utils.isBlank(data.getValidasi())) {
-                            RegPeriksa reg = RegPeriksaDao.get(data.getNoRawat());
-                            if (reg.getStatusBayar().equals("Belum Bayar")) {
-                                panelSulapan.remove(panelResep);
-                                panelDetailTotal.setVisible(true);
-                                scrollDetail.setVisible(true);
-                                panelResep.setVisible(false);
-                                btnEdit.setVisible(false);
-                                btnHapus.setVisible(false);
-                                if (data.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                                    kategoriObat = "K01";
-                                } else {
-                                    kategoriObat = "K02";
-                                }
-                                List<ObatResep> list = data.getObatDetails();
-                                List<ObatResep> dataObats = getAllObatListByNoResep(list, data.getNoResep());
-                                modelPilihan.removeAllElements();
-                                modelPilihan.add(dataObats);
-                                tblEditor.setModel(modelPilihan);
-                                total = 0;
-                                double ppn = 0;
-                                double totalPpn = 0;
+//                            RegPeriksa reg = RegPeriksaDao.get(data.getNoRawat());
+//                            if (reg.getStatusBayar().equals("Belum Bayar")) {
+                            panelSulapan.remove(panelResep);
+                            panelDetailTotal.setVisible(true);
+                            scrollDetail.setVisible(true);
+                            panelResep.setVisible(false);
+                            btnEdit.setVisible(false);
+                            btnHapus.setVisible(false);
+                            if (data.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                                kategoriObat = "K01";
+                            } else {
+                                kategoriObat = "K02";
+                            }
+                            List<ObatResep> list = data.getObatDetails();
+                            List<ObatResep> dataObats = getAllObatListByNoResep(list, data.getNoResep());
+                            modelPilihan.removeAllElements();
+                            modelPilihan.add(dataObats);
+                            tblEditor.setModel(modelPilihan);
+                            total = 0;
+                            double ppn = 0;
+                            double totalPpn = 0;
 
-                                for (ObatResep o : dataObats) {
-                                    total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
-                                }
-                                ppn = (total * 10) / 100;
-                                totalPpn = total + ppn;
-                                lblTotal.setText("Total : " + Utils.format(total, 0));
+                            for (ObatResep o : dataObats) {
+                                total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
+                            }
+                            ppn = (total * 10) / 100;
+                            totalPpn = total + ppn;
+                            lblTotal.setText("Total : " + Utils.format(total, 0));
 //                            lblPpn.setText("PPN : " + Utils.format(ppn, 0));
 //                            lblTotalPpn.setText("Total + PPN : " + Utils.format(totalPpn, 0));
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Data billing sudah terverifikasi, silahkan hubungi kasir/bagian keuangan.");
-                            }
+//                            } else {
+//                                JOptionPane.showMessageDialog(null, "Data billing sudah terverifikasi, silahkan hubungi kasir/bagian keuangan.");
+//                            }
 
                         } else {
 //                            panelSulapan.remove(Popup);
@@ -1322,7 +1322,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 } else {
                     JOptionPane.showMessageDialog(null, "Stok obat " + obatName + " tidak mencukupi, silahkan edit lagi..");
                 }
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Data billing sudah terverifikasi, silahkan hubungi kasir/bagian keuangan.");
             }
 
