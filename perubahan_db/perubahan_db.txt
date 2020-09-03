@@ -161,3 +161,7 @@ CREATE TABLE `e_resep_racikan_rsifc_detail` (
 ----------------------------------- tgl 31/08/2020 -----------------------------------------------------------
 ALTER TABLE `rsifc_db`.`obat_racikan_eresep_rsifc`   
   ADD COLUMN `aturan_pakai_farmasi` VARCHAR(150) NULL AFTER `aturan_pakai`;
+
+-------------------------------tgl 03/09/2020 by herinoid --------------------------------------------
+ALTER TABLE `rsifc_db`.`jadwal`   
+  ADD COLUMN `keterangan` VARCHAR(100) NOT NULL DEFAULT '' AFTER `is_cuti`;
