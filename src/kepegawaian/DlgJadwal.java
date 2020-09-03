@@ -719,7 +719,7 @@ public class DlgJadwal extends javax.swing.JDialog {
             if(Sequel.menyimpantf("jadwal","'"+kddokter.getText()+"','"+cmbHari.getSelectedItem()+"','"+
                 cmbJam1.getSelectedItem()+":"+cmbMnt1.getSelectedItem()+":"+cmbDtk1.getSelectedItem()+"','"+
                 cmbJam2.getSelectedItem()+":"+cmbMnt2.getSelectedItem()+":"+cmbDtk2.getSelectedItem()+"','"+
-                KdPoli.getText()+"','"+Kuota.getText()+"','"+txtKeterangan.getText()+"','"+cuti+"'","Kode Dokter")==true){
+                KdPoli.getText()+"','"+Kuota.getText()+"','"+cuti+"','"+txtKeterangan.getText()+"'","Kode Dokter")==true){
                 tampil();
                 emptTeks();
             }
