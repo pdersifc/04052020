@@ -1694,7 +1694,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         try {
             pr = koneksi.prepareStatement("SELECT * FROM reg_periksa WHERE no_rkm_medis = ? AND  status_bayar = 'Belum Bayar' ORDER BY tgl_registrasi DESC");
             try {
-                ps.setString(1, norm);
+                pr.setString(1, norm);
                 res = pr.executeQuery();
                 while (res.next()) {
                     isBayar = true;
