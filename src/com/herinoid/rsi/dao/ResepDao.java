@@ -539,26 +539,27 @@ public class ResepDao {
         return obat;
     }
 
-    public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo, String noResep) {
+    public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo, String noResep,String jaminan) {
         boolean sukses = true;
         PreparedStatement psttmn = null;
         try {
             RegPeriksa reg = RegPeriksaDao.get(norawat);
             for (ObatResep obat : obats) {
                 if (obat.isParent() == false) {
+                    Obat obt = ObatDao.getObatForSave(depo, obat.getKodeObat(), jaminan, reg.getKdPj());
                     psttmn = koneksi.prepareStatement("insert into detail_pemberian_obat(tgl_perawatan,jam,no_rawat,kode_brng,h_beli,biaya_obat,jml,embalase,tuslah,total,status,kd_bangsal,no_batch,no_faktur) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     try {
                         psttmn.setString(1, Utils.formatDb(new Date()));
                         psttmn.setString(2, Utils.formatTime(new Date()));
                         psttmn.setString(3, norawat);
                         psttmn.setString(4, obat.getKodeObat());
-                        psttmn.setDouble(5, obat.getHargaBeli());
-                        psttmn.setDouble(6, obat.getHarga());
+                        psttmn.setDouble(5, obt.getHargaBeli());
+                        psttmn.setDouble(6, obt.getHarga());
                         psttmn.setDouble(7, obat.getJumlah());
                         psttmn.setDouble(8, obat.getEmbalase());
                         psttmn.setDouble(9, obat.getTuslah());
-                        psttmn.setDouble(10, (obat.getHarga() * Utils.rounding(obat.getJumlah())) + obat.getEmbalase() + obat.getTuslah());
-                        psttmn.setString(11, sttRawat);
+                        psttmn.setDouble(10, (obt.getHarga() * Utils.rounding(obat.getJumlah())) + obat.getEmbalase() + obat.getTuslah());
+                        psttmn.setString(11, Utils.isBlank(sttRawat)?"Ralan":sttRawat);
                         psttmn.setString(12, depo);
                         psttmn.setString(13, "");
                         psttmn.setString(14, noResep);

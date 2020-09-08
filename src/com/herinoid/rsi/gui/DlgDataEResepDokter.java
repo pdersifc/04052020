@@ -202,7 +202,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 public void valueChanged(ListSelectionEvent e) {
                     int selected = tblData.getSelectedRow();
                     if (selected != -1) {
-                        DataEResep data = model.getAll().get(tblData.convertRowIndexToModel(selected));
+                        DataEResep data = model.get(tblData.convertRowIndexToModel(selected));
                         Pasien pasien = PasienDao.get(data.getNorm());
                         lblPasien.setText(data.getPasien());
                         lblTelp.setText(pasien.getNoTelp());
@@ -1300,7 +1300,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                         int emmmm = JOptionPane.showConfirmDialog(null, "Anda akan memverifikasi data resep, data yang sudah di verifikasi tidak dapat di verifikasi ulang. silahkan teliti kembali", "Perhatian", dialogButton);
                         if (emmmm == 0) {
                             if (resep.getObatDetails().size() > 0) {
-                                boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep());
+                                boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep(),resep.getJaminan());
                                 if (sukses) {
                                     String jenisPasien = Konstan.PASIEN_RALAN;
                                     if (rdoRanap.isSelected()) {
