@@ -553,7 +553,7 @@ public class ResepDao {
                         psttmn.setString(2, Utils.formatTime(new Date()));
                         psttmn.setString(3, norawat);
                         psttmn.setString(4, obat.getKodeObat());
-                        psttmn.setDouble(5, obt.getHargaBeli());
+                        psttmn.setDouble(5, obt.getHargaDasar());
                         psttmn.setDouble(6, obt.getHarga());
                         psttmn.setDouble(7, obat.getJumlah());
                         psttmn.setDouble(8, obat.getEmbalase());
