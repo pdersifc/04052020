@@ -88,4 +88,5 @@
     <entry key="USERELIMS">kMR3WfAwUK6MbhCyydxa0g==</entry>
     <entry key="PASELIMS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
     <entry key="DEPOOBAT">KMOBT</entry>
+    <entry key="NOTIFIKASIFARMASI">ON</entry><!--ON hidup. OFF mati-->
 </properties>
