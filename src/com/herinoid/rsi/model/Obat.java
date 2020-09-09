@@ -20,6 +20,7 @@ public class Obat {
     private String aturanPakai;
     private String kategori;
     private double hargaBeli;
+    private double hargaDasar;
     private double stok;
     private double kapasitas;
     
@@ -177,6 +178,20 @@ public class Obat {
      */
     public void setKapasitas(double kapasitas) {
         this.kapasitas = kapasitas;
+    }
+
+    /**
+     * @return the hargaDasar
+     */
+    public double getHargaDasar() {
+        return hargaDasar;
+    }
+
+    /**
+     * @param hargaDasar the hargaDasar to set
+     */
+    public void setHargaDasar(double hargaDasar) {
+        this.hargaDasar = hargaDasar;
     }
     
     

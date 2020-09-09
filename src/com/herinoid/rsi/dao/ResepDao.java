@@ -558,7 +558,7 @@ public class ResepDao {
                         psttmn.setDouble(7, obat.getJumlah());
                         psttmn.setDouble(8, obat.getEmbalase());
                         psttmn.setDouble(9, obat.getTuslah());
-                        psttmn.setDouble(10, (obat.getHarga() * Utils.rounding(obat.getJumlah())) + obat.getEmbalase() + obat.getTuslah());
+                        psttmn.setDouble(10, (obt.getHarga() * Utils.rounding(obat.getJumlah())) + obat.getEmbalase() + obat.getTuslah());
                         psttmn.setString(11, Utils.isBlank(sttRawat)?"Ralan":sttRawat);
                         psttmn.setString(12, depo);
                         psttmn.setString(13, "");

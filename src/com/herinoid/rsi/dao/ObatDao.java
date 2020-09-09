@@ -208,7 +208,7 @@ public class ObatDao {
             ps = koneksi.prepareStatement("SELECT databarang.kode_brng, databarang.nama_brng,jenis.nama AS jenis,kategori_barang.nama AS kategori,kodesatuan.satuan,"
                     + "databarang.ralan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
                     + "databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,databarang.kapasitas,"
-                    + "databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.dasar,gudangbarang.stok "
+                    + "databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,databarang.dasar,gudangbarang.stok "
                     + "FROM databarang INNER JOIN jenis INNER JOIN industrifarmasi INNER JOIN gudangbarang INNER JOIN kategori_barang INNER JOIN kodesatuan "
                     + "ON databarang.kdjns=jenis.kdjns AND databarang.kode_brng=gudangbarang.kode_brng AND databarang.kode_kategori=kategori_barang.kode AND databarang.kode_sat=kodesatuan.kode_sat "
                     + "AND industrifarmasi.kode_industri=databarang.kode_industri "
@@ -225,7 +225,8 @@ public class ObatDao {
                 obat.setKategori(rs.getString("kategori"));
                 obat.setJenisObat(rs.getString("jenis"));
                 obat.setKapasitas(rs.getDouble("kapasitas"));
-                obat.setHargaBeli(rs.getDouble("dasar"));
+                obat.setHargaBeli(rs.getDouble("h_beli"));
+                obat.setHargaDasar(rs.getDouble("dasar"));
                 double marginPersen = 28;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
