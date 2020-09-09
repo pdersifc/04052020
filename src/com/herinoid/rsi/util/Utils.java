@@ -6,6 +6,7 @@
  */
 package com.herinoid.rsi.util;
 
+import fungsi.koneksiDB;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -52,6 +53,7 @@ public class Utils {
     public static String[] hariName = {"Ahad", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"};
     public final static String FORMAT_TIME = "HH:mm:ss";
     public final static String TSID_FORMAT_LONG = "yyyyMMddHHmmssSSSSSS";
+    private static String PEMBULATANHARGAOBAT=koneksiDB.PEMBULATANHARGAOBAT();
 
     public static java.sql.Date convertUtilToSql(java.util.Date uDate) {
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
@@ -307,6 +309,24 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+    
+    public static double roundUpKhanza(double number, int multiple) {
+        int result = 0;
+        if(PEMBULATANHARGAOBAT.equals("yes")){
+            result = multiple;
+            if (number % multiple == 0) {
+                return (int) number;
+            }
+
+            if (number % multiple != 0) {
+                int division = (int) ((number / multiple) + 1);
+                result = division * multiple;
+            }
+            return result;
+        }else{
+            return Math.round(number);
         }
     }
 
