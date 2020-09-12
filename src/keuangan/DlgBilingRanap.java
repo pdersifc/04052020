@@ -4952,7 +4952,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                                 ttlService = biayaMax;
                             }
                             ttl=ttl+ttlService;
-                            tabModeRwJlDr.addRow(new Object[]{true,rsservice.getString("nama_service"),":","",null,null,null,ttlService,"Service"});
+                            tabModeRwJlDr.addRow(new Object[]{true,rsservice.getString("nama_service"),":","",null,null,null,Valid.roundUpDuit(ttlService,100),"Service"});
                         }                    
                     } catch (Exception e) {
                         System.out.println("Notifikasi : "+e);

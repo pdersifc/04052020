@@ -1191,6 +1191,16 @@ public final class validasi {
         }
     }
     
+    public static double roundUpDuit(double value,int nextRoundedValue) {
+        int actualValue = (int) value;
+        int roundedUpValue = actualValue;
+        if (actualValue % nextRoundedValue != 0) {
+            roundedUpValue
+                    = (((actualValue / nextRoundedValue)) * nextRoundedValue) + nextRoundedValue;
+        }
+        return 1.0 * roundedUpValue;
+    }
+    
     public String terbilang(double angka){
         if(angka<12)
         {
