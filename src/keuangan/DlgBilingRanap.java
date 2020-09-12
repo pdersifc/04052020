@@ -4951,8 +4951,9 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                             }else if(ttlService>biayaMax){
                                 ttlService = biayaMax;
                             }
+                            ttlService = Valid.roundUpDuit(ttlService,100);
                             ttl=ttl+ttlService;
-                            tabModeRwJlDr.addRow(new Object[]{true,rsservice.getString("nama_service"),":","",null,null,null,Valid.roundUpDuit(ttlService,100),"Service"});
+                            tabModeRwJlDr.addRow(new Object[]{true,rsservice.getString("nama_service"),":","",null,null,null,ttlService,"Service"});
                         }                    
                     } catch (Exception e) {
                         System.out.println("Notifikasi : "+e);
