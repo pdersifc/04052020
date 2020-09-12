@@ -25,7 +25,6 @@ public class Jurnal {
     private boolean sukses=true;
     public boolean simpanJurnal(String nobukti,String tanggal,String jenis,String keterangan){            
         if(Sequel.cariInteger("select count(*) from tampjurnal")>0){
-            System.out.println("tampungan jurnal tidak kosong");
             nojur=Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(no_jurnal,6),signed)),0) from jurnal where tgl_jurnal='"+tanggal+"' ",
                 "JR"+tanggal.replaceAll("-",""),6);
             try {
