@@ -635,7 +635,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(10, 40, 68, 23);
 
         cmbTanggal.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "28-08-2020" }));
+        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-09-2020" }));
         cmbTanggal.setDisplayFormat("dd-MM-yyyy");
         cmbTanggal.setName("cmbTanggal"); // NOI18N
         cmbTanggal.setOpaque(false);
@@ -697,31 +697,35 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
 
         jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setText("No.Rawat :");
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel10.setName("jLabel10"); // NOI18N
         jLabel10.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel10);
-        jLabel10.setBounds(10, 10, 65, 23);
+        jLabel10.setBounds(10, 10, 80, 23);
 
         LblNoRawat.setEditable(false);
         LblNoRawat.setForeground(new java.awt.Color(0, 0, 0));
+        LblNoRawat.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         LblNoRawat.setName("LblNoRawat"); // NOI18N
         LblNoRawat.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNoRawat);
-        LblNoRawat.setBounds(80, 10, 123, 23);
+        LblNoRawat.setBounds(90, 10, 140, 23);
 
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setText("No.RM :");
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel11.setName("jLabel11"); // NOI18N
         jLabel11.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel11);
-        jLabel11.setBounds(190, 10, 65, 23);
+        jLabel11.setBounds(230, 10, 60, 23);
 
         LblNamaPasien.setEditable(false);
         LblNamaPasien.setForeground(new java.awt.Color(0, 0, 0));
+        LblNamaPasien.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         LblNamaPasien.setName("LblNamaPasien"); // NOI18N
         LblNamaPasien.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNamaPasien);
-        LblNamaPasien.setBounds(460, 10, 310, 23);
+        LblNamaPasien.setBounds(470, 10, 300, 23);
 
         lbAlergi.setForeground(new java.awt.Color(0, 0, 0));
         lbAlergi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -763,17 +767,19 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
 
         LblNoRM.setEditable(false);
         LblNoRM.setForeground(new java.awt.Color(0, 0, 0));
+        LblNoRM.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         LblNoRM.setName("LblNoRM"); // NOI18N
         LblNoRM.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNoRM);
-        LblNoRM.setBounds(260, 10, 90, 23);
+        LblNoRM.setBounds(290, 10, 80, 23);
 
         jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setText("Nama Pasien :");
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel13.setName("jLabel13"); // NOI18N
         jLabel13.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel13);
-        jLabel13.setBounds(370, 10, 80, 23);
+        jLabel13.setBounds(370, 10, 100, 23);
 
         jLabel15.setForeground(new java.awt.Color(0, 0, 0));
         jLabel15.setText("Tinggi Badan :");
