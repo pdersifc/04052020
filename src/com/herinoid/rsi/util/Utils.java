@@ -50,7 +50,7 @@ public class Utils {
     public final static String DATE_FORMAT_DB = "yyyy-MM-dd";
     public final static String DATE_FORMAT_DB_TIME = "yyyy-MM-dd HH:mm:ss";
     public final static String TIMESTAMP_FORMAT = "dd/MM/yyyy HH:mm:ss";
-    public static String[] hariName = {"Ahad", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"};
+    public static String[] hariName = {"Ahad","Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"};
     public final static String FORMAT_TIME = "HH:mm:ss";
     public final static String TSID_FORMAT_LONG = "yyyyMMddHHmmssSSSSSS";
     private static String PEMBULATANHARGAOBAT=koneksiDB.PEMBULATANHARGAOBAT();
