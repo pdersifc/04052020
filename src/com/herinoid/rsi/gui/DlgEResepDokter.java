@@ -635,7 +635,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(10, 40, 68, 23);
 
         cmbTanggal.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-09-2020" }));
+        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-09-2020" }));
         cmbTanggal.setDisplayFormat("dd-MM-yyyy");
         cmbTanggal.setName("cmbTanggal"); // NOI18N
         cmbTanggal.setOpaque(false);
@@ -709,7 +709,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         LblNoRawat.setName("LblNoRawat"); // NOI18N
         LblNoRawat.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNoRawat);
-        LblNoRawat.setBounds(90, 10, 140, 23);
+        LblNoRawat.setBounds(90, 10, 160, 23);
 
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setText("No.RM :");
@@ -717,7 +717,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel11.setName("jLabel11"); // NOI18N
         jLabel11.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel11);
-        jLabel11.setBounds(230, 10, 60, 23);
+        jLabel11.setBounds(250, 10, 60, 23);
 
         LblNamaPasien.setEditable(false);
         LblNamaPasien.setForeground(new java.awt.Color(0, 0, 0));
@@ -725,14 +725,14 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         LblNamaPasien.setName("LblNamaPasien"); // NOI18N
         LblNamaPasien.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNamaPasien);
-        LblNamaPasien.setBounds(470, 10, 300, 23);
+        LblNamaPasien.setBounds(490, 10, 440, 28);
 
         lbAlergi.setForeground(new java.awt.Color(0, 0, 0));
         lbAlergi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbAlergi.setName("lbAlergi"); // NOI18N
         lbAlergi.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(lbAlergi);
-        lbAlergi.setBounds(890, 80, 250, 23);
+        lbAlergi.setBounds(1030, 80, 250, 23);
 
         jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setText("Poli/Bangsal :");
@@ -747,7 +747,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lblJaminan.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblJaminan.setName("lblJaminan"); // NOI18N
         FormInput.add(lblJaminan);
-        lblJaminan.setBounds(510, 60, 290, 20);
+        lblJaminan.setBounds(540, 60, 290, 20);
 
         ChkJln.setBorder(null);
         ChkJln.setSelected(true);
@@ -771,7 +771,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         LblNoRM.setName("LblNoRM"); // NOI18N
         LblNoRM.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNoRM);
-        LblNoRM.setBounds(290, 10, 80, 23);
+        LblNoRM.setBounds(310, 10, 80, 23);
 
         jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setText("Nama Pasien :");
@@ -779,42 +779,42 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel13.setName("jLabel13"); // NOI18N
         jLabel13.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel13);
-        jLabel13.setBounds(370, 10, 100, 23);
+        jLabel13.setBounds(390, 10, 100, 23);
 
         jLabel15.setForeground(new java.awt.Color(0, 0, 0));
         jLabel15.setText("Tinggi Badan :");
         jLabel15.setName("jLabel15"); // NOI18N
         jLabel15.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel15);
-        jLabel15.setBounds(800, 0, 80, 23);
+        jLabel15.setBounds(940, 0, 80, 23);
 
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("Berat Badan :");
         jLabel16.setName("jLabel16"); // NOI18N
         jLabel16.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel16);
-        jLabel16.setBounds(800, 20, 80, 23);
+        jLabel16.setBounds(940, 20, 80, 23);
 
         jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setText("Tekanan Darah :");
         jLabel17.setName("jLabel17"); // NOI18N
         jLabel17.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel17);
-        jLabel17.setBounds(800, 40, 80, 23);
+        jLabel17.setBounds(940, 40, 80, 23);
 
         jLabel18.setForeground(new java.awt.Color(0, 0, 0));
         jLabel18.setText("Suhu Badan :");
         jLabel18.setName("jLabel18"); // NOI18N
         jLabel18.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel18);
-        jLabel18.setBounds(800, 60, 80, 23);
+        jLabel18.setBounds(940, 60, 80, 23);
 
         jLabel19.setForeground(new java.awt.Color(0, 0, 0));
         jLabel19.setText("Alergi :");
         jLabel19.setName("jLabel19"); // NOI18N
         jLabel19.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(jLabel19);
-        jLabel19.setBounds(800, 80, 80, 23);
+        jLabel19.setBounds(940, 80, 80, 23);
 
         lbTB.setForeground(new java.awt.Color(0, 0, 0));
         lbTB.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -822,7 +822,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lbTB.setName("lbTB"); // NOI18N
         lbTB.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(lbTB);
-        lbTB.setBounds(890, 0, 80, 23);
+        lbTB.setBounds(1030, 0, 80, 23);
 
         lbBB.setForeground(new java.awt.Color(0, 0, 0));
         lbBB.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -830,28 +830,28 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lbBB.setName("lbBB"); // NOI18N
         lbBB.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(lbBB);
-        lbBB.setBounds(890, 20, 80, 23);
+        lbBB.setBounds(1030, 20, 80, 23);
 
         lbTekanDarah.setForeground(new java.awt.Color(0, 0, 0));
         lbTekanDarah.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbTekanDarah.setName("lbTekanDarah"); // NOI18N
         lbTekanDarah.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(lbTekanDarah);
-        lbTekanDarah.setBounds(890, 40, 80, 23);
+        lbTekanDarah.setBounds(1030, 40, 80, 23);
 
         lbSuhuBadan.setForeground(new java.awt.Color(0, 0, 0));
         lbSuhuBadan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbSuhuBadan.setName("lbSuhuBadan"); // NOI18N
         lbSuhuBadan.setPreferredSize(new java.awt.Dimension(68, 23));
         FormInput.add(lbSuhuBadan);
-        lbSuhuBadan.setBounds(890, 60, 80, 23);
+        lbSuhuBadan.setBounds(1030, 60, 80, 23);
 
         jLabel20.setForeground(new java.awt.Color(0, 0, 0));
         jLabel20.setText("Jaminan :");
         jLabel20.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel20.setName("jLabel20"); // NOI18N
         FormInput.add(jLabel20);
-        jLabel20.setBounds(430, 60, 60, 23);
+        jLabel20.setBounds(470, 60, 60, 23);
 
         lblPoli.setForeground(new java.awt.Color(0, 0, 0));
         lblPoli.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -866,7 +866,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel21.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel21.setName("jLabel21"); // NOI18N
         FormInput.add(jLabel21);
-        jLabel21.setBounds(430, 80, 60, 23);
+        jLabel21.setBounds(470, 80, 60, 23);
 
         lblTotal.setForeground(new java.awt.Color(0, 153, 0));
         lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -874,7 +874,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         lblTotal.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblTotal.setName("lblTotal"); // NOI18N
         FormInput.add(lblTotal);
-        lblTotal.setBounds(510, 80, 290, 20);
+        lblTotal.setBounds(540, 80, 290, 20);
 
         internalFrame1.add(FormInput, java.awt.BorderLayout.PAGE_START);
 
