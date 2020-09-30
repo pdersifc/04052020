@@ -1976,7 +1976,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                         btnHapusResep.setVisible(false);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Hanya data resep yang sudah divalidasi yang bisa dihapus!");
+                    JOptionPane.showMessageDialog(null, "Hanya data resep yang belum divalidasi yang bisa dihapus!");
                 }
 
             }
