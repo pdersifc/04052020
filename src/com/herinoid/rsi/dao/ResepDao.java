@@ -86,6 +86,29 @@ public class ResepDao {
         }
         return sukses;
     }
+    
+    public static boolean deleteRacikanByNoResep(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("delete from e_resep_racikan_rsifc where no_resep = ?");
+            try {
+                pst.setString(1, noresep);
+                pst.execute();
+                deleteDetailRacikanByNoResep(noresep);
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+        } catch (Exception e) {
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
 
     public static boolean saveRacikanDetail(String norawat, String noResep, List<ObatResep> reseps) {
         boolean sukses = true;
@@ -138,6 +161,29 @@ public class ResepDao {
             try {
                 pst.setString(1, noresep);
                 pst.execute();
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (pst != null) {
+                    pst.close();
+                }
+            }
+        } catch (Exception e) {
+            sukses = false;
+            System.out.println("Notifikasi : " + e);
+        }
+        return sukses;
+    }
+    
+    public static boolean deleteResepByNoResep(String noresep) {
+        boolean sukses = true;
+        PreparedStatement pst = null;
+        try {
+            pst = koneksi.prepareStatement("delete from e_resep_rsifc where no_resep = ?");
+            try {
+                pst.setString(1, noresep);
+                pst.execute();
+                deleteDetailByNoResep(noresep);
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
             } finally {

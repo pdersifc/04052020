@@ -132,6 +132,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             kdBangsal = pro.getProperty("DEPOOBAT");
             btnEdit.setVisible(false);
             btnHapus.setVisible(false);
+            btnHapusResep.setVisible(false);
             txtCari.getDocument().addDocumentListener(new DocumentListener() {
 
                 @Override
@@ -222,6 +223,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             panelResep.setVisible(false);
                             btnEdit.setVisible(false);
                             btnHapus.setVisible(false);
+                            btnHapusResep.setVisible(true);
                             if (data.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
                                 kategoriObat = "K01";
                             } else {
@@ -261,6 +263,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             panelResep.setVisible(true);
                             btnEdit.setVisible(true);
                             btnHapus.setVisible(true);
+                            btnHapusResep.setVisible(false);
                         }
 
                     }
@@ -636,6 +639,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         btnAddObat = new widget.Button();
         label13 = new widget.Label();
         label2 = new widget.Label();
+        btnHapusResep = new widget.Button();
         btnHapus = new widget.Button();
         btnEdit = new widget.Button();
         btnSimpan = new widget.Button();
@@ -886,6 +890,16 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         label2.setName("label2"); // NOI18N
         panelisi3.add(label2);
 
+        btnHapusResep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Delete.png"))); // NOI18N
+        btnHapusResep.setText("Hapus Resep");
+        btnHapusResep.setName("btnHapusResep"); // NOI18N
+        btnHapusResep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusResepActionPerformed(evt);
+            }
+        });
+        panelisi3.add(btnHapusResep);
+
         btnHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Delete.png"))); // NOI18N
         btnHapus.setText("Hapus");
         btnHapus.setName("btnHapus"); // NOI18N
@@ -946,7 +960,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(370, 40, 60, 23);
 
         cmbTanggalTo.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-09-2020" }));
+        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "30-09-2020" }));
         cmbTanggalTo.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalTo.setName("cmbTanggalTo"); // NOI18N
         cmbTanggalTo.setOpaque(false);
@@ -1006,7 +1020,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         rdoRanap.setBounds(261, 10, 130, 23);
 
         cmbTanggalfrom.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-09-2020" }));
+        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "30-09-2020" }));
         cmbTanggalfrom.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalfrom.setName("cmbTanggalfrom"); // NOI18N
         cmbTanggalfrom.setOpaque(false);
@@ -1926,6 +1940,50 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     }//GEN-LAST:event_MnResepPrintActionPerformed
 
+    private void btnHapusResepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusResepActionPerformed
+        // TODO add your handling code here:
+        int baris = tblData.getSelectedRow();
+        if (baris > -1) {
+            int nguiknguik = JOptionPane.showConfirmDialog(null, "Apakah anda akan menghapus resep ini..?", "PERHATIAN", JOptionPane.YES_NO_OPTION);
+            if (nguiknguik == 0) {
+                DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));                
+                if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
+                    boolean isHapusResep = ResepDao.deleteResepByNoResep(resep.getNoResep());
+                    boolean isHapusRacikan = ResepDao.deleteRacikanByNoResep(resep.getNoResep());
+                    if (isHapusResep || isHapusRacikan) {                        
+                        ResepDao.updateValidasiAfterHapus(resep.getNoResep());
+                        String jenisPasien = Konstan.PASIEN_RALAN;
+                        if (rdoRanap.isSelected()) {
+                            jenisPasien = Konstan.PASIEN_RANAP;
+                        }
+                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                        showResepData(dataList, dataRacikanList);
+                        panelSulapan.remove(panelResep);
+                        panelDetailTotal.setVisible(true);
+                        scrollDetail.setVisible(true);
+                        panelResep.setVisible(false);
+                        btnEdit.setVisible(false);
+                        btnHapus.setVisible(false);
+                        if (resep.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                            kategoriObat = "K01";
+                        } else {
+                            kategoriObat = "K02";
+                        }
+                        lblTotal.setText("Total : 0.0" );
+                        modelPilihan.removeAllElements();
+                        tblEditor.setModel(modelPilihan);
+                        btnHapusResep.setVisible(false);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Hanya data resep yang sudah divalidasi yang bisa dihapus!");
+                }
+
+            }
+
+        }
+    }//GEN-LAST:event_btnHapusResepActionPerformed
+
     private void deleteObatSatuan() {
 //        int dialogButton = JOptionPane.YES_NO_OPTION;
 //        int wkwkw = JOptionPane.showConfirmDialog(null, "Serius mau menghapus obat ini..?", "Perhatian", dialogButton);
@@ -1981,6 +2039,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.Button btnCariData;
     private widget.Button btnEdit;
     private widget.Button btnHapus;
+    private widget.Button btnHapusResep;
     private widget.Button btnSimpan;
     private widget.Tanggal cmbTanggalTo;
     private widget.Tanggal cmbTanggalfrom;
