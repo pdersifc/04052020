@@ -1798,6 +1798,25 @@ public final class sekuel {
             }
         }
     }
+    
+    public void saveTrace(String user,String sql) {
+            try {
+                ps = connect.prepareStatement("insert into trackersql values(now(),?,?)");
+                try {
+                    ps.setString(1, sql);
+                    ps.setString(2, user);
+                    ps.executeUpdate();
+                } catch (Exception e) {
+                    System.out.println("Notifikasi : " + e);
+                } finally {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            }
+    }
 
     public String cariString(String sql) {
         dicari = "";

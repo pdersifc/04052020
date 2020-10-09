@@ -55,6 +55,7 @@ import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
 import com.herinoid.rsi.model.NotaResep;
 import com.herinoid.rsi.model.report.ResepReport;
+import com.herinoid.rsi.session.SessionLogin;
 import com.herinoid.rsi.util.AgeCalculator;
 import fungsi.akses;
 import fungsi.sekuel;
@@ -1342,6 +1343,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             if (resep.getObatDetails().size() > 0) {
                                 boolean sukses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep(),resep.getJaminan());
                                 if (sukses) {
+                                    Sequel.saveTrace(SessionLogin.getInstance().getUser(),"simpan validasi dengan no rawat : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
                                     String jenisPasien = Konstan.PASIEN_RALAN;
                                     if (rdoRanap.isSelected()) {
                                         jenisPasien = Konstan.PASIEN_RANAP;
@@ -1618,6 +1620,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 if (resep.getStatus().equals(Resep.STATUS_SUDAH_VERIFIKASI)) {
                     boolean isHapus = ResepDao.deleteDataObatValidasiFarmasi(resep.getNoResep());
                     if (isHapus) {
+                        Sequel.saveTrace(SessionLogin.getInstance().getUser(),"delete validasi dengan no rawat : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
                         boolean isDel = PemberianObatDetailDao.deleteDetailPemberianObat(resep.getNoResep());
                         if (isDel) {
                             // update gudang
@@ -1950,7 +1953,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
                     boolean isHapusResep = ResepDao.deleteResepByNoResep(resep.getNoResep());
                     boolean isHapusRacikan = ResepDao.deleteRacikanByNoResep(resep.getNoResep());
-                    if (isHapusResep || isHapusRacikan) {                        
+                    if (isHapusResep || isHapusRacikan) { 
+                        Sequel.saveTrace(SessionLogin.getInstance().getUser(),"Hapus resep : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
                         ResepDao.updateValidasiAfterHapus(resep.getNoResep());
                         String jenisPasien = Konstan.PASIEN_RALAN;
                         if (rdoRanap.isSelected()) {
