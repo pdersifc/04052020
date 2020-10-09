@@ -13,6 +13,7 @@ package bridging;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.herinoid.rsi.util.Utils;
 import fungsi.WarnaTable;
 import fungsi.batasInput;
 import fungsi.koneksiDB;
@@ -955,6 +956,9 @@ public final class BPJSRujukanKeluar extends javax.swing.JDialog {
             param.put("kontakrs",akses.getkontakrs());
             param.put("norujuk",tbObat.getValueAt(tbObat.getSelectedRow(),5).toString());
             param.put("logo",Sequel.cariGambar("select bpjs from gambar")); 
+            Date nextDate = Utils.getDayInterval(new Date(),90);
+            String tglNext = Utils.formatTanggalWithoutDay(nextDate);
+            param.put("nextdate",tglNext); 
             Valid.MyReport("rptBridgingRujukanBPJS.jasper",param,"::[ Surat Rujukan Keluar VClaim ]::");
             this.setCursor(Cursor.getDefaultCursor());
         }else{
