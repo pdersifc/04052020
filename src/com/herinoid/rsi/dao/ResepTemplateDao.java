@@ -17,7 +17,7 @@ import com.herinoid.rsi.util.NumberUtils;
 import com.herinoid.rsi.dao.MarginDao;
 import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
-import com.herinoid.rsi.session.SessionLogin;
+import com.herinoid.rsi.model.ResepTemplate;
 import static com.herinoid.rsi.util.NumberUtils.DATE_FORMAT_NUMBERING;
 import com.herinoid.rsi.util.Utils;
 import fungsi.koneksiDB;
@@ -38,7 +38,7 @@ import javax.swing.JOptionPane;
  *
  * @author Hewrei
  */
-public class ResepDao {
+public class ResepTemplateDao {
 
     private static Connection koneksi = koneksiDB.condb();
     private static PreparedStatement ps;
@@ -229,37 +229,37 @@ public class ResepDao {
         return sukses;
     }
 
-    public static boolean save(Resep resep) {
-        boolean sukses = true;
-        PreparedStatement psttmn = null;
-        try {
-//            String noresep = getNoResepForUpdate();
-            psttmn = koneksi.prepareStatement("insert into e_resep_rsifc(no_resep,tgl_resep,jam_resep,no_rawat,kd_dokter_peresep,status,jenis_pasien) values(?,?,?,?,?,?,?)");
-            try {
-                psttmn.setString(1, resep.getNoResep());
-                psttmn.setString(2, Utils.formatDb(resep.getTglResep()));
-                psttmn.setString(3, resep.getJamResep());
-                psttmn.setString(4, resep.getNoRawat());
-                psttmn.setString(5, resep.getKdDokter());
-                psttmn.setString(6, resep.getStatus());
-                psttmn.setString(7, resep.getJenisPasien());
-                psttmn.executeUpdate();
-                saveDetail(resep.getNoResep(), resep.getObatResepDetail());
-            } catch (Exception e) {
-                System.out.println("Notifikasi : " + e);
-            } finally {
-                if (psttmn != null) {
-                    psttmn.close();
-                }
-            }
-
-        } catch (Exception e) {
-            System.out.println("Notifikasi : " + e);
-            sukses = false;
-            JOptionPane.showMessageDialog(null, "error : " + e);
-        }
-        return sukses;
-    }
+//    public static boolean save(ResepTemplate resep) {
+//        boolean sukses = true;
+//        PreparedStatement psttmn = null;
+//        try {
+////            String noresep = getNoResepForUpdate();
+//            psttmn = koneksi.prepareStatement("insert into e_resep_rsifc(no_resep,tgl_resep,jam_resep,no_rawat,kd_dokter_peresep,status,jenis_pasien) values(?,?,?,?,?,?,?)");
+//            try {
+//                psttmn.setString(1, resep.getCode());
+//                psttmn.setString(2, Utils.formatDb(resep.getTglResep()));
+//                psttmn.setString(3, resep.getJamResep());
+//                psttmn.setString(4, resep.getNoRawat());
+//                psttmn.setString(5, resep.getKdDokter());
+//                psttmn.setString(6, resep.getStatus());
+//                psttmn.setString(7, resep.getJenisPasien());
+//                psttmn.executeUpdate();
+//                saveDetail(resep.getNoResep(), resep.getObatResepDetail());
+//            } catch (Exception e) {
+//                System.out.println("Notifikasi : " + e);
+//            } finally {
+//                if (psttmn != null) {
+//                    psttmn.close();
+//                }
+//            }
+//
+//        } catch (Exception e) {
+//            System.out.println("Notifikasi : " + e);
+//            sukses = false;
+//            JOptionPane.showMessageDialog(null, "error : " + e);
+//        }
+//        return sukses;
+//    }
 
     public static boolean saveRacikan(Resep resep) {
         boolean sukses = true;
@@ -348,7 +348,7 @@ public class ResepDao {
                 noresep = noresepnew;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rset != null) {
@@ -377,7 +377,7 @@ public class ResepDao {
                 noresep = rset.getString("no_resep");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rset != null) {
@@ -436,7 +436,7 @@ public class ResepDao {
                 obatList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
@@ -506,7 +506,7 @@ public class ResepDao {
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (psttmn != null) {
@@ -568,7 +568,7 @@ public class ResepDao {
                 obat.setHarga(harga);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (psttmn != null) {
@@ -652,12 +652,11 @@ public class ResepDao {
 //        }
         try {
 //            if (biasas.size() > 0) {
-            pst = koneksi.prepareStatement("update e_resep_rsifc set validasi = ?, status = ?,user_validator=? where no_resep = ?");
+            pst = koneksi.prepareStatement("update e_resep_rsifc set validasi = ?, status = ? where no_resep = ?");
             try {
                 pst.setString(1, Utils.formatDateTimeDb(validasi));
                 pst.setString(2, Resep.STATUS_SUDAH_VERIFIKASI);
-                pst.setString(3, SessionLogin.getInstance().getUser());
-                pst.setString(4, noresep);
+                pst.setString(3, noresep);
                 pst.executeUpdate();
 //                    boolean isDeleted = deleteDetailByNoResep(noresep);
 //                    if (isDeleted) {
@@ -724,12 +723,11 @@ public class ResepDao {
         boolean sukses = true;
         PreparedStatement pst = null;
         try {
-            pst = koneksi.prepareStatement("update e_resep_racikan_rsifc set validasi = ?, status = ?,user_validator = ? where no_resep = ?");
+            pst = koneksi.prepareStatement("update e_resep_racikan_rsifc set validasi = ?, status = ? where no_resep = ?");
             try {
                 pst.setString(1, Utils.formatDateTimeDb(new Date()));
                 pst.setString(2, Resep.STATUS_SUDAH_VERIFIKASI);
-                pst.setString(3, SessionLogin.getInstance().getUser());
-                pst.setString(4, noresep);
+                pst.setString(3, noresep);
                 pst.executeUpdate();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -787,7 +785,7 @@ public class ResepDao {
                 obatList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
@@ -817,7 +815,7 @@ public class ResepDao {
                 isExist = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rset != null) {
@@ -847,7 +845,7 @@ public class ResepDao {
                 isExist = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rset != null) {
@@ -877,7 +875,7 @@ public class ResepDao {
                 isExist = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rset != null) {
@@ -907,7 +905,7 @@ public class ResepDao {
                 isExist = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rset != null) {
@@ -994,7 +992,7 @@ public class ResepDao {
                 obatDetailList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (psttmn != null) {
@@ -1214,7 +1212,7 @@ public class ResepDao {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
@@ -1270,7 +1268,7 @@ public class ResepDao {
                 obatList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
@@ -1325,7 +1323,7 @@ public class ResepDao {
                 obatList.add(obat);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
@@ -1531,7 +1529,7 @@ public class ResepDao {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
@@ -1560,7 +1558,7 @@ public class ResepDao {
                 x = rs.getInt("jumlah");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {

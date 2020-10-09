@@ -437,6 +437,7 @@ import com.herinoid.rsi.gui.DlgSimulasiBilling;
 import com.herinoid.rsi.gui.MonthlyBorLos;
 import com.herinoid.rsi.gui.RuangDokter;
 import com.herinoid.rsi.model.RekapPembelianObat;
+import com.herinoid.rsi.session.SessionLogin;
 import com.herinoid.rsi.util.Utils;
 import grafikanalisa.GrafikInventarisPerJenis;
 import grafikanalisa.GrafikInventarisPerRuang;
@@ -7682,6 +7683,8 @@ public class frmUtama extends javax.swing.JFrame {
         DlgHome.dispose();
         int jawab=JOptionPane.showConfirmDialog(null, "Yakin anda mau keluar dari program ini ????","Konfirmasi",JOptionPane.YES_NO_OPTION);
         if(jawab==JOptionPane.YES_OPTION){
+            SessionLogin.getInstance().setDokter(null);
+            SessionLogin.getInstance().setUser(null);
             System.exit(0);
         }
     }//GEN-LAST:event_BtnCloseActionPerformed
@@ -7721,6 +7724,8 @@ public class frmUtama extends javax.swing.JFrame {
                 lblStts.setText("Status Admin : ");
                 lblUser.setText("Log Out");
                 BtnMenu.setEnabled(false);
+                SessionLogin.getInstance().setDokter(null);
+                SessionLogin.getInstance().setUser(null);
                 isTutup();
                 break;
             case "Log In":

@@ -329,5 +329,31 @@ public class Utils {
             return Math.round(number);
         }
     }
+    
+    public static Date getDayInterval(Date date, int interval) {
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.add(Calendar.DATE, interval);
+            return cal.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public static String formatTanggalWithoutDay(Date date){
+        Calendar cal = Calendar.getInstance();
+        if(date!=null){
+            cal.setTime(date);
+        }else {
+            cal.setTime(new Date());
+        }
+        int tgl = cal.get(Calendar.DATE);
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        String tanggalan = tgl + " " + Utils.monthName[month]+" "+year;
+        return tanggalan;
+    }
 
 }

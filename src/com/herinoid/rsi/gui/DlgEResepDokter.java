@@ -43,6 +43,7 @@ import com.herinoid.rsi.gui.dialog.DlgHistoriResepPasien;
 import com.herinoid.rsi.model.Bangsal;
 import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
+import com.herinoid.rsi.session.SessionLogin;
 import com.herinoid.rsi.util.Utils;
 import java.util.Iterator;
 
@@ -81,7 +82,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         modelPilihan = new TabelObatResepPilihan();
         this.setLocation(10, 2);
         setSize(656, 250);
-
+        System.out.println("dokter login : "+SessionLogin.getInstance().getDokter().getNamaDokter());
         txtCari.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
