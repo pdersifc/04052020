@@ -165,4 +165,35 @@ public class DokterDao {
         }
         return dokterPolis;
     }
+    
+    public static List<DokterRajal> findDokters() {
+        List<DokterRajal> dokters = new LinkedList<>();
+        try {
+            ps = koneksi.prepareStatement("SELECT dp.`kd_dokter`,d.`nm_dokter` FROM e_resep_template dp LEFT JOIN dokter d ON dp.`kd_dokter`=d.`kd_dokter` GROUP BY dp.`kd_dokter` ORDER BY d.`nm_dokter` ");
+           
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                DokterRajal b = new DokterRajal();
+                b.setKodeDokter(rs.getString("kd_dokter"));
+                b.setNamaDokter(rs.getString("nm_dokter"));
+                dokters.add(b);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(DokterDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return dokters;
+    }
 }

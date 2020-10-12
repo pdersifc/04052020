@@ -53,6 +53,7 @@ public class Utils {
     public static String[] hariName = {"Ahad","Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"};
     public final static String FORMAT_TIME = "HH:mm:ss";
     public final static String TSID_FORMAT_LONG = "yyyyMMddHHmmssSSSSSS";
+    public final static String AUTOID_FORMAT_LONG = "yyyyMMddHHmmss";
     private static String PEMBULATANHARGAOBAT=koneksiDB.PEMBULATANHARGAOBAT();
 
     public static java.sql.Date convertUtilToSql(java.util.Date uDate) {
@@ -256,6 +257,10 @@ public class Utils {
 
     public static String TSID(Date date) {
         return convertDate(date, TSID_FORMAT_LONG);
+    }
+    
+    public static String AutoID(Date date) {
+        return convertDate(date, AUTOID_FORMAT_LONG);
     }
 
     public static String toRoman(Double jumlah) {

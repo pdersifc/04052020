@@ -642,6 +642,7 @@ import tranfusidarah.UTDPenyerahanDarah;
 import tranfusidarah.UTDStokDarah;
 import viabarcode.DlgBarcodeRalan;
 import viabarcode.DlgBarcodeRanap;
+import com.herinoid.rsi.gui.DlgInputTemplateResepDokter;
 
 
 /**
@@ -1265,6 +1266,7 @@ public class frmUtama extends javax.swing.JFrame {
         btnRekapPembelian = new widget.ButtonBig();
         btnRekapObatPerPasien = new widget.ButtonBig();
         btnDataEresep = new widget.ButtonBig();
+        btnTemplateResep = new widget.ButtonBig();
         internalFrame1 = new widget.InternalFrame();
         BtnMenu = new widget.ButtonBig();
         jSeparator4 = new javax.swing.JSeparator();
@@ -1548,7 +1550,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         tanggal.setEditable(false);
         tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08/07/2020" }));
+        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "12/10/2020" }));
         tanggal.setDisplayFormat("dd/MM/yyyy");
         tanggal.setName("tanggal"); // NOI18N
         tanggal.setOpaque(false);
@@ -6598,6 +6600,10 @@ public class frmUtama extends javax.swing.JFrame {
         btnDataEresep.setText("E-Resep");
         btnDataEresep.setName("btnDataEresep"); // NOI18N
 
+        btnTemplateResep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Drug-basket-32.png"))); // NOI18N
+        btnTemplateResep.setText("Template Eresep");
+        btnTemplateResep.setName("btnTemplateResep"); // NOI18N
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("::[ Khanza SIMKES 2020 ]::");
         setBackground(new java.awt.Color(255, 254, 254));
@@ -10491,6 +10497,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         FlayMenu.add(btnRekapPembelian);
         FlayMenu.add(btnRekapObatPerPasien);
         FlayMenu.add(btnDataEresep);
+        FlayMenu.add(btnTemplateResep);
         
         btnInputPenjualan.setEnabled(akses.getpenjualan_obat());
         btnDataPenjualan.setEnabled(akses.getpenjualan_obat());
@@ -15897,6 +15904,17 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         this.setCursor(Cursor.getDefaultCursor());
     } 
     
+    private void btnTemplateResepActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+        isTutup();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        DlgInputTemplateResepDokter data = new DlgInputTemplateResepDokter(this,false);
+        data.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
+        data.setLocationRelativeTo(PanelUtama);
+        data.setVisible(true);
+        DlgHome.dispose();
+        this.setCursor(Cursor.getDefaultCursor());
+    } 
+    
     /**
     * @param args the command line arguments
     */
@@ -16402,6 +16420,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
     private widget.ButtonBig btnTarifLab;
     private widget.ButtonBig btnTarifRadiologi;
     private widget.ButtonBig btnTarifUtd;
+    private widget.ButtonBig btnTemplateResep;
     private widget.ButtonBig btnTemporaryPresensi;
     private widget.ButtonBig btnTindakanRalan;
     private widget.ButtonBig btnTindakanRanap;
@@ -29070,6 +29089,11 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         btnDataEresep.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDataEresepActionPerformed(evt);
+            }
+        });
+        btnTemplateResep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTemplateResepActionPerformed(evt);
             }
         });
     }

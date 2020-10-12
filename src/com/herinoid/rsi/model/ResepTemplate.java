@@ -15,6 +15,8 @@ import java.util.List;
 public class ResepTemplate {
     private String code;
     private String kdDokter;
+    private String namaDokter;
+    private String kdJaminan;
     private String namaTemplate;
     private boolean racikan;
     private List<ObatResep> obatTemplateDetail;
@@ -104,6 +106,34 @@ public class ResepTemplate {
      */
     public void setObatTemplateRacikanDetail(List<ObatResep> obatTemplateRacikanDetail) {
         this.obatTemplateRacikanDetail = obatTemplateRacikanDetail;
+    }
+
+    /**
+     * @return the namaDokter
+     */
+    public String getNamaDokter() {
+        return namaDokter;
+    }
+
+    /**
+     * @param namaDokter the namaDokter to set
+     */
+    public void setNamaDokter(String namaDokter) {
+        this.namaDokter = namaDokter;
+    }
+
+    /**
+     * @return the kdJaminan
+     */
+    public String getKdJaminan() {
+        return kdJaminan;
+    }
+
+    /**
+     * @param kdJaminan the kdJaminan to set
+     */
+    public void setKdJaminan(String kdJaminan) {
+        this.kdJaminan = kdJaminan;
     }
 
    

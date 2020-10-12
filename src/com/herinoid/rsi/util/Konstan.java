@@ -21,6 +21,7 @@ public class Konstan {
     public static final String PASIEN_RANAP="RANAP";
     
     public static final String PASIEN_BPJS_KESEHATAN="BPJS KESEHATAN";
+    public static final String PASIEN_UMUM="UMUM";
     
    
 }

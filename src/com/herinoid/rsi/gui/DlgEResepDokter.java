@@ -40,6 +40,7 @@ import kepegawaian.DlgCariDokter;
 import com.herinoid.rsi.dao.BangsalDao;
 import com.herinoid.rsi.dao.MarginDao;
 import com.herinoid.rsi.gui.dialog.DlgHistoriResepPasien;
+import com.herinoid.rsi.gui.dialog.DlgTemplateResepDokter;
 import com.herinoid.rsi.model.Bangsal;
 import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
@@ -58,6 +59,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
     private TableRowSorter<TableModel> rowSorter;
     private DialogAddQtyResepDokter addQty = new DialogAddQtyResepDokter(null, false);
     private DlgHistoriResepPasien cekHistory = new DlgHistoriResepPasien(null, false);
+    private DlgTemplateResepDokter templateResep = new DlgTemplateResepDokter(null, false);
     private ObatResep obatFromDialog;
     private ObatResep obatRacikan;
     private List<ObatResep> racikanList;
@@ -82,7 +84,6 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         modelPilihan = new TabelObatResepPilihan();
         this.setLocation(10, 2);
         setSize(656, 250);
-        System.out.println("dokter login : "+SessionLogin.getInstance().getDokter().getNamaDokter());
         txtCari.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -303,6 +304,63 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
             public void windowDeactivated(WindowEvent e) {
             }
         });
+        
+        templateResep.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                List<ObatResep> obats = templateResep.getData();
+                if (obats != null && obats.size() > 0) {
+                    modelPilihan.add(obats);
+                    for (ObatResep o : obats) {
+                        double marginPersen = 28;
+                        if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                            MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
+                            if(marginBpjs!=null){
+                                marginPersen = marginBpjs.getRalan();
+                            }
+                            
+                        } else {
+                            MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                            if(marginNon!=null){
+                                marginPersen = marginNon.getMargin();
+                            }
+                            
+                        }
+                        double margin = (o.getHargaBeli() * marginPersen) / 100;
+                        double hpp = margin + o.getHargaBeli();
+                        total = total + (hpp * o.getJumlah());
+                        lblTotal.setText(Utils.format(total, 2));
+                    }
+                    tblPilihan.setModel(modelPilihan);
+
+                }
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
+        });
     }
 
     public void setData(String kdDokter, String nmDokter, String kodeDepo, String kategoriObat, String jenisPasien, PemeriksaanRalan periksa) {
@@ -428,6 +486,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         panelisi3 = new widget.panelisi();
         BtnTambah = new widget.Button();
         btnHistory = new widget.Button();
+        btnTemplateResep = new widget.Button();
         label13 = new widget.Label();
         btnSimpan = new widget.Button();
         BtnKeluar = new widget.Button();
@@ -592,6 +651,16 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         });
         panelisi3.add(btnHistory);
 
+        btnTemplateResep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Pills.png"))); // NOI18N
+        btnTemplateResep.setText("Template Resep");
+        btnTemplateResep.setName("btnTemplateResep"); // NOI18N
+        btnTemplateResep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTemplateResepActionPerformed(evt);
+            }
+        });
+        panelisi3.add(btnTemplateResep);
+
         label13.setName("label13"); // NOI18N
         label13.setPreferredSize(new java.awt.Dimension(500, 23));
         panelisi3.add(label13);
@@ -636,7 +705,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         jLabel5.setBounds(10, 40, 68, 23);
 
         cmbTanggal.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-09-2020" }));
+        cmbTanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "12-10-2020" }));
         cmbTanggal.setDisplayFormat("dd-MM-yyyy");
         cmbTanggal.setName("cmbTanggal"); // NOI18N
         cmbTanggal.setOpaque(false);
@@ -683,7 +752,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         FormInput.add(txtNamaDokter);
         txtNamaDokter.setBounds(180, 70, 197, 23);
 
-        BtnPilihDokter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/011.png"))); // NOI18N
+        BtnPilihDokter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Doctor.png"))); // NOI18N
         BtnPilihDokter.setMnemonic('2');
         BtnPilihDokter.setToolTipText("Alt+2");
         BtnPilihDokter.setName("BtnPilihDokter"); // NOI18N
@@ -1138,6 +1207,14 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         cekHistory.setVisible(true);
     }//GEN-LAST:event_btnHistoryActionPerformed
 
+    private void btnTemplateResepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTemplateResepActionPerformed
+        // TODO add your handling code here:
+        templateResep.setData(txtKodeDokter.getText(), depoKode);
+        templateResep.setSize(internalFrame1.getWidth() - 30, internalFrame1.getHeight() - 30);
+        templateResep.setLocationRelativeTo(internalFrame1);
+        templateResep.setVisible(true);
+    }//GEN-LAST:event_btnTemplateResepActionPerformed
+
     private void clean() {
         racikanList = new LinkedList<>();
         model.removeAllElements();
@@ -1179,6 +1256,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JPopupMenu Popup;
     private widget.Button btnHistory;
     private widget.Button btnSimpan;
+    private widget.Button btnTemplateResep;
     private widget.ComboBox cmbDtk;
     private widget.ComboBox cmbJam;
     private widget.ComboBox cmbMnt;
