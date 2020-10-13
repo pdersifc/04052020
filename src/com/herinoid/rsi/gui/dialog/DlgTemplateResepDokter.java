@@ -78,7 +78,7 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
     private Properties pro = new Properties();
     private String sttRawat, kategoriObat;
     private int row, rowEditor;
-    private String kdBangsal, tarif;
+    private String kdBangsal, tarif,kdDokter;
     private sekuel Sequel = new sekuel();
     private DlgAturanPakai aturanpakai = new DlgAturanPakai(null, false);
     private List<ObatResep> obatReseps;
@@ -165,7 +165,7 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
             }
         });
         
-        setComboList();
+        
     }
 
     public List<ObatResep> getData() {
@@ -251,8 +251,12 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
     }
     
     private void setComboList() {
+        DokterRajal doter = null;
         List<DokterRajal> dokters = DokterDao.findDokters();
         for (DokterRajal m : dokters) {
+            if(m.getKodeDokter().equals(kdDokter)){
+                doter = m;
+            }
             cmbDokter.addItem(m);
         }
         KeySelectionRenderer renderer = new KeySelectionRenderer(cmbDokter) {
@@ -262,16 +266,21 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
                 return dokter.getNamaDokter();
             }
         };
+        if(doter!=null){
+            cmbDokter.getModel().setSelectedItem(doter);
+        }
+        
     }
 
     public void setData(String kodeDokter, String depo) {
+        this.kdDokter = kodeDokter;
         model.removeAllElements();
         List<ResepTemplate> dataList = ResepTemplateDao.getTemplateByDokter(kodeDokter,depo);
         model.add(dataList);
         tblTemplate.setModel(model);
         rowSorter = new TableRowSorter<>(tblTemplate.getModel());
         tblTemplate.setRowSorter(rowSorter);
-
+        setComboList();
     }
 
     /**
@@ -361,11 +370,12 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
         FormInput.setLayout(null);
 
         label7.setText("Dokter :");
-        label7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        label7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         label7.setName("label7"); // NOI18N
         FormInput.add(label7);
         label7.setBounds(20, 10, 110, 20);
 
+        cmbDokter.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         cmbDokter.setName("cmbDokter"); // NOI18N
         cmbDokter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -373,16 +383,16 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
             }
         });
         FormInput.add(cmbDokter);
-        cmbDokter.setBounds(140, 10, 340, 20);
+        cmbDokter.setBounds(140, 10, 340, 21);
 
         label1.setText("Nama Template :");
-        label1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        label1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         label1.setName("label1"); // NOI18N
         FormInput.add(label1);
-        label1.setBounds(10, 40, 120, 14);
+        label1.setBounds(10, 40, 120, 20);
 
         lblNamaTemplate.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblNamaTemplate.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblNamaTemplate.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblNamaTemplate.setName("lblNamaTemplate"); // NOI18N
         FormInput.add(lblNamaTemplate);
         lblNamaTemplate.setBounds(140, 40, 440, 20);

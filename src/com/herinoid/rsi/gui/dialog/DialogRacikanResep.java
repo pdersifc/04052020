@@ -88,10 +88,10 @@ public class DialogRacikanResep extends javax.swing.JDialog {
         button2 = new widget.Button();
         lblObat = new widget.Label();
         txtNamaRacikan = new widget.TextBox();
-        btnAturan1 = new widget.Button();
-        btnAturan2 = new widget.Button();
-        btnAturan3 = new widget.Button();
         comboBox1 = new widget.ComboBox();
+        btnAturan = new javax.swing.JButton();
+        btnAturan2 = new javax.swing.JButton();
+        btnAturan3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -141,32 +141,41 @@ public class DialogRacikanResep extends javax.swing.JDialog {
         lblObat.setText("Tambah Obat Racikan");
         lblObat.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
-        btnAturan1.setText("3 dd 1");
-        btnAturan1.addActionListener(new java.awt.event.ActionListener() {
+        comboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih", "30", "60", "90" }));
+        comboBox1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        comboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAturan1ActionPerformed(evt);
+                comboBox1ActionPerformed(evt);
             }
         });
 
+        btnAturan.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnAturan.setText("3 dd 1");
+        btnAturan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnAturan.setPreferredSize(new java.awt.Dimension(37, 15));
+        btnAturan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAturanActionPerformed(evt);
+            }
+        });
+
+        btnAturan2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnAturan2.setText("2 dd 1");
+        btnAturan2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnAturan2.setPreferredSize(new java.awt.Dimension(37, 15));
         btnAturan2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAturan2ActionPerformed(evt);
             }
         });
 
+        btnAturan3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnAturan3.setText("1 dd 1");
+        btnAturan3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnAturan3.setPreferredSize(new java.awt.Dimension(37, 15));
         btnAturan3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAturan3ActionPerformed(evt);
-            }
-        });
-
-        comboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih", "30", "60", "90" }));
-        comboBox1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        comboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBox1ActionPerformed(evt);
             }
         });
 
@@ -203,17 +212,17 @@ public class DialogRacikanResep extends javax.swing.JDialog {
                                         .addComponent(label4, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelisi1Layout.createSequentialGroup()
-                                            .addComponent(btnAturan1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(btnAturan2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(btnAturan3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(panelisi1Layout.createSequentialGroup()
                                             .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(comboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(comboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelisi1Layout.createSequentialGroup()
+                                            .addComponent(btnAturan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(btnAturan2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(btnAturan3, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGap(0, 0, Short.MAX_VALUE))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -240,14 +249,16 @@ public class DialogRacikanResep extends javax.swing.JDialog {
                     .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAturan1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAturan3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAturan2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
-                .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
-                    .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnAturan2, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                    .addComponent(btnAturan3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAturan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                    .addGroup(panelisi1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(button2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -300,10 +311,15 @@ public class DialogRacikanResep extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_cmbRacikanActionPerformed
 
-    private void btnAturan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAturan1ActionPerformed
+    private void comboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBox1ActionPerformed
+        // TODO add your handling code here:
+        txtJumlah.setText(comboBox1.getSelectedItem().toString());
+    }//GEN-LAST:event_comboBox1ActionPerformed
+
+    private void btnAturanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAturanActionPerformed
         // TODO add your handling code here:
         txtAturanPakai.setText("3 dd 1");
-    }//GEN-LAST:event_btnAturan1ActionPerformed
+    }//GEN-LAST:event_btnAturanActionPerformed
 
     private void btnAturan2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAturan2ActionPerformed
         // TODO add your handling code here:
@@ -314,11 +330,6 @@ public class DialogRacikanResep extends javax.swing.JDialog {
         // TODO add your handling code here:
         txtAturanPakai.setText("1 dd 1");
     }//GEN-LAST:event_btnAturan3ActionPerformed
-
-    private void comboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBox1ActionPerformed
-        // TODO add your handling code here:
-        txtJumlah.setText(comboBox1.getSelectedItem().toString());
-    }//GEN-LAST:event_comboBox1ActionPerformed
 
     void clean() {
         txtJumlah.setText(null);
@@ -370,9 +381,9 @@ public class DialogRacikanResep extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private widget.Button btnAturan1;
-    private widget.Button btnAturan2;
-    private widget.Button btnAturan3;
+    private javax.swing.JButton btnAturan;
+    private javax.swing.JButton btnAturan2;
+    private javax.swing.JButton btnAturan3;
     private widget.Button btnSimpan;
     private widget.Button button2;
     private widget.ComboBox cmbRacikan;
