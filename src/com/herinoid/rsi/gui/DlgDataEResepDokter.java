@@ -343,7 +343,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             int urut = 0;
             for (ObatResep f : obatRacikans) {
                 urut++;
-                if (Utils.isBlank(rck)) {
+                if (Utils.isBlank(rck)) {                    
                     rck = f.getRacikan();
                     ObatResep r = new ObatResep();
                     ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(noResep, f.getKodeRacikan());
@@ -1880,7 +1880,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         String rck = null;
         for (ObatResep o : dokterRacikans) {
             if (Utils.isBlank(rck)) {
-                System.out.println("racikan " + o.getRacikan());
                 RincianResepVerifikasi r = new RincianResepVerifikasi();
                 ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(eresep.getNoResep(), o.getKodeRacikan());
                 ResepReport r1 = new ResepReport();
@@ -1893,7 +1892,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 rck = o.getRacikan();
             } else {
                 if (!rck.equals(o.getRacikan())) {
-                    System.out.println("racikan " + o.getRacikan());
                     rck = o.getRacikan();
                     ObatResep obatRck = PemberianObatDetailDao.getObatRacikanByNoResep(eresep.getNoResep(), o.getKodeRacikan());
                     ResepReport r1 = new ResepReport();

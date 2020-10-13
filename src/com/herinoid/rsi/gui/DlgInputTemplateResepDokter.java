@@ -563,7 +563,7 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
         jLabel10.setBounds(10, 10, 150, 23);
 
         txtNamaTemplate.setForeground(new java.awt.Color(0, 0, 0));
-        txtNamaTemplate.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        txtNamaTemplate.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         txtNamaTemplate.setName("txtNamaTemplate"); // NOI18N
         txtNamaTemplate.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(txtNamaTemplate);

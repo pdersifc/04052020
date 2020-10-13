@@ -74,7 +74,7 @@ public class ResepTemplateDao {
         PreparedStatement psttmn = null;
         try {
             for (ObatResep o : reseps) {
-                psttmn = koneksi.prepareStatement("insert into e_resep_template_detail_racikan(e_resep_template_id,kode_racik,nama_racik,is_parent,kandungan,kode_brng,jml,embalase,tuslah,p1,p2,aturan_pakai,code) values(?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                psttmn = koneksi.prepareStatement("insert into e_resep_template_detail_racikan(e_resep_template_id,kode_racik,nama_racik,is_parent,kandungan,kode_brng,jml,embalase,tuslah,p1,p2,aturan_pakai,code,metode_racik) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 try {
                     psttmn.setString(1, kodeTemplate);
                     psttmn.setString(2, o.getKodeRacikan());
@@ -87,8 +87,9 @@ public class ResepTemplateDao {
                     psttmn.setDouble(9, o.getTuslah());
                     psttmn.setInt(10, o.getPembilang());
                     psttmn.setInt(11, o.getPenyebut());
-                    psttmn.setString(12, o.getAturanPakai());
+                    psttmn.setString(12, o.getAturanPakai());                    
                     psttmn.setString(13, Utils.TSID(new Date()));
+                    psttmn.setString(14, o.getMetodeRacikKode());
                     psttmn.executeUpdate();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -229,7 +230,6 @@ public class ResepTemplateDao {
     public static List<ResepTemplate> getTemplateByDokter(String kdDokter, String depo) {
         List<ResepTemplate> obatList = new LinkedList<>();
         try {
-
             ps = koneksi.prepareStatement("SELECT e.`code`,e.`kd_dokter`,e.`nama_dokter`,e.`kd_jaminan`,e.`nama_template`,e.`is_racikan` FROM e_resep_template e where e.`kd_dokter` = ? ");
             ps.setString(1, kdDokter);
             rs = ps.executeQuery();
@@ -690,14 +690,13 @@ public class ResepTemplateDao {
         PreparedStatement psttmn = null,pstracikan = null;
         ResultSet rset = null,rsRck = null;
         try {
-            pstracikan = koneksi.prepareStatement("SELECT d.e_resep_template_id,d.kode_brng,d.nama_racik,d.kode_racik,d.nama_racik,d.jml,d.is_parent,d.kandungan,d.embalase,d.tuslah,d.aturan_pakai FROM e_resep_template_detail_racikan d where  d.kode_brng like CONCAT( '%',?,'%') and d.e_resep_template_id = ? ");
+            pstracikan = koneksi.prepareStatement("SELECT d.e_resep_template_id,d.kode_brng,d.nama_racik,d.kode_racik,d.nama_racik,d.jml,d.is_parent,d.kandungan,d.embalase,d.tuslah,d.aturan_pakai,m.kd_racik,m.nm_racik FROM e_resep_template_detail_racikan d JOIN metode_racik m ON d.`metode_racik`=m.`kd_racik` where  d.kode_brng like CONCAT( '%',?,'%') and d.e_resep_template_id = ? ");
             pstracikan.setString(1, "RCK");
-            pstracikan.setString(2, codeTemplate);
-            
+            pstracikan.setString(2, codeTemplate);            
             rsRck = pstracikan.executeQuery();
             while (rsRck.next()) {
+                
                 ObatResep obat = new ObatResep();
-                obat.setKodeObat(rsRck.getString("kode_brng"));
                 obat.setNamaObat(rsRck.getString("nama_racik"));
                 obat.setKodeRacikan(rsRck.getString("kode_racik"));
                 obat.setRacikan(rsRck.getString("nama_racik"));
@@ -707,6 +706,9 @@ public class ResepTemplateDao {
                 obat.setAturanPakai(rsRck.getString("aturan_pakai"));
                 obat.setEmbalase(rsRck.getDouble("embalase"));
                 obat.setTuslah(rsRck.getDouble("tuslah"));
+                obat.setMetodeRacikKode(rsRck.getString("kd_racik"));
+                obat.setSatuan(rsRck.getString("nm_racik"));
+                obat.setJenisObat(Obat.OBAT_RACIKAN);
                 obat.setParent(true);               
                 obatDetailList.add(obat);
             }
@@ -731,7 +733,7 @@ public class ResepTemplateDao {
                 obat.setAturanPakai(rset.getString("aturan_pakai"));
                 obat.setHargaBeli(rset.getDouble("h_beli"));
                 obat.setSatuan(rset.getString("satuan"));
-                obat.setJenisObat(rset.getString("jenis"));
+                obat.setJenisObat(Obat.OBAT_RACIKAN);
                 obat.setKategori(rset.getString("kategori"));
                 obat.setEmbalase(rset.getDouble("embalase"));
                 obat.setTuslah(rset.getDouble("tuslah"));
