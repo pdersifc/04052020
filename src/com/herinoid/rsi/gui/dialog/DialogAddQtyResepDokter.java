@@ -64,6 +64,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             txtAturanPakai.setVisible(false);
             txtAturanPakai.setText("-");
             lblAturanPake.setVisible(false);
+            cmbJumlah.setVisible(false);
+            btnAturan1.setVisible(false);
+            btnAturan2.setVisible(false);
+            btnAturan3.setVisible(false);
             for (ObatResep m : racikanList) {
                 cmbRacikan.addItem(m);
                 KeySelectionRenderer renderer = new KeySelectionRenderer(cmbRacikan) {
@@ -78,6 +82,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             scrAturanPake.setVisible(true);
             txtAturanPakai.setVisible(true);
             lblAturanPake.setVisible(true);
+            cmbJumlah.setVisible(true);
+            btnAturan1.setVisible(true);
+            btnAturan2.setVisible(true);
+            btnAturan3.setVisible(true);
             cekRacikan.setText("Tidak");
             lblRacikan.setVisible(false);
             cmbRacikan.setVisible(false);
@@ -110,6 +118,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             txtPenyebut.setVisible(true);
             scrAturanPake.setVisible(false);
             txtAturanPakai.setVisible(false);
+            cmbJumlah.setVisible(false);
+            btnAturan1.setVisible(false);
+            btnAturan2.setVisible(false);
+            btnAturan3.setVisible(false);
             txtAturanPakai.setText("-");
             lblAturanPake.setVisible(false);
             for (ObatResep m : racikanList) {
@@ -132,6 +144,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             scrAturanPake.setVisible(true);
             txtAturanPakai.setVisible(true);
             lblAturanPake.setVisible(true);
+            cmbJumlah.setVisible(true);
+            btnAturan1.setVisible(true);
+            btnAturan2.setVisible(true);
+            btnAturan3.setVisible(true);
             cekRacikan.setText("Tidak");
             lblRacikan.setVisible(false);
             cmbRacikan.setVisible(false);
@@ -180,7 +196,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         btnAturan1 = new widget.Button();
         btnAturan2 = new widget.Button();
         btnAturan3 = new widget.Button();
-        comboBox1 = new widget.ComboBox();
+        cmbJumlah = new widget.ComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -188,6 +204,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         panelBiasa1.setLayout(new javax.swing.BoxLayout(panelBiasa1, javax.swing.BoxLayout.LINE_AXIS));
+        getContentPane().add(panelBiasa1);
 
         panelisi1.setPreferredSize(new java.awt.Dimension(489, 331));
 
@@ -286,11 +303,11 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             }
         });
 
-        comboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih", "30", "60", "90" }));
-        comboBox1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        comboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cmbJumlah.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih", "30", "60", "90" }));
+        cmbJumlah.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cmbJumlah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBox1ActionPerformed(evt);
+                cmbJumlahActionPerformed(evt);
             }
         });
 
@@ -322,7 +339,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                                     .addGroup(panelisi1Layout.createSequentialGroup()
                                         .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(comboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(cmbJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(cekRacikan, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addGroup(panelisi1Layout.createSequentialGroup()
@@ -374,7 +391,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                 .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtJumlah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(comboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cmbJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelisi1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,9 +409,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
                 .addGap(34, 34, 34))
         );
 
-        panelBiasa1.add(panelisi1);
-
-        getContentPane().add(panelBiasa1);
+        getContentPane().add(panelisi1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -416,6 +431,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             txtAturanPakai.setVisible(false);
             txtAturanPakai.setText("-");
             lblAturanPake.setVisible(false);
+            cmbJumlah.setVisible(false);
+            btnAturan1.setVisible(false);
+            btnAturan2.setVisible(false);
+            btnAturan3.setVisible(false);
             for (ObatResep m : racikanList) {
                 cmbRacikan.addItem(m);
                 KeySelectionRenderer renderer = new KeySelectionRenderer(cmbRacikan) {
@@ -430,6 +449,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
             scrAturanPake.setVisible(true);
             txtAturanPakai.setVisible(true);
             lblAturanPake.setVisible(true);
+            cmbJumlah.setVisible(true);
+            btnAturan1.setVisible(true);
+            btnAturan2.setVisible(true);
+            btnAturan3.setVisible(true);
             cekRacikan.setText("Tidak");
             lblRacikan.setVisible(false);
             cmbRacikan.setVisible(false);
@@ -530,10 +553,10 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
         txtAturanPakai.setText("1 dd 1");
     }//GEN-LAST:event_btnAturan3ActionPerformed
 
-    private void comboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBox1ActionPerformed
+    private void cmbJumlahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbJumlahActionPerformed
         // TODO add your handling code here:
-        txtJumlah.setText(comboBox1.getSelectedItem().toString());
-    }//GEN-LAST:event_comboBox1ActionPerformed
+        txtJumlah.setText(cmbJumlah.getSelectedItem().toString());
+    }//GEN-LAST:event_cmbJumlahActionPerformed
 
     void clean() {
         txtJumlah.setText(null);
@@ -605,8 +628,8 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
     private widget.Button btnBatal;
     private widget.Button btnSimpan;
     private widget.CekBox cekRacikan;
+    private widget.ComboBox cmbJumlah;
     private widget.ComboBox cmbRacikan;
-    private widget.ComboBox comboBox1;
     private widget.Label label1;
     private widget.Label label2;
     private widget.Label lblAturanPake;
