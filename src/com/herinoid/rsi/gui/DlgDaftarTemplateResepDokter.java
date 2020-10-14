@@ -204,6 +204,7 @@ public final class DlgDaftarTemplateResepDokter extends javax.swing.JDialog {
         FormInput = new widget.PanelBiasa();
         label7 = new widget.Label();
         cmbDokter = new widget.ComboBox();
+        btnRefresh = new widget.Button();
         jPanel1 = new javax.swing.JPanel();
         panelBiasa1 = new widget.PanelBiasa();
         panelBiasa2 = new widget.PanelBiasa();
@@ -280,6 +281,16 @@ public final class DlgDaftarTemplateResepDokter extends javax.swing.JDialog {
         FormInput.add(cmbDokter);
         cmbDokter.setBounds(140, 20, 340, 21);
 
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/42a.png"))); // NOI18N
+        btnRefresh.setName("btnRefresh"); // NOI18N
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+        FormInput.add(btnRefresh);
+        btnRefresh.setBounds(490, 20, 30, 20);
+
         internalFrame1.add(FormInput, java.awt.BorderLayout.PAGE_START);
 
         jPanel1.setName("jPanel1"); // NOI18N
@@ -347,6 +358,16 @@ public final class DlgDaftarTemplateResepDokter extends javax.swing.JDialog {
         tblTemplate.setRowSorter(rowSorter);
     }//GEN-LAST:event_cmbDokterActionPerformed
 
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        setComboList();
+        DokterRajal dokter = (DokterRajal) cmbDokter.getItemAt(cmbDokter.getSelectedIndex());
+        model.removeAllElements();
+        List<ResepTemplate> dataList = ResepTemplateDao.getTemplateByDokter(dokter.getKodeDokter(), kdBangsal);
+        model.add(dataList);
+        tblTemplate.setModel(model);
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
     private void clean() {
         racikanList = new LinkedList<>();
         model.removeAllElements();
@@ -372,6 +393,7 @@ public final class DlgDaftarTemplateResepDokter extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private widget.Button BtnKeluar;
     private widget.PanelBiasa FormInput;
+    private widget.Button btnRefresh;
     private widget.Button btnTambahTemplate;
     private widget.ComboBox cmbDokter;
     private widget.InternalFrame internalFrame1;
