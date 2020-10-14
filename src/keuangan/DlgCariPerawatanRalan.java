@@ -1264,13 +1264,13 @@ private void ppPetugasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             }
             
             pstindakan=koneksi.prepareStatement(sql+
-                   "where jns_perawatan.status='1' and (jns_perawatan.kd_pj=? or jns_perawatan.kd_pj='-') and (jns_perawatan.kd_poli=? or jns_perawatan.kd_poli='-') and jns_perawatan.kd_jenis_prw like ? or "+
-                    "jns_perawatan.status='1' and (jns_perawatan.kd_pj=? or jns_perawatan.kd_pj='-') and (jns_perawatan.kd_poli=? or jns_perawatan.kd_poli='-') and jns_perawatan.nm_perawatan like ? or "+
-                    "jns_perawatan.status='1' and (jns_perawatan.kd_pj=? or jns_perawatan.kd_pj='-') and (jns_perawatan.kd_poli=? or jns_perawatan.kd_poli='-') and kategori_perawatan.nm_kategori like ? order by jns_perawatan.nm_perawatan "); 
+                   "where jns_perawatan.status='1' and jns_perawatan.kd_pj and (jns_perawatan.kd_poli=? or jns_perawatan.kd_poli='-') and jns_perawatan.kd_jenis_prw like ? or "+
+                    "jns_perawatan.status='1' and jns_perawatan.kd_pj and (jns_perawatan.kd_poli=? or jns_perawatan.kd_poli='-') and jns_perawatan.nm_perawatan like ? or "+
+                    "jns_perawatan.status='1' and jns_perawatan.kd_pj and (jns_perawatan.kd_poli=? or jns_perawatan.kd_poli='-') and kategori_perawatan.nm_kategori like ? order by jns_perawatan.nm_perawatan "); 
             pstindakan2=koneksi.prepareStatement(sql+
-                   "where jns_perawatan.status='1' and (jns_perawatan.kd_pj=? or jns_perawatan.kd_pj='-') and jns_perawatan.kd_jenis_prw like ? or "+
-                    "jns_perawatan.status='1' and (jns_perawatan.kd_pj=? or jns_perawatan.kd_pj='-') and jns_perawatan.nm_perawatan like ? or "+
-                    "jns_perawatan.status='1' and (jns_perawatan.kd_pj=? or jns_perawatan.kd_pj='-') and kategori_perawatan.nm_kategori like ? order by jns_perawatan.nm_perawatan ");        
+                   "where jns_perawatan.status='1' and jns_perawatan.kd_pj and jns_perawatan.kd_jenis_prw like ? or "+
+                    "jns_perawatan.status='1' and jns_perawatan.kd_pj and jns_perawatan.nm_perawatan like ? or "+
+                    "jns_perawatan.status='1' and jns_perawatan.kd_pj and kategori_perawatan.nm_kategori like ? order by jns_perawatan.nm_perawatan ");        
             pstindakan3=koneksi.prepareStatement(sql+
                    "where jns_perawatan.status='1' and (jns_perawatan.kd_poli=? or jns_perawatan.kd_poli='-') and jns_perawatan.kd_jenis_prw like ? or "+
                     "jns_perawatan.status='1' and (jns_perawatan.kd_poli=? or jns_perawatan.kd_poli='-') and jns_perawatan.nm_perawatan like ? or "+
@@ -1281,22 +1281,22 @@ private void ppPetugasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                     "jns_perawatan.status='1' and kategori_perawatan.nm_kategori like ? order by jns_perawatan.nm_perawatan "); 
             try {
                 if(poli_ralan.equals("Yes")&&cara_bayar_ralan.equals("Yes")){
-                    pstindakan.setString(1,kd_pj.trim());
+                    pstindakan.setString(1,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan.setString(2,kd_poli.trim());
                     pstindakan.setString(3,"%"+TCariTindakan.getText().trim()+"%");
-                    pstindakan.setString(4,kd_pj.trim());
+                    pstindakan.setString(4,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan.setString(5,kd_poli.trim());
                     pstindakan.setString(6,"%"+TCariTindakan.getText().trim()+"%");
-                    pstindakan.setString(7,kd_pj.trim());
+                    pstindakan.setString(7,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan.setString(8,kd_poli.trim());
                     pstindakan.setString(9,"%"+TCariTindakan.getText().trim()+"%");
                     rstindakan=pstindakan.executeQuery();
                 }else if(poli_ralan.equals("No")&&cara_bayar_ralan.equals("Yes")){
-                    pstindakan2.setString(1,kd_pj.trim());
+                    pstindakan2.setString(1,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan2.setString(2,"%"+TCariTindakan.getText().trim()+"%");
-                    pstindakan2.setString(3,kd_pj.trim());
+                    pstindakan2.setString(3,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan2.setString(4,"%"+TCariTindakan.getText().trim()+"%");
-                    pstindakan2.setString(5,kd_pj.trim());
+                    pstindakan2.setString(5,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan2.setString(6,"%"+TCariTindakan.getText().trim()+"%");
                     rstindakan=pstindakan2.executeQuery();
                 }else if(poli_ralan.equals("Yes")&&cara_bayar_ralan.equals("No")){
