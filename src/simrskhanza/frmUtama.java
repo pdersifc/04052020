@@ -642,7 +642,7 @@ import tranfusidarah.UTDPenyerahanDarah;
 import tranfusidarah.UTDStokDarah;
 import viabarcode.DlgBarcodeRalan;
 import viabarcode.DlgBarcodeRanap;
-import com.herinoid.rsi.gui.DlgInputTemplateResepDokter;
+import com.herinoid.rsi.gui.DlgDaftarTemplateResepDokter;
 
 
 /**
@@ -668,7 +668,7 @@ public class frmUtama extends javax.swing.JFrame {
     private String coder_nik="",pilihpage="",judulform="",tampilkantni=Sequel.cariIsi("select tampilkan_tni_polri from set_tni_polri"),
             AKTIFKANTRACKSQL=koneksiDB.AKTIFKANTRACKSQL();
     /** Creates new form frmUtama */
-    private frmUtama() {
+    public frmUtama() {
         super();
         initComponents();
         initKhanza();
@@ -767,6 +767,14 @@ public class frmUtama extends javax.swing.JFrame {
             myInstance = new frmUtama();
 
         return myInstance;
+    }
+    
+    public int getPanelHeight(){
+        return PanelUtama.getHeight();
+    }
+    
+    public int getPanelWidht(){
+        return PanelUtama.getWidth();
     }
     
  
@@ -15907,7 +15915,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
     private void btnTemplateResepActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         isTutup();
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        DlgInputTemplateResepDokter data = new DlgInputTemplateResepDokter(this,false);
+        DlgDaftarTemplateResepDokter data = new DlgDaftarTemplateResepDokter(this,false);
         data.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
         data.setLocationRelativeTo(PanelUtama);
         data.setVisible(true);

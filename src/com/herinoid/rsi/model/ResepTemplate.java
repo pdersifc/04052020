@@ -5,7 +5,9 @@
  */
 package com.herinoid.rsi.model;
 
+import com.herinoid.rsi.dao.ResepTemplateDao;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -135,7 +137,5 @@ public class ResepTemplate {
     public void setKdJaminan(String kdJaminan) {
         this.kdJaminan = kdJaminan;
     }
-
-   
     
 }

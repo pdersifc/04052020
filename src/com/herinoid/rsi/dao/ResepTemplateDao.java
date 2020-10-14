@@ -15,6 +15,7 @@ import com.herinoid.rsi.model.RincianResepVerifikasi;
 import com.herinoid.rsi.util.Konstan;
 import com.herinoid.rsi.util.NumberUtils;
 import com.herinoid.rsi.dao.MarginDao;
+import com.herinoid.rsi.dao.ResepTemplateDao.Actions;
 import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
 import com.herinoid.rsi.model.ResepTemplate;
@@ -28,6 +29,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -224,6 +226,49 @@ public class ResepTemplateDao {
         }
         return sukses;
     }
+    
+    public static boolean update(ResepTemplate resep) {
+        boolean sukses = true;
+        PreparedStatement psttmn = null;
+        if (resep.getObatTemplateRacikanDetail().size() > 0) {
+            resep.setRacikan(true);
+        }
+        try {
+            psttmn = koneksi.prepareStatement("update e_resep_template set kd_dokter = ?,nama_dokter = ?,nama_template = ?,is_racikan = ?,kd_jaminan = ? where code = ?");
+            try {
+                
+                psttmn.setString(1, resep.getKdDokter());
+                psttmn.setString(2, resep.getNamaDokter());
+                psttmn.setString(3, resep.getNamaTemplate());
+                psttmn.setBoolean(4, resep.isRacikan());
+                psttmn.setString(5, resep.getKdJaminan());
+                psttmn.setString(6, resep.getCode());
+                psttmn.executeUpdate();
+                if (resep.getObatTemplateDetail().size() > 0) {
+                    deleteDetailByTemplate(resep.getCode());
+                    saveDetail(resep.getCode(), resep.getObatTemplateDetail());
+                }
+                
+                if (resep.getObatTemplateRacikanDetail().size() > 0) {
+                    deleteDetailRacikanByTemplate(resep.getCode());
+                    saveRacikanDetail(resep.getCode(), resep.getObatTemplateRacikanDetail());
+                }
+            } catch (Exception e) {
+                sukses = false;
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (psttmn != null) {
+                    psttmn.close();
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Notifikasi : " + e);
+            sukses = false;
+            JOptionPane.showMessageDialog(null, "error : " + e);
+        }
+        return sukses;
+    }
 
    
 
@@ -253,6 +298,56 @@ public class ResepTemplateDao {
                             .thenComparing(ObatResep::getNamaObat));
                     obat.setObatTemplateDetail(obatDetails);
                 }
+
+                obatList.add(obat);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResepTemplateDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obatList;
+    }
+    enum Actions {
+        HAPUS, EDIT;
+    }
+    public static List<ResepTemplate> getAllTemplate() {
+        
+        List<ResepTemplate> obatList = new LinkedList<>();
+        try {
+            ps = koneksi.prepareStatement("SELECT e.`code`,e.`kd_dokter`,e.`nama_dokter`,e.`kd_jaminan`,e.`nama_template`,e.`is_racikan` FROM e_resep_template e ");            
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ResepTemplate obat = new ResepTemplate();
+                obat.setCode(rs.getString("code"));
+                obat.setKdDokter(rs.getString("kd_dokter"));
+                obat.setNamaDokter(rs.getString("nama_dokter"));
+                obat.setKdJaminan(rs.getString("kd_jaminan"));
+                obat.setNamaTemplate(rs.getString("nama_template"));
+                obat.setRacikan(rs.getBoolean("is_racikan"));
+//                if (obat.isRacikan()) {
+//                    List<ObatResep> obatRacikanDetails = getObatResepRacikanDetail(obat.getCode(), depo, obat.getKdJaminan());
+//                    Collections.sort(obatRacikanDetails, Comparator
+//                            .comparing(ObatResep::getKodeRacikan));
+//                    obat.setObatTemplateRacikanDetail(obatRacikanDetails);
+//                } else {
+//                    List<ObatResep> obatDetails = getObatResepDetail(obat.getCode(), depo, obat.getKdJaminan());
+//                    Collections.sort(obatDetails, Comparator
+//                            .comparing(ObatResep::getNamaObat)
+//                            .thenComparing(ObatResep::getNamaObat));
+//                    obat.setObatTemplateDetail(obatDetails);
+//                }
 
                 obatList.add(obat);
             }

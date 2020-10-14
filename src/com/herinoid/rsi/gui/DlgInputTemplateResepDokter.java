@@ -67,16 +67,14 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
     private DialogAddQtyResepDokter addQty = new DialogAddQtyResepDokter(null, false);
     private DlgHistoriResepPasien cekHistory = new DlgHistoriResepPasien(null, false);
     private ObatResep obatFromDialog;
-    private ObatResep obatRacikan;
     private List<ObatResep> racikanList;
     private DialogRacikanResep dlgRacikan = new DialogRacikanResep(null, false);
     private DlgCariDokter dokter = new DlgCariDokter(null, false);
-//    private DlgCariPenjab dokter = new DlgCariDokter(null, false);
     private validasi Valid = new validasi();
-    private String jenisPasien;
-    private String depoKode, kdJaminan, jaminan;
+    private String depoKode, kdJaminan, jaminan, jenisPasien;
     private double total;
     private Properties pro = new Properties();
+    private ResepTemplate templateEdit;
 
     /**
      * Creates new form DlgPenyakit
@@ -95,45 +93,45 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
             setSize(656, 250);
             pro.loadFromXML(new FileInputStream("setting/database.xml"));
             txtCari.getDocument().addDocumentListener(new DocumentListener() {
-                
+
                 @Override
                 public void insertUpdate(DocumentEvent e) {
                     String text = txtCari.getText();
-                    
+
                     if (text.trim().length() == 0) {
                         rowSorter.setRowFilter(null);
                     } else {
                         rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                     }
                 }
-                
+
                 @Override
                 public void removeUpdate(DocumentEvent e) {
                     String text = txtCari.getText();
-                    
+
                     if (text.trim().length() == 0) {
                         rowSorter.setRowFilter(null);
                     } else {
                         rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                     }
                 }
-                
+
                 @Override
                 public void changedUpdate(DocumentEvent e) {
                     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
-                
+
             });
-            
+
             addQty.addWindowListener(new WindowListener() {
                 @Override
                 public void windowOpened(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowClosing(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowClosed(WindowEvent e) {
                     obatFromDialog = addQty.getData();
@@ -142,16 +140,16 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
                             if (obatFromDialog.isEdit()) {
                                 modelPilihan.remove(tblPilihan.getSelectedRow());
                             }
-                            
+
                             double marginPersen = 28;
                             if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                                 MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obatFromDialog.getKodeObat());
-                                if(marginBpjs!=null){                            
+                                if (marginBpjs != null) {
                                     marginPersen = marginBpjs.getRalan();
                                 }
                             } else {
                                 MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                                if(marginNon!=null){
+                                if (marginNon != null) {
                                     marginPersen = marginNon.getMargin();
                                 }
                             }
@@ -159,26 +157,26 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
                             double hpp = margin + obatFromDialog.getHargaBeli();
                             total = total + (hpp * obatFromDialog.getJumlah());
                             lblTotal.setText(Utils.format(total, 2));
-                            
+
                             removeDuplicate(obatFromDialog);
                             tblPilihan.setModel(modelPilihan);
                         }
                     }
-                    
+
                 }
-                
+
                 @Override
                 public void windowIconified(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowDeiconified(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowActivated(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowDeactivated(WindowEvent e) {
                 }
@@ -187,11 +185,11 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
                 @Override
                 public void windowOpened(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowClosing(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowClosed(WindowEvent e) {
                     obatFromDialog = dlgRacikan.getData();
@@ -202,35 +200,35 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
                             racikanList.add(obatFromDialog);
                         }
                     }
-                    
+
                 }
-                
+
                 @Override
                 public void windowIconified(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowDeiconified(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowActivated(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowDeactivated(WindowEvent e) {
                 }
             });
-            
+
             dokter.addWindowListener(new WindowListener() {
                 @Override
                 public void windowOpened(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowClosing(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowClosed(WindowEvent e) {
                     if (dokter.getTable().getSelectedRow() != -1) {
@@ -239,33 +237,33 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
                     }
                     txtKodeDokter.requestFocus();
                 }
-                
+
                 @Override
                 public void windowIconified(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowDeiconified(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowActivated(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowDeactivated(WindowEvent e) {
                 }
             });
-            
+
             cekHistory.addWindowListener(new WindowListener() {
                 @Override
                 public void windowOpened(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowClosing(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowClosed(WindowEvent e) {
                     List<ObatResep> obats = cekHistory.getData();
@@ -275,16 +273,16 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
                             double marginPersen = 28;
                             if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                                 MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
-                                if(marginBpjs!=null){
+                                if (marginBpjs != null) {
                                     marginPersen = marginBpjs.getRalan();
                                 }
-                                
+
                             } else {
                                 MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                                if(marginNon!=null){
+                                if (marginNon != null) {
                                     marginPersen = marginNon.getMargin();
                                 }
-                                
+
                             }
                             double margin = (o.getHargaBeli() * marginPersen) / 100;
                             double hpp = margin + o.getHargaBeli();
@@ -292,23 +290,23 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
                             lblTotal.setText(Utils.format(total, 2));
                         }
                         tblPilihan.setModel(modelPilihan);
-                        
+
                     }
 
                 }
-                
+
                 @Override
                 public void windowIconified(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowDeiconified(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowActivated(WindowEvent e) {
                 }
-                
+
                 @Override
                 public void windowDeactivated(WindowEvent e) {
                 }
@@ -337,7 +335,7 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
     public void setPasien(String norawat, String norm, String nmPasien, String jaminan, String jenisPasien, String poli) {
         RegPeriksa reg = RegPeriksaDao.get(norawat);
         txtNamaTemplate.setText(norawat);
-       
+
         this.jaminan = jaminan;
         this.kdJaminan = reg.getKdPj();
         this.jenisPasien = jenisPasien;
@@ -355,7 +353,85 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
         modelPilihan.add(obatResep);
     }
 
-   
+    public void setToEdit(ResepTemplate template) {
+        txtNamaTemplate.setText(template.getNamaTemplate());
+        txtKodeDokter.setText(template.getKdDokter());
+        txtNamaDokter.setText(template.getNamaDokter());
+        this.templateEdit = template;
+        if (template.getObatTemplateDetail() != null && template.getObatTemplateDetail().size() > 0) {
+            modelPilihan.add(template.getObatTemplateDetail());
+            for (ObatResep o : template.getObatTemplateDetail()) {
+                if (o.getKategori().equals("Formularium Nasional")) {
+                    rdoFornas.setSelected(true);
+                    break;
+                }
+            }
+            for (ObatResep o : template.getObatTemplateDetail()) {
+                double marginPersen = 28;
+                if (rdoFornas.isSelected()) {
+                    MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
+                    if (marginBpjs != null) {
+                        marginPersen = marginBpjs.getRalan();
+                    }
+
+                } else {
+                    MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                    if (marginNon != null) {
+                        marginPersen = marginNon.getMargin();
+                    }
+
+                }
+                double margin = (o.getHargaBeli() * marginPersen) / 100;
+                double hpp = margin + o.getHargaBeli();
+                total = total + (hpp * o.getJumlah());
+                lblTotal.setText(Utils.format(total, 2));
+            }
+
+        }
+
+        if (template.getObatTemplateRacikanDetail() != null && template.getObatTemplateRacikanDetail().size() > 0) {
+            modelPilihan.add(template.getObatTemplateRacikanDetail());
+            for (ObatResep o : template.getObatTemplateRacikanDetail()) {
+                if (!Utils.isBlank(o.getKategori())) {
+                    if (o.getKategori().equals("Formularium Nasional")) {
+                        rdoFornas.setSelected(true);
+                        break;
+                    }
+                }
+
+            }
+
+            for (ObatResep o : template.getObatTemplateRacikanDetail()) {
+                double marginPersen = 28;
+                if (rdoFornas.isSelected()) {
+                    MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
+                    if (marginBpjs != null) {
+                        marginPersen = marginBpjs.getRalan();
+                    }
+
+                } else {
+                    MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                    if (marginNon != null) {
+                        marginPersen = marginNon.getMargin();
+                    }
+
+                }
+                double margin = (o.getHargaBeli() * marginPersen) / 100;
+                double hpp = margin + o.getHargaBeli();
+                total = total + (hpp * o.getJumlah());
+                lblTotal.setText(Utils.format(total, 2));
+            }
+
+        }
+        if (rdoFornas.isSelected()) {
+            this.jaminan = Konstan.PASIEN_BPJS_KESEHATAN;
+            setData(pro.getProperty("DEPOOBAT"), "K01", Konstan.PASIEN_RALAN);
+        } else {
+            this.jaminan = Konstan.PASIEN_UMUM;
+            setData(pro.getProperty("DEPOOBAT"), "K02", Konstan.PASIEN_RALAN);
+        }
+        tblPilihan.setModel(modelPilihan);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -378,6 +454,7 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
         panelisi3 = new widget.panelisi();
         BtnTambah = new widget.Button();
         label13 = new widget.Label();
+        btnEdit = new widget.Button();
         btnSimpan = new widget.Button();
         BtnKeluar = new widget.Button();
         FormInput = new widget.PanelBiasa();
@@ -513,6 +590,16 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
         label13.setName("label13"); // NOI18N
         label13.setPreferredSize(new java.awt.Dimension(500, 23));
         panelisi3.add(label13);
+
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/EDIT2.png"))); // NOI18N
+        btnEdit.setText("Ganti");
+        btnEdit.setName("btnEdit"); // NOI18N
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
+        panelisi3.add(btnEdit);
 
         btnSimpan.setForeground(new java.awt.Color(0, 0, 0));
         btnSimpan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/save-16x16.png"))); // NOI18N
@@ -650,7 +737,7 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
         jPanel1.setName("jPanel1"); // NOI18N
         jPanel1.setLayout(new java.awt.GridLayout(2, 1, 1, 0));
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, ".:: OBAT TERPILIH ::.", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(0, 102, 0))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, ".:: Daftar Template Resep ::.", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         jPanel2.setName("jPanel2"); // NOI18N
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -802,9 +889,9 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 resep.setKdDokter(txtKodeDokter.getText());
                 resep.setCode(Utils.AutoID(new Date()));
                 resep.setNamaDokter(txtNamaDokter.getText());
-                resep.setKdJaminan(rdoFornas.isSelected()?"K01":"K02");
+                resep.setKdJaminan(rdoFornas.isSelected() ? "K01" : "K02");
                 resep.setNamaTemplate(txtNamaTemplate.getText());
-                
+
                 List<ObatResep> biasas = new LinkedList<>();
                 List<ObatResep> racikans = new LinkedList<>();
                 for (ObatResep o : modelPilihan.getAll()) {
@@ -844,16 +931,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 double marginPersen = 28;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(oresep.getKodeObat());
-                    if(marginBpjs!=null){
+                    if (marginBpjs != null) {
                         marginPersen = marginBpjs.getRalan();
                     }
-                    
+
                 } else {
                     MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                    if(marginNon!=null){
+                    if (marginNon != null) {
                         marginPersen = marginNon.getMargin();
                     }
-                    
+
                 }
                 double margin = (oresep.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + oresep.getHargaBeli();
@@ -887,20 +974,57 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private void rdoFornasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoFornasActionPerformed
         // TODO add your handling code here:
         this.jaminan = Konstan.PASIEN_BPJS_KESEHATAN;
-        setData(pro.getProperty("DEPOOBAT"),"K01",Konstan.PASIEN_RALAN);
+        setData(pro.getProperty("DEPOOBAT"), "K01", Konstan.PASIEN_RALAN);
     }//GEN-LAST:event_rdoFornasActionPerformed
 
     private void rdoNonFornasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoNonFornasActionPerformed
         // TODO add your handling code here:
         this.jaminan = Konstan.PASIEN_UMUM;
-        setData(pro.getProperty("DEPOOBAT"),"K02",Konstan.PASIEN_RALAN);
+        setData(pro.getProperty("DEPOOBAT"), "K02", Konstan.PASIEN_RALAN);
     }//GEN-LAST:event_rdoNonFornasActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // TODO add your handling code here:
+        if (txtKodeDokter.getText().trim().equals("") || txtKodeDokter.getText().trim().equals("xxx")) {
+            Valid.textKosong(txtKodeDokter, "Dokter");
+        } else {
+            int oke = JOptionPane.showConfirmDialog(null, "Apakah data sudah benar, silahkan cek kembali sebelum disimpan?", "Perhatian", JOptionPane.YES_NO_OPTION);
+            if (oke == 0) {
+                ResepTemplate resep = new ResepTemplate();
+                resep.setKdDokter(txtKodeDokter.getText());
+                resep.setCode(templateEdit.getCode());
+                resep.setNamaDokter(txtNamaDokter.getText());
+                resep.setKdJaminan(rdoFornas.isSelected() ? "K01" : "K02");
+                resep.setNamaTemplate(txtNamaTemplate.getText());
+
+                List<ObatResep> biasas = new LinkedList<>();
+                List<ObatResep> racikans = new LinkedList<>();
+                for (ObatResep o : modelPilihan.getAll()) {
+                    if (o.getJenisObat().equals(Obat.OBAT_RACIKAN)) {
+                        if(Utils.isBlank(o.getKodeObat())){
+                            o.setKodeObat(o.getKodeRacikan());
+                        }
+                        racikans.add(o);
+                    } else {
+                        biasas.add(o);
+                    }
+                }
+                resep.setObatTemplateRacikanDetail(racikans);
+                resep.setObatTemplateDetail(biasas);
+                boolean sukses = false;
+                sukses = ResepTemplateDao.update(resep);
+                if (sukses) {
+                    clean();
+                    dispose();
+                }
+            }
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
 
     private void clean() {
         racikanList = new LinkedList<>();
         model.removeAllElements();
         modelPilihan.removeAllElements();
-        obatRacikan = null;
         txtNamaTemplate.setText(null);
         total = 0;
         lblTotal.setText(null);
@@ -937,6 +1061,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private widget.Button BtnTambah;
     private widget.PanelBiasa FormInput;
     private javax.swing.JPopupMenu Popup;
+    private widget.Button btnEdit;
     private widget.Button btnSimpan;
     private javax.swing.ButtonGroup grupKatergori;
     private widget.InternalFrame internalFrame1;
