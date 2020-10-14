@@ -3190,8 +3190,8 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                    "alat+dokter_anestesi+asisten_anestesi+asisten_anestesi2+bidan+bidan2+bidan3+perawat_luar+sewa_ok+"+
                    "akomodasi+bagian_rs+omloop+omloop2+omloop3+omloop4+omloop5+sarpras+dokter_pjanak+dokter_umum) as jumlah "+
                    "from paket_operasi "+
-                   "where status='1' and (kd_pj=? or kd_pj='-') and kode_paket like ? or "+
-                   "status='1' and (kd_pj=? or kd_pj='-') and nm_perawatan like ? order by nm_perawatan ");
+                   "where status='1' and kd_pj=? and kode_paket like ? or "+
+                   "status='1' and kd_pj=?  and nm_perawatan like ? order by nm_perawatan ");
             pstindakan2=koneksi.prepareStatement("select kode_paket, nm_perawatan,kategori, operator1, operator2, operator3, "+
                    "asisten_operator1, asisten_operator2,asisten_operator3, instrumen, dokter_anak,perawaat_resusitas,"+
                    "dokter_anestesi, asisten_anestesi, asisten_anestesi2, bidan, bidan2, bidan3, perawat_luar, alat,"+
@@ -3210,8 +3210,8 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                    "alat+dokter_anestesi+asisten_anestesi+asisten_anestesi2+bidan+bidan2+bidan3+perawat_luar+sewa_ok+"+
                    "akomodasi+bagian_rs+omloop+omloop2+omloop3+omloop4+omloop5+sarpras+dokter_pjanak+dokter_umum) as jumlah "+
                    "from paket_operasi "+
-                   "where status='1' and (kd_pj=? or kd_pj='-') and (kelas=? or kelas='-') and kode_paket like ? or "+
-                   "status='1' and (kd_pj=? or kd_pj='-') and (kelas=? or kelas='-') and nm_perawatan like ? order by nm_perawatan ");
+                   "where status='1' and kd_pj=? and (kelas=? or kelas='-') and kode_paket like ? or "+
+                   "status='1' and kd_pj=?  and (kelas=? or kelas='-') and nm_perawatan like ? order by nm_perawatan ");
             pstindakan4=koneksi.prepareStatement("select kode_paket, nm_perawatan,kategori, operator1, operator2, operator3, "+
                    "asisten_operator1, asisten_operator2,asisten_operator3, instrumen, dokter_anak,perawaat_resusitas,"+
                    "dokter_anestesi, asisten_anestesi, asisten_anestesi2, bidan, bidan2, bidan3, perawat_luar, alat,"+
@@ -3225,9 +3225,9 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             
             try {
                 if(cara_bayar_operasi.equals("Yes")&&kelas_operasi.equals("No")){
-                    pstindakan.setString(1,kd_pj.trim());
+                    pstindakan.setString(1,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan.setString(2,"%"+TCariPaket.getText()+"%");
-                    pstindakan.setString(3,kd_pj.trim());
+                    pstindakan.setString(3,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan.setString(4,"%"+TCariPaket.getText()+"%");
                     rs=pstindakan.executeQuery();
                 }else if(cara_bayar_operasi.equals("No")&&kelas_operasi.equals("No")){
@@ -3235,10 +3235,10 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     pstindakan2.setString(2,"%"+TCariPaket.getText()+"%");
                     rs=pstindakan2.executeQuery();
                 }else if(cara_bayar_operasi.equals("Yes")&&kelas_operasi.equals("Yes")){
-                    pstindakan3.setString(1,kd_pj.trim());
+                    pstindakan3.setString(1,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan3.setString(2,kelas.trim());
                     pstindakan3.setString(3,"%"+TCariPaket.getText()+"%");
-                    pstindakan3.setString(4,kd_pj.trim());
+                    pstindakan3.setString(4,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
                     pstindakan3.setString(5,kelas.trim());
                     pstindakan3.setString(6,"%"+TCariPaket.getText()+"%");
                     rs=pstindakan3.executeQuery();
