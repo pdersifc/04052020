@@ -1005,7 +1005,7 @@
             <Component class="widget.ComboBox" name="cboRuang">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="21">
+                  <StringArray count="26">
                     <StringItem index="0" value="RUANG A"/>
                     <StringItem index="1" value="RUANG B"/>
                     <StringItem index="2" value="RUANG C"/>
@@ -1026,7 +1026,12 @@
                     <StringItem index="17" value="RUANG R"/>
                     <StringItem index="18" value="RUANG S"/>
                     <StringItem index="19" value="RUANG T"/>
-                    <StringItem index="20" value=" "/>
+                    <StringItem index="20" value="RUANG U"/>
+                    <StringItem index="21" value="RUANG V"/>
+                    <StringItem index="22" value="RUANG W"/>
+                    <StringItem index="23" value="RUANG X"/>
+                    <StringItem index="24" value="RUANG Y"/>
+                    <StringItem index="25" value="RUANG Z"/>
                   </StringArray>
                 </Property>
                 <Property name="name" type="java.lang.String" value="cboRuang" noResource="true"/>

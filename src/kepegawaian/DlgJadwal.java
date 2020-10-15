@@ -667,7 +667,7 @@ public class DlgJadwal extends javax.swing.JDialog {
         panelBiasa1.add(label1);
         label1.setBounds(830, 10, 60, 30);
 
-        cboRuang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "RUANG A", "RUANG B", "RUANG C", "RUANG D", "RUANG E", "RUANG F", "RUANG G", "RUANG H", "RUANG I", "RUANG J", "RUANG K", "RUANG L", "RUANG M", "RUANG N", "RUANG O", "RUANG P", "RUANG Q", "RUANG R", "RUANG S", "RUANG T", " " }));
+        cboRuang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "RUANG A", "RUANG B", "RUANG C", "RUANG D", "RUANG E", "RUANG F", "RUANG G", "RUANG H", "RUANG I", "RUANG J", "RUANG K", "RUANG L", "RUANG M", "RUANG N", "RUANG O", "RUANG P", "RUANG Q", "RUANG R", "RUANG S", "RUANG T", "RUANG U", "RUANG V", "RUANG W", "RUANG X", "RUANG Y", "RUANG Z" }));
         cboRuang.setName("cboRuang"); // NOI18N
         panelBiasa1.add(cboRuang);
         cboRuang.setBounds(850, 40, 200, 20);
