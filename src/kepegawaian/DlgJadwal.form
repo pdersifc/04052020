@@ -991,6 +991,52 @@
                 </Constraint>
               </Constraints>
             </Component>
+            <Component class="widget.Label" name="label1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Ruang :"/>
+                <Property name="name" type="java.lang.String" value="label1" noResource="true"/>
+              </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="830" y="10" width="60" height="30"/>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Component class="widget.ComboBox" name="cboRuang">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="21">
+                    <StringItem index="0" value="RUANG A"/>
+                    <StringItem index="1" value="RUANG B"/>
+                    <StringItem index="2" value="RUANG C"/>
+                    <StringItem index="3" value="RUANG D"/>
+                    <StringItem index="4" value="RUANG E"/>
+                    <StringItem index="5" value="RUANG F"/>
+                    <StringItem index="6" value="RUANG G"/>
+                    <StringItem index="7" value="RUANG H"/>
+                    <StringItem index="8" value="RUANG I"/>
+                    <StringItem index="9" value="RUANG J"/>
+                    <StringItem index="10" value="RUANG K"/>
+                    <StringItem index="11" value="RUANG L"/>
+                    <StringItem index="12" value="RUANG M"/>
+                    <StringItem index="13" value="RUANG N"/>
+                    <StringItem index="14" value="RUANG O"/>
+                    <StringItem index="15" value="RUANG P"/>
+                    <StringItem index="16" value="RUANG Q"/>
+                    <StringItem index="17" value="RUANG R"/>
+                    <StringItem index="18" value="RUANG S"/>
+                    <StringItem index="19" value="RUANG T"/>
+                    <StringItem index="20" value=" "/>
+                  </StringArray>
+                </Property>
+                <Property name="name" type="java.lang.String" value="cboRuang" noResource="true"/>
+              </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="850" y="40" width="200" height="20"/>
+                </Constraint>
+              </Constraints>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>

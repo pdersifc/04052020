@@ -8928,8 +8928,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             Calendar cal = Calendar.getInstance();
             int day = cal.get(Calendar.DAY_OF_WEEK);
             String hari = Utils.hariName[day - 1];
-            String ruang = Sequel.cariIsi("SELECT d.ruang FROM dokter_poli d JOIN jadwal j ON j.kd_dokter = d.kd_dokter AND  j.kd_poli = d.kd_poli WHERE j.hari_kerja='" + hari.toUpperCase() + "'  AND d.kd_dokter='" + kddokter.getText() + "' GROUP BY d.kd_dokter");
-            
+            String ruang = Sequel.cariIsi("SELECT j.ruang FROM jadwal j WHERE j.hari_kerja='" + hari.toUpperCase() + "'  AND j.kd_dokter='" + kddokter.getText() + "' limit 1");            
             String hurup = String.valueOf(ruang.charAt(ruang.length() - 1));
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             Map<String, Object> param = new HashMap<>();

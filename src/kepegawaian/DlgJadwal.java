@@ -234,6 +234,8 @@ public class DlgJadwal extends javax.swing.JDialog {
         txtKeterangan = new widget.TextBox();
         jLabel8 = new widget.Label();
         cekCuti = new javax.swing.JCheckBox();
+        label1 = new widget.Label();
+        cboRuang = new widget.ComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -660,6 +662,16 @@ public class DlgJadwal extends javax.swing.JDialog {
         panelBiasa1.add(cekCuti);
         cekCuti.setBounds(640, 70, 140, 23);
 
+        label1.setText("Ruang :");
+        label1.setName("label1"); // NOI18N
+        panelBiasa1.add(label1);
+        label1.setBounds(830, 10, 60, 30);
+
+        cboRuang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "RUANG A", "RUANG B", "RUANG C", "RUANG D", "RUANG E", "RUANG F", "RUANG G", "RUANG H", "RUANG I", "RUANG J", "RUANG K", "RUANG L", "RUANG M", "RUANG N", "RUANG O", "RUANG P", "RUANG Q", "RUANG R", "RUANG S", "RUANG T", " " }));
+        cboRuang.setName("cboRuang"); // NOI18N
+        panelBiasa1.add(cboRuang);
+        cboRuang.setBounds(850, 40, 200, 20);
+
         internalFrame1.add(panelBiasa1, java.awt.BorderLayout.PAGE_START);
 
         getContentPane().add(internalFrame1, java.awt.BorderLayout.CENTER);
@@ -719,7 +731,7 @@ public class DlgJadwal extends javax.swing.JDialog {
             if(Sequel.menyimpantf("jadwal","'"+kddokter.getText()+"','"+cmbHari.getSelectedItem()+"','"+
                 cmbJam1.getSelectedItem()+":"+cmbMnt1.getSelectedItem()+":"+cmbDtk1.getSelectedItem()+"','"+
                 cmbJam2.getSelectedItem()+":"+cmbMnt2.getSelectedItem()+":"+cmbDtk2.getSelectedItem()+"','"+
-                KdPoli.getText()+"','"+Kuota.getText()+"','"+cuti+"','"+txtKeterangan.getText()+"'","Kode Dokter")==true){
+                KdPoli.getText()+"','"+Kuota.getText()+"','"+cuti+"','"+txtKeterangan.getText()+"','"+cboRuang.getSelectedItem().toString()+"'","Kode Dokter")==true){
                 tampil();
                 emptTeks();
             }
@@ -775,7 +787,7 @@ public class DlgJadwal extends javax.swing.JDialog {
                 int cuti = cekCuti.isSelected()?1:0;
                 Sequel.queryu("update jadwal set jam_mulai='"+cmbJam1.getSelectedItem()+":"+cmbMnt1.getSelectedItem()+":"+cmbDtk1.getSelectedItem()+"',"+
                         "jam_selesai='"+cmbJam2.getSelectedItem()+":"+cmbMnt2.getSelectedItem()+":"+cmbDtk2.getSelectedItem()+"',"+
-                        "kd_poli='"+KdPoli.getText()+"',kd_dokter='"+kddokter.getText()+"',hari_kerja='"+cmbHari.getSelectedItem()+"',kuota='"+Kuota.getText()+"',keterangan='"+txtKeterangan.getText()+"',is_cuti='"+cuti+"' where "+
+                        "kd_poli='"+KdPoli.getText()+"',kd_dokter='"+kddokter.getText()+"',hari_kerja='"+cmbHari.getSelectedItem()+"',kuota='"+Kuota.getText()+"',keterangan='"+txtKeterangan.getText()+"',ruang='"+cboRuang.getSelectedItem()+"',is_cuti='"+cuti+"' where "+
                         "kd_dokter='"+tbJadwal.getValueAt(tbJadwal.getSelectedRow(),1).toString()+"' "+
                         "and hari_kerja='"+tbJadwal.getValueAt(tbJadwal.getSelectedRow(),3).toString()+"' "+
                         "and jam_mulai='"+tbJadwal.getValueAt(tbJadwal.getSelectedRow(),4).toString()+"' "+
@@ -980,6 +992,7 @@ private void BtnPoliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     private widget.TextBox TCari;
     private widget.TextBox TPoli;
     private widget.Button btnDokter;
+    private widget.ComboBox cboRuang;
     private javax.swing.JCheckBox cekCuti;
     private widget.ComboBox cmbDtk1;
     private widget.ComboBox cmbDtk2;
@@ -1000,6 +1013,7 @@ private void BtnPoliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     private widget.Label jLabel9;
     private javax.swing.JPanel jPanel3;
     private widget.TextBox kddokter;
+    private widget.Label label1;
     private widget.TextBox nmdokter;
     private widget.PanelBiasa panelBiasa1;
     private widget.panelisi panelGlass8;
