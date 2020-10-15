@@ -57,7 +57,7 @@ public class DlgJadwal extends javax.swing.JDialog {
         this.setLocation(8,1);
         setSize(628,674);
 
-        Object[] row={"P","Kode Dokter","Nama Dokter","Hari Kerja","Jam Mulai","Jam Selesai","Poliklinik","Kuota","Keterangan","Status Cuti"};
+        Object[] row={"P","Kode Dokter","Nama Dokter","Hari Kerja","Jam Mulai","Jam Selesai","Poliklinik","Kuota","Keterangan","Status Cuti","Ruang"};
         tabMode=new DefaultTableModel(null,row){
              @Override public boolean isCellEditable(int rowIndex, int colIndex){
                 boolean a = false;
@@ -1027,7 +1027,7 @@ private void BtnPoliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         try{           
             ps=koneksi.prepareStatement(
                 "select jadwal.kd_dokter,dokter.nm_dokter,jadwal.hari_kerja, "+
-                "jadwal.jam_mulai,jadwal.jam_selesai,poliklinik.nm_poli,jadwal.kuota,jadwal.keterangan,jadwal.is_cuti "+
+                "jadwal.jam_mulai,jadwal.jam_selesai,poliklinik.nm_poli,jadwal.kuota,jadwal.keterangan,jadwal.is_cuti,jadwal.ruang "+
                 "from jadwal inner join poliklinik inner join dokter "+
                 "on jadwal.kd_dokter=dokter.kd_dokter "+
                 "and jadwal.kd_poli=poliklinik.kd_poli "+
@@ -1043,7 +1043,7 @@ private void BtnPoliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 while(rs.next()){
                     tabMode.addRow(new Object[]{
                         false,rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),
-                        rs.getString(5),rs.getString(6),rs.getDouble(7),rs.getString(8),rs.getBoolean(9)
+                        rs.getString(5),rs.getString(6),rs.getDouble(7),rs.getString(8),rs.getBoolean(9),rs.getString(10)
                     });
                 }
             } catch (Exception e) {
@@ -1100,6 +1100,7 @@ private void BtnPoliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             Sequel.cariIsi("select kd_poli from poliklinik where nm_poli='"+tabMode.getValueAt(row,6).toString()+"'",KdPoli);
             txtKeterangan.setText(tabMode.getValueAt(row,8).toString());
             cekCuti.setSelected((Boolean)tabMode.getValueAt(row,9));
+            cboRuang.setSelectedItem(tabMode.getValueAt(row,10));
         }
     }
     
