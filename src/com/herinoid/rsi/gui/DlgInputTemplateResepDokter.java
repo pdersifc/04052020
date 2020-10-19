@@ -195,9 +195,13 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
                     obatFromDialog = dlgRacikan.getData();
                     if (obatFromDialog != null) {
                         if (obatFromDialog.isFlag()) {
+                            if (obatFromDialog.isEdit()) {
+                                modelPilihan.remove(tblPilihan.getSelectedRow());
+                            }
                             modelPilihan.add(obatFromDialog);
                             tblPilihan.setModel(modelPilihan);
                             racikanList.add(obatFromDialog);
+
                         }
                     }
 
@@ -343,13 +347,14 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
 
     private void removeDuplicate(ObatResep obatResep) {
         for (Iterator<ObatResep> i = modelPilihan.getAll().iterator(); i.hasNext();) {
-            ObatResep obat = i.next();
-            if (obat.getKodeObat().equals(obatResep.getKodeObat())) {
+            ObatResep obat = i.next();            
+            if (obat.getKodeObat().equals(obatResep.getKodeObat())) {                
                 int index = modelPilihan.getAll().indexOf(obat);
                 modelPilihan.remove(index);
                 break;
             }
         }
+        
         modelPilihan.add(obatResep);
     }
 
@@ -957,8 +962,23 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         // TODO add your handling code here:
         int row = tblPilihan.getSelectedRow();
         if (row > -1) {
-            addQty.setDataEdit(modelPilihan.get(tblPilihan.convertRowIndexToModel(row)), racikanList);
-            addQty.setVisible(true);
+            ObatResep obatDetail = modelPilihan.get(tblPilihan.convertRowIndexToModel(row));
+            if (obatDetail.isParent()) {
+                dlgRacikan.setEditData(obatDetail);
+                dlgRacikan.setVisible(true);
+            } else {
+                if(!obatDetail.getRacikan().equals("-")){
+                   for(ObatResep o:modelPilihan.getAll()){
+                       if(o.isParent() && o.getRacikan().equals(obatDetail.getRacikan())){
+                           racikanList.add(o);
+                           break;
+                       }
+                   } 
+                }
+                addQty.setDataEdit(obatDetail, racikanList);
+                addQty.setVisible(true);
+            }
+
         }
 
     }//GEN-LAST:event_mnEditObatActionPerformed
@@ -1001,7 +1021,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 List<ObatResep> racikans = new LinkedList<>();
                 for (ObatResep o : modelPilihan.getAll()) {
                     if (o.getJenisObat().equals(Obat.OBAT_RACIKAN)) {
-                        if(Utils.isBlank(o.getKodeObat())){
+                        if (Utils.isBlank(o.getKodeObat())) {
                             o.setKodeObat(o.getKodeRacikan());
                         }
                         racikans.add(o);

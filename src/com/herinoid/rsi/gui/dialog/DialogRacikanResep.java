@@ -24,6 +24,7 @@ public class DialogRacikanResep extends javax.swing.JDialog {
 
     private ObatResep obatResep;
     private int countCode;
+    private boolean isEdit;
 
     /**
      * Creates new form DialogAddQtyResepDokter
@@ -34,6 +35,7 @@ public class DialogRacikanResep extends javax.swing.JDialog {
         setPreferredSize(new Dimension(524, 327));
         setLocationRelativeTo(null);
         obatResep = new ObatResep();
+        isEdit = false;
         setComboList();
 
     }
@@ -42,6 +44,19 @@ public class DialogRacikanResep extends javax.swing.JDialog {
         this.countCode = count;
         txtNamaRacikan.setText("Racikan " + count);
         obatResep = new ObatResep();
+        isEdit = false;
+    }
+    
+    public void setEditData(ObatResep obatR) {
+        txtNamaRacikan.setText(obatR.getNamaObat());
+        txtJumlah.setText(String.valueOf((int)obatR.getJumlah()));
+        txtAturanPakai.setText(obatR.getAturanPakai());
+        MetodeRacikan metod = new MetodeRacikan();
+        metod.setKode(obatR.getMetodeRacikKode());
+        metod.setMetode(obatR.getMetodeRacik());
+        cmbRacikan.setSelectedItem(metod);
+        obatResep = obatR;
+        isEdit = true;
     }
 
     private void setComboList() {
@@ -291,6 +306,7 @@ public class DialogRacikanResep extends javax.swing.JDialog {
         obatResep.setParent(true);
         obatResep.setFlag(true);
         obatResep.setUrutan(countCode);
+        obatResep.setEdit(isEdit);
         clean();
         dispose();
 

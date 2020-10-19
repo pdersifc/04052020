@@ -785,7 +785,7 @@ public class ResepTemplateDao {
         PreparedStatement psttmn = null,pstracikan = null;
         ResultSet rset = null,rsRck = null;
         try {
-            pstracikan = koneksi.prepareStatement("SELECT d.e_resep_template_id,d.kode_brng,d.nama_racik,d.kode_racik,d.nama_racik,d.jml,d.is_parent,d.kandungan,d.embalase,d.tuslah,d.aturan_pakai,m.kd_racik,m.nm_racik FROM e_resep_template_detail_racikan d JOIN metode_racik m ON d.`metode_racik`=m.`kd_racik` where  d.kode_brng like CONCAT( '%',?,'%') and d.e_resep_template_id = ? ");
+            pstracikan = koneksi.prepareStatement("SELECT d.e_resep_template_id,d.kode_brng,d.nama_racik,d.kode_racik,d.nama_racik,d.jml,d.is_parent,d.kandungan,d.embalase,d.tuslah,d.aturan_pakai,d.p1,d.p2,m.kd_racik,m.nm_racik FROM e_resep_template_detail_racikan d JOIN metode_racik m ON d.`metode_racik`=m.`kd_racik` where  d.kode_brng like CONCAT( '%',?,'%') and d.e_resep_template_id = ? ");
             pstracikan.setString(1, "RCK");
             pstracikan.setString(2, codeTemplate);            
             rsRck = pstracikan.executeQuery();
@@ -793,6 +793,7 @@ public class ResepTemplateDao {
                 
                 ObatResep obat = new ObatResep();
                 obat.setNamaObat(rsRck.getString("nama_racik"));
+                obat.setKodeObat(rsRck.getString("kode_brng"));
                 obat.setKodeRacikan(rsRck.getString("kode_racik"));
                 obat.setRacikan(rsRck.getString("nama_racik"));
                 obat.setJumlah(rsRck.getDouble("jml"));
@@ -803,11 +804,13 @@ public class ResepTemplateDao {
                 obat.setTuslah(rsRck.getDouble("tuslah"));
                 obat.setMetodeRacikKode(rsRck.getString("kd_racik"));
                 obat.setSatuan(rsRck.getString("nm_racik"));
+                obat.setPembilang(rsRck.getInt("p1"));
+                obat.setPenyebut(rsRck.getInt("p2"));
                 obat.setJenisObat(Obat.OBAT_RACIKAN);
                 obat.setParent(true);               
                 obatDetailList.add(obat);
             }
-            psttmn = koneksi.prepareStatement("SELECT d.e_resep_template_id,o.kode_brng,o.nama_brng,d.kode_racik,d.nama_racik,d.jml,d.is_parent,d.kandungan,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,j.nama AS jenis,k.nama AS kategori "
+            psttmn = koneksi.prepareStatement("SELECT d.e_resep_template_id,d.kode_brng,o.nama_brng,o.kapasitas,d.kode_racik,d.nama_racik,d.jml,d.is_parent,d.kandungan,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,d.p1,d.p2,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,j.nama AS jenis,k.nama AS kategori "
                     + "FROM e_resep_template_detail_racikan d "
                     + "INNER JOIN databarang o ON d.kode_brng = o.kode_brng "
                     + "INNER JOIN gudangbarang g ON d.kode_brng = g.kode_brng "
@@ -833,6 +836,9 @@ public class ResepTemplateDao {
                 obat.setEmbalase(rset.getDouble("embalase"));
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
+                obat.setPembilang(rset.getInt("p1"));
+                obat.setPenyebut(rset.getInt("p2"));
+                obat.setKapasitas(rset.getDouble("kapasitas"));
                 obat.setParent(false);
                 double marginPersen = 28;
                 if (jaminan.equals("BPJ")) {
