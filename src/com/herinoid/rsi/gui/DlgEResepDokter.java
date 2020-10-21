@@ -192,7 +192,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                         }
                         modelPilihan.add(obatFromDialog);
                         tblPilihan.setModel(modelPilihan);
-                        racikanList.add(obatFromDialog);
+//                        racikanList.add(obatFromDialog);
                     }
                 }
 
@@ -323,6 +323,9 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                 if (obats != null && obats.size() > 0) {
                     modelPilihan.add(obats);
                     for (ObatResep o : obats) {
+                        if(o.isParent()){
+                            racikanList.add(o);
+                        }
                         double marginPersen = 28;
                         if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                             MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
