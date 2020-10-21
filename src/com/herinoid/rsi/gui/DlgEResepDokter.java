@@ -189,10 +189,12 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                     if (obatFromDialog.isFlag()) {
                         if (obatFromDialog.isEdit()) {
                             modelPilihan.remove(tblPilihan.getSelectedRow());
+                        }else{
+                            removeDuplicateRacikans(obatFromDialog);
                         }
                         modelPilihan.add(obatFromDialog);
                         tblPilihan.setModel(modelPilihan);
-//                        racikanList.add(obatFromDialog);
+//                        
                     }
                 }
 
@@ -324,7 +326,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                     modelPilihan.add(obats);
                     for (ObatResep o : obats) {
                         if(o.isParent()){
-                            racikanList.add(o);
+                            removeDuplicateRacikans(o);
                         }
                         double marginPersen = 28;
                         if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
@@ -414,6 +416,18 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
             }
         }
         modelPilihan.add(obatResep);
+    }
+    
+    private void removeDuplicateRacikans(ObatResep obatResep) {
+        for (Iterator<ObatResep> i = racikanList.iterator(); i.hasNext();) {
+            ObatResep obat = i.next();
+            if (obat.getKodeObat().equals(obatResep.getKodeObat())) {
+                int index = racikanList.indexOf(obat);
+                racikanList.remove(index);
+                break;
+            }
+        }
+        racikanList.add(obatResep);
     }
 
     private void jam() {
@@ -1207,7 +1221,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 if (!obatDetail.getRacikan().equals("-")) {
                     for (ObatResep o : modelPilihan.getAll()) {
                         if (o.isParent() && o.getRacikan().equals(obatDetail.getRacikan())) {
-                            racikanList.add(o);
+                            removeDuplicateRacikans(o);
                             break;
                         }
                     }
