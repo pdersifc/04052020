@@ -846,7 +846,7 @@ public final class DlgInputTemplateResepDokter extends javax.swing.JDialog {
     }//GEN-LAST:event_BtnKeluarActionPerformed
 
     private void BtnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnTambahActionPerformed
-        dlgRacikan.setData(racikanList.size() + 1);
+        dlgRacikan.setData(racikanList.size() + 1,true);
         dlgRacikan.setVisible(true);
 
     }//GEN-LAST:event_BtnTambahActionPerformed

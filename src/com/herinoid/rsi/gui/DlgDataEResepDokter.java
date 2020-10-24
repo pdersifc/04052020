@@ -1317,7 +1317,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
         String depo = pro.getProperty("DEPOOBAT");
-        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogButton = JOptionPane.YES_NO_OPTION;        
         if (row > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(row));
             RegPeriksa reg = RegPeriksaDao.get(resep.getNoRawat());

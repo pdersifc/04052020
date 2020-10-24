@@ -25,6 +25,7 @@ public class DialogRacikanResep extends javax.swing.JDialog {
     private ObatResep obatResep;
     private int countCode;
     private boolean isEdit;
+    private boolean isTmp;
 
     /**
      * Creates new form DialogAddQtyResepDokter
@@ -40,7 +41,8 @@ public class DialogRacikanResep extends javax.swing.JDialog {
 
     }
 
-    public void setData(int count) {
+    public void setData(int count,boolean temp) {
+        this.isTmp = temp;
         this.countCode = count;
         txtNamaRacikan.setText("Racikan " + count);
         obatResep = new ObatResep();
@@ -290,8 +292,14 @@ public class DialogRacikanResep extends javax.swing.JDialog {
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
         MetodeRacikan metod = (MetodeRacikan) cmbRacikan.getSelectedItem();
-        obatResep.setKodeObat("RCK" + countCode);
+        if(isTmp){
+            obatResep.setKodeObat("RCKTMP" + countCode);
+        obatResep.setKodeRacikan("RCKTMP" + countCode);
+        }else{
+            obatResep.setKodeObat("RCK" + countCode);
         obatResep.setKodeRacikan("RCK" + countCode);
+        }
+        
         obatResep.setNomorRacik(countCode);
         obatResep.setMetodeRacikKode(metod.getKode());
         obatResep.setMetodeRacik(metod.getMetode());
