@@ -46,6 +46,7 @@ import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
 import com.herinoid.rsi.session.SessionLogin;
 import com.herinoid.rsi.util.Utils;
+import fungsi.sekuel;
 import java.util.Iterator;
 
 /**
@@ -69,6 +70,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
     private String jenisPasien;
     private String depoKode, kdJaminan, jaminan;
     private double total;
+    private sekuel Sequel = new sekuel();
 
     /**
      * Creates new form DlgPenyakit
@@ -1161,6 +1163,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
                 }
                 if (sukses) {
+                    Sequel.saveTrace(SessionLogin.getInstance().getUser(),"create e-resep dengan no rawat : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
                     clean();
                     dispose();
 

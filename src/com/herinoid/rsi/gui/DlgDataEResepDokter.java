@@ -1601,6 +1601,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 ResepDao.updateAturanPakaiFarmasi(r.getAturanPakai(), resep.getNoResep(), r.getKodeObat());
                 if (!Utils.isBlank(r.getRacikan())) {
                     ResepDao.updateAturanPakaiRacikan(r.getAturanPakai(), resep.getNoResep(), r.getKodeObat());
+                    Sequel.saveTrace(SessionLogin.getInstance().getUser(),"Edit aturan pakai dengan no rawat : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
                 }
 
             }
@@ -1620,7 +1621,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 if (resep.getStatus().equals(Resep.STATUS_SUDAH_VERIFIKASI)) {
                     boolean isHapus = ResepDao.deleteDataObatValidasiFarmasi(resep.getNoResep());
                     if (isHapus) {
-                        Sequel.saveTrace(SessionLogin.getInstance().getUser(),"delete validasi dengan no rawat : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
+                        Sequel.saveTrace(SessionLogin.getInstance().getUser(),"delete validasi e-resep dengan no rawat : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
                         boolean isDel = PemberianObatDetailDao.deleteDetailPemberianObat(resep.getNoResep());
                         if (isDel) {
                             // update gudang
@@ -1952,7 +1953,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                     boolean isHapusResep = ResepDao.deleteResepByNoResep(resep.getNoResep());
                     boolean isHapusRacikan = ResepDao.deleteRacikanByNoResep(resep.getNoResep());
                     if (isHapusResep || isHapusRacikan) { 
-                        Sequel.saveTrace(SessionLogin.getInstance().getUser(),"Hapus resep : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
+                        Sequel.saveTrace(SessionLogin.getInstance().getUser(),"Hapus e-resep : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
                         ResepDao.updateValidasiAfterHapus(resep.getNoResep());
                         String jenisPasien = Konstan.PASIEN_RALAN;
                         if (rdoRanap.isSelected()) {
