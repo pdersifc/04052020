@@ -1318,8 +1318,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         // TODO add your handling code here:
         String depo = pro.getProperty("DEPOOBAT");
         int dialogButton = JOptionPane.YES_NO_OPTION;        
-        if (row > -1) {
-            DataEResep resep = model.get(tblData.convertRowIndexToModel(row));
+        if (tblData.getSelectedRow() > -1) {
+            DataEResep resep = model.get(tblData.convertRowIndexToModel(tblData.getSelectedRow()));
             RegPeriksa reg = RegPeriksaDao.get(resep.getNoRawat());
             if (reg.getStatusBayar().equals("Belum Bayar")) {
                 List<ObatResep> newDetails = modelPilihan.getAll();
