@@ -585,9 +585,39 @@ public class ResepDao {
         }
         return obat;
     }
+    
+    public static boolean isDataKasirExist(String noresep) {
+        boolean exist =  false;
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
+        try {
+            ps1 = koneksi.prepareStatement("SELECT * from detail_pemberian_obat where no_faktur = ? ");
+            ps1.setString(1, noresep);
+            rs1 = ps1.executeQuery();
+            while (rs1.next()) {
+                exist = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                if (rs1 != null) {
+
+                    rs1.close();
+
+                }
+                if (ps1 != null) {
+                    ps1.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return exist;
+    }
 
     public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo, String noResep,String jaminan) {
-        boolean sukses = true;
+        boolean sukses = false;
         PreparedStatement psttmn = null;
         try {
             RegPeriksa reg = RegPeriksaDao.get(norawat);
@@ -628,11 +658,11 @@ public class ResepDao {
                 }
 
             }
-
+            sukses = isDataKasirExist(noResep);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Notifikasi : " + e);
             sukses = false;
+            e.printStackTrace();
+            System.out.println("Notifikasi : " + e);            
             JOptionPane.showMessageDialog(null, "error : " + e);
         }
         return sukses;
@@ -641,17 +671,7 @@ public class ResepDao {
     public static boolean updateValidasi(String norawat, String noresep, Date validasi, List<ObatResep> reseps) {
         boolean sukses = true;
         PreparedStatement pst = null;
-//        List<ObatResep> racikans = new LinkedList<>();
-//        List<ObatResep> biasas = new LinkedList<>();
-//        for (ObatResep o : reseps) {
-//            if (!Utils.isBlank(o.getRacikan())) {
-//                racikans.add(o);
-//            } else {
-//                biasas.add(o);
-//            }
-//        }
         try {
-//            if (biasas.size() > 0) {
             pst = koneksi.prepareStatement("update e_resep_rsifc set validasi = ?, status = ?,user_validator=? where no_resep = ?");
             try {
                 pst.setString(1, Utils.formatDateTimeDb(validasi));
@@ -659,10 +679,6 @@ public class ResepDao {
                 pst.setString(3, SessionLogin.getInstance().getUser());
                 pst.setString(4, noresep);
                 pst.executeUpdate();
-//                    boolean isDeleted = deleteDetailByNoResep(noresep);
-//                    if (isDeleted) {
-//                        saveDetail(noresep, biasas);
-//                    }
             } catch (Exception e) {
                 sukses = false;
                 e.printStackTrace();
@@ -672,16 +688,9 @@ public class ResepDao {
                     pst.close();
                 }
             }
-//            }
-//            if (racikans.size() > 0) {
             if (isResepRacikanExist(noresep)) {
                 updateValidasiResepRacikan(noresep);
-//                    boolean isDeletedDetail = deleteDetailRacikanByNoResep(noresep);
-//                    if (isDeletedDetail) {
-//                        saveRacikanDetail(norawat, noresep, racikans);
-//                    }
             }
-//            }
 
         } catch (Exception e) {
             e.printStackTrace();

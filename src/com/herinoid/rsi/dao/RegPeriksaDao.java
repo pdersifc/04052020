@@ -44,7 +44,7 @@ public class RegPeriksaDao {
                 regPeriksa.setStatusBayar(rs.getString("status_bayar"));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BorDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RegPeriksaDao.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             try {
                 if (rs != null) {
@@ -62,5 +62,34 @@ public class RegPeriksaDao {
         return regPeriksa;
     }
     
+    public static boolean isClosed(String norawat) {
+        boolean closed =  false;
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
+        try {
+            ps1 = koneksi.prepareStatement("SELECT * from reg_periksa where no_rawat = ? and status_bayar ='Sudah Bayar'");
+            ps1.setString(1, norawat);
+            rs1 = ps1.executeQuery();
+            while (rs1.next()) {
+                closed = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RegPeriksaDao.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                if (rs1 != null) {
+
+                    rs1.close();
+
+                }
+                if (ps1 != null) {
+                    ps1.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(RegPeriksaDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return closed;
+    }
   
 }
