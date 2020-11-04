@@ -191,7 +191,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                     if (obatFromDialog.isFlag()) {
                         if (obatFromDialog.isEdit()) {
                             modelPilihan.remove(tblPilihan.getSelectedRow());
-                        }else{
+                        } else {
                             removeDuplicateRacikans(obatFromDialog);
                         }
                         modelPilihan.add(obatFromDialog);
@@ -327,7 +327,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                 if (obats != null && obats.size() > 0) {
                     modelPilihan.add(obats);
                     for (ObatResep o : obats) {
-                        if(o.isParent()){
+                        if (o.isParent()) {
                             removeDuplicateRacikans(o);
                         }
                         double marginPersen = 28;
@@ -419,7 +419,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         }
         modelPilihan.add(obatResep);
     }
-    
+
     private void removeDuplicateRacikans(ObatResep obatResep) {
         for (Iterator<ObatResep> i = racikanList.iterator(); i.hasNext();) {
             ObatResep obat = i.next();
@@ -1077,7 +1077,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
     }//GEN-LAST:event_BtnKeluarActionPerformed
 
     private void BtnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnTambahActionPerformed
-        dlgRacikan.setData(racikanList.size() + 1,false);
+        dlgRacikan.setData(racikanList.size() + 1, false);
         dlgRacikan.setVisible(true);
 
     }//GEN-LAST:event_BtnTambahActionPerformed
@@ -1163,7 +1163,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
                 }
                 if (sukses) {
-                    Sequel.saveTrace(SessionLogin.getInstance().getUser(),"create e-resep dengan no rawat : "+resep.getNoRawat()+" dan no resep : "+resep.getNoResep());
+                    Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
                     clean();
                     dispose();
 
@@ -1221,14 +1221,17 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 dlgRacikan.setEditData(obatDetail);
                 dlgRacikan.setVisible(true);
             } else {
-                if (!obatDetail.getRacikan().equals("-")) {
-                    for (ObatResep o : modelPilihan.getAll()) {
-                        if (o.isParent() && o.getRacikan().equals(obatDetail.getRacikan())) {
-                            removeDuplicateRacikans(o);
-                            break;
+                if (!Utils.isBlank(obatDetail.getRacikan())) {
+                    if (!obatDetail.getRacikan().equals("-")) {
+                        for (ObatResep o : modelPilihan.getAll()) {
+                            if (o.isParent() && o.getRacikan().equals(obatDetail.getRacikan())) {
+                                removeDuplicateRacikans(o);
+                                break;
+                            }
                         }
                     }
                 }
+
                 addQty.setDataEdit(obatDetail, racikanList);
                 addQty.setVisible(true);
             }
