@@ -2489,9 +2489,9 @@ private void tbRadiologiRalanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         + "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                         + "inner join dokter on permintaan_radiologi.dokter_perujuk=dokter.kd_dokter "
                         + "inner join kamar_inap on reg_periksa.no_rawat=kamar_inap.no_rawat "
-                        + "inner join kamar on kamar_inap.kd_kamar=kamar.kd_kamar "
+                        + "inner join kamar ON kamar.kd_kamar = (SELECT kd_kamar FROM kamar_inap WHERE no_rawat=reg_periksa.no_rawat ORDER BY tgl_masuk, jam_masuk DESC LIMIT 1) "
                         + "inner join bangsal on kamar.kd_bangsal=bangsal.kd_bangsal "
-                        + "where permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? AND kamar_inap.stts_pulang='-' "
+                        + "where permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? "
                         + "group by permintaan_radiologi.noorder order by permintaan_radiologi.tgl_permintaan,permintaan_radiologi.jam_permintaan desc");
             } else {
                 ps = koneksi.prepareStatement(
@@ -2504,14 +2504,14 @@ private void tbRadiologiRalanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         + "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                         + "inner join dokter on permintaan_radiologi.dokter_perujuk=dokter.kd_dokter "
                         + "inner join kamar_inap on reg_periksa.no_rawat=kamar_inap.no_rawat "
-                        + "inner join kamar on kamar_inap.kd_kamar=kamar.kd_kamar "
+                        + "inner join kamar ON kamar.kd_kamar = (SELECT kd_kamar FROM kamar_inap WHERE no_rawat=reg_periksa.no_rawat ORDER BY tgl_masuk, jam_masuk DESC LIMIT 1) "
                         + "inner join bangsal on kamar.kd_bangsal=bangsal.kd_bangsal "
                         + "where permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and permintaan_radiologi.noorder like ? or "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and permintaan_radiologi.no_rawat like ? or "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and reg_periksa.no_rkm_medis like ? or "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and pasien.nm_pasien like ? or "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and permintaan_radiologi.diagnosa_klinis like ? or "
-                        + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and dokter.nm_dokter like ? AND kamar_inap.stts_pulang='-' "
+                        + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and dokter.nm_dokter like ? "
                         + "group by permintaan_radiologi.noorder order by permintaan_radiologi.tgl_permintaan,permintaan_radiologi.jam_permintaan desc");
             }
 
@@ -2618,8 +2618,8 @@ private void tbRadiologiRalanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         + "permintaan_radiologi.no_rawat=reg_periksa.no_rawat and reg_periksa.no_rkm_medis=pasien.no_rkm_medis and "
                         + "permintaan_radiologi.noorder=permintaan_pemeriksaan_radiologi.noorder and jns_perawatan_radiologi.kd_jenis_prw=permintaan_pemeriksaan_radiologi.kd_jenis_prw "
                         + "and permintaan_radiologi.dokter_perujuk=dokter.kd_dokter and kamar.kd_bangsal=bangsal.kd_bangsal "
-                        + " and reg_periksa.no_rawat=kamar_inap.no_rawat and kamar_inap.kd_kamar=kamar.kd_kamar where "
-                        + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? AND kamar_inap.stts_pulang='-' "
+                        + " and reg_periksa.no_rawat=kamar_inap.no_rawat and kamar.kd_kamar=(SELECT kd_kamar FROM kamar_inap WHERE no_rawat=reg_periksa.no_rawat ORDER BY tgl_masuk, jam_masuk DESC LIMIT 1) where "
+                        + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? "
                         + "group by permintaan_radiologi.noorder order by permintaan_radiologi.tgl_permintaan,permintaan_radiologi.jam_permintaan desc");
             } else {
                 ps = koneksi.prepareStatement(
@@ -2634,14 +2634,14 @@ private void tbRadiologiRalanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         + "permintaan_radiologi.no_rawat=reg_periksa.no_rawat and reg_periksa.no_rkm_medis=pasien.no_rkm_medis and "
                         + "permintaan_radiologi.noorder=permintaan_pemeriksaan_radiologi.noorder and jns_perawatan_radiologi.kd_jenis_prw=permintaan_pemeriksaan_radiologi.kd_jenis_prw "
                         + "and permintaan_radiologi.dokter_perujuk=dokter.kd_dokter and kamar.kd_bangsal=bangsal.kd_bangsal "
-                        + " and reg_periksa.no_rawat=kamar_inap.no_rawat and kamar_inap.kd_kamar=kamar.kd_kamar where "
+                        + " and reg_periksa.no_rawat=kamar_inap.no_rawat and kamar.kd_kamar=(SELECT kd_kamar FROM kamar_inap WHERE no_rawat=reg_periksa.no_rawat ORDER BY tgl_masuk, jam_masuk DESC LIMIT 1) where "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and permintaan_radiologi.noorder like ? or "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and permintaan_radiologi.no_rawat like ? or "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and reg_periksa.no_rkm_medis like ? or "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and pasien.nm_pasien like ? or "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and permintaan_radiologi.diagnosa_klinis like ? or "
                         + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and jns_perawatan_radiologi.nm_perawatan like ? or "
-                        + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and dokter.nm_dokter like ? AND kamar_inap.stts_pulang='-' "
+                        + "permintaan_radiologi.status='ranap' and permintaan_radiologi.tgl_permintaan between ? and ? and dokter.nm_dokter like ? and bangsal.nm_bangsal like ? and dokter.nm_dokter like ? "
                         + "group by permintaan_radiologi.noorder order by permintaan_radiologi.tgl_permintaan,permintaan_radiologi.jam_permintaan desc");
             }
 
