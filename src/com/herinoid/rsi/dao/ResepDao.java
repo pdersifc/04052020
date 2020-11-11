@@ -641,6 +641,7 @@ public class ResepDao {
                         psttmn.setString(13, "");
                         psttmn.setString(14, noResep);
                         psttmn.executeUpdate();
+                        psttmn.close();
                         updateStokGudang(obat.getStok() - Utils.rounding(obat.getJumlah()), obat.getKodeObat(), depo);
                         saveObatValidasi(noResep, obat);
                     } catch (Exception e) {

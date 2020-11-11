@@ -1306,6 +1306,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         lblDepoResep.setText(bangsal.getNama());
         List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
         List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+        System.out.println("jenis pasien = "+jenisPasien+" || and data ada berapa = "+dataList.size());
         showResepData(dataList, dataRacikanList);
     }//GEN-LAST:event_btnCariDataActionPerformed
 
