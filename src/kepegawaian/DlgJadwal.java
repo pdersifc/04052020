@@ -68,7 +68,7 @@ public class DlgJadwal extends javax.swing.JDialog {
              }
              Class[] types = new Class[] {
                  java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, 
-                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Double.class,java.lang.Object.class, java.lang.Boolean.class
+                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Double.class,java.lang.Object.class, java.lang.Boolean.class,java.lang.Object.class
              };
              @Override
              public Class getColumnClass(int columnIndex) {
@@ -102,6 +102,8 @@ public class DlgJadwal extends javax.swing.JDialog {
                 column.setPreferredWidth(200);
             }else if(i==9){
                 column.setPreferredWidth(50);
+            }else if(i==10){
+                column.setPreferredWidth(100);
             }
         }
         tbJadwal.setDefaultRenderer(Object.class, new WarnaTable());
@@ -1100,7 +1102,7 @@ private void BtnPoliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             Sequel.cariIsi("select kd_poli from poliklinik where nm_poli='"+tabMode.getValueAt(row,6).toString()+"'",KdPoli);
             txtKeterangan.setText(tabMode.getValueAt(row,8).toString());
             cekCuti.setSelected((Boolean)tabMode.getValueAt(row,9));
-            cboRuang.setSelectedItem(tabMode.getValueAt(row,10));
+            cboRuang.setSelectedItem(tabMode.getValueAt(row,10).toString());
         }
     }
     
