@@ -1605,7 +1605,6 @@ public class ResepDao {
         } catch (SQLException ex) {
             Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            System.out.println("racikan validasi ? "+isVaidasi);
             try {
                 if (rset != null) {
 
@@ -1638,7 +1637,6 @@ public class ResepDao {
         } catch (SQLException ex) {
             Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            System.out.println("resep tunggal validasi ? "+isVaidasi);
             try {
                 if (rset != null) {
 
