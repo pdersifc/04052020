@@ -1587,5 +1587,72 @@ public class ResepDao {
         }
         return x;
     }
+    
+    public static boolean isResepRacikanValidasi(String noresep) {
+        boolean isVaidasi = false;
+        PreparedStatement pre = null;
+        ResultSet rset = null;
+        try {
+            pre = koneksi.prepareStatement("SELECT * FROM e_resep_racikan_rsifc WHERE no_resep = ?");
+            pre.setString(1, noresep);
+            rset = pre.executeQuery();
+            while (rset.next()) {
+                if(rset.getDate("validasi")!=null){
+                    isVaidasi = true;
+                }
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            System.out.println("racikan validasi ? "+isVaidasi);
+            try {
+                if (rset != null) {
+
+                    rset.close();
+
+                }
+                if (pre != null) {
+                    pre.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return isVaidasi;
+    }
+
+    public static boolean isResepValidasi(String noresep) {
+        boolean isVaidasi = false;
+        PreparedStatement pre = null;
+        ResultSet rset = null;
+        try {
+            pre = koneksi.prepareStatement("SELECT * FROM e_resep_rsifc WHERE no_resep = ?");
+            pre.setString(1, noresep);
+            rset = pre.executeQuery();
+            while (rset.next()) {
+                if(rset.getDate("validasi")!=null){
+                    isVaidasi = true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            System.out.println("resep tunggal validasi ? "+isVaidasi);
+            try {
+                if (rset != null) {
+
+                    rset.close();
+
+                }
+                if (pre != null) {
+                    pre.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return isVaidasi;
+    }
 
 }
