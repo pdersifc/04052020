@@ -464,9 +464,10 @@ public class ResepDao {
                     + "INNER JOIN databarang o ON d.kode_brng = o.kode_brng "
                     + "INNER JOIN gudangbarang g ON d.kode_brng = g.kode_brng "
                     + "INNER JOIN kodesatuan s ON s.kode_sat=o.kode_sat INNER JOIN jenis j ON j.kdjns=o.kdjns INNER JOIN kategori_barang k ON k.kode=o.kode_kategori "
-                    + "WHERE d.no_resep = ? AND g.kd_bangsal=?");
+                    + "WHERE d.no_resep = ? AND g.kd_bangsal=? and o.status='1' and o.kode_kategori=?");
             psttmn.setString(1, noResep);
             psttmn.setString(2, depo);
+            psttmn.setString(3, jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)?"K01":"K02");
             rset = psttmn.executeQuery();
             while (rset.next()) {
                 ObatResep obat = new ObatResep();
@@ -945,9 +946,10 @@ public class ResepDao {
                     + "INNER JOIN databarang o ON d.kode_brng = o.kode_brng "
                     + "INNER JOIN gudangbarang g ON d.kode_brng = g.kode_brng "
                     + "INNER JOIN kodesatuan s ON s.kode_sat=o.kode_sat INNER JOIN jenis j ON j.kdjns=o.kdjns INNER JOIN kategori_barang k ON k.kode=o.kode_kategori "
-                    + "WHERE d.no_resep = ? AND g.kd_bangsal=?");
+                    + "WHERE d.no_resep = ? AND g.kd_bangsal=? and o.status='1' and o.kode_kategori=?");
             psttmn.setString(1, noResep);
             psttmn.setString(2, depo);
+            psttmn.setString(3, jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)?"K01":"K02");
             rset = psttmn.executeQuery();
             while (rset.next()) {
                 ObatResep obat = new ObatResep();
