@@ -37,6 +37,7 @@ public class ObatResep {
     private boolean edit;
     private int urutan;
     private String aturanPakaiFarmasi;
+    private int status;
     
     
     public ObatResep(){}
@@ -427,6 +428,20 @@ public class ObatResep {
      */
     public void setAturanPakaiFarmasi(String aturanPakaiFarmasi) {
         this.aturanPakaiFarmasi = aturanPakaiFarmasi;
+    }
+
+    /**
+     * @return the status
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     

@@ -375,7 +375,7 @@ public class ResepTemplateDao {
         PreparedStatement psttmn = null;
         ResultSet rset = null;
         try {
-            psttmn = koneksi.prepareStatement("SELECT d.e_resep_template_id,o.kode_brng,o.nama_brng,d.jml,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,j.nama AS jenis,k.nama AS kategori "
+            psttmn = koneksi.prepareStatement("SELECT d.e_resep_template_id,o.kode_brng,o.nama_brng,d.jml,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,o.status,j.nama AS jenis,k.nama AS kategori "
                     + "FROM e_resep_template_detail d "
                     + "INNER JOIN databarang o ON d.kode_brng = o.kode_brng "
                     + "INNER JOIN gudangbarang g ON d.kode_brng = g.kode_brng "
@@ -398,7 +398,7 @@ public class ResepTemplateDao {
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
                 obat.setParent(false);
-
+                obat.setStatus(Integer.parseInt(rset.getString("status")));
                 double marginPersen = 28;
                 if (jaminan.equals("BPJ")) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());

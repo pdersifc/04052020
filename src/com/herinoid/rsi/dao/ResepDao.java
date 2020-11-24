@@ -459,15 +459,16 @@ public class ResepDao {
         PreparedStatement psttmn = null;
         ResultSet rset = null;
         try {
-            psttmn = koneksi.prepareStatement("SELECT d.no_resep,o.kode_brng,o.nama_brng,d.jml,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,j.nama AS jenis,k.nama AS kategori "
+            psttmn = koneksi.prepareStatement("SELECT d.no_resep,o.kode_brng,o.nama_brng,d.jml,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,o.status,j.nama AS jenis,k.nama AS kategori "
                     + "FROM e_resep_rsifc_detail d "
                     + "INNER JOIN databarang o ON d.kode_brng = o.kode_brng "
                     + "INNER JOIN gudangbarang g ON d.kode_brng = g.kode_brng "
                     + "INNER JOIN kodesatuan s ON s.kode_sat=o.kode_sat INNER JOIN jenis j ON j.kdjns=o.kdjns INNER JOIN kategori_barang k ON k.kode=o.kode_kategori "
-                    + "WHERE d.no_resep = ? AND g.kd_bangsal=? and o.status='1' and o.kode_kategori=?");
+                    + "WHERE d.no_resep = ? AND g.kd_bangsal=?");
+//                    + "WHERE d.no_resep = ? AND g.kd_bangsal=? and o.status='1' and o.kode_kategori=?");
             psttmn.setString(1, noResep);
             psttmn.setString(2, depo);
-            psttmn.setString(3, jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)?"K01":"K02");
+//            psttmn.setString(3, jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)?"K01":"K02");
             rset = psttmn.executeQuery();
             while (rset.next()) {
                 ObatResep obat = new ObatResep();
@@ -482,6 +483,7 @@ public class ResepDao {
                 obat.setEmbalase(rset.getDouble("embalase"));
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
+                obat.setStatus(Integer.parseInt(rset.getString("status")));
                 obat.setParent(false);
 
                 double marginPersen = 28;
@@ -941,15 +943,16 @@ public class ResepDao {
         PreparedStatement psttmn = null;
         ResultSet rset = null;
         try {
-            psttmn = koneksi.prepareStatement("SELECT d.no_resep,o.kode_brng,o.nama_brng,d.kode_racik,d.nama_racik,d.jml,d.is_parent,d.kandungan,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,j.nama AS jenis,k.nama AS kategori "
+            psttmn = koneksi.prepareStatement("SELECT d.no_resep,o.kode_brng,o.nama_brng,d.kode_racik,d.nama_racik,d.jml,d.is_parent,d.kandungan,s.satuan,d.embalase,d.tuslah,d.aturan_pakai,g.stok,o.h_beli,o.karyawan,o.ralan,o.beliluar,o.kelas1,o.kelas2,o.kelas3,o.vip,o.vvip,o.status,j.nama AS jenis,k.nama AS kategori "
                     + "FROM e_resep_racikan_rsifc_detail d "
                     + "INNER JOIN databarang o ON d.kode_brng = o.kode_brng "
                     + "INNER JOIN gudangbarang g ON d.kode_brng = g.kode_brng "
                     + "INNER JOIN kodesatuan s ON s.kode_sat=o.kode_sat INNER JOIN jenis j ON j.kdjns=o.kdjns INNER JOIN kategori_barang k ON k.kode=o.kode_kategori "
-                    + "WHERE d.no_resep = ? AND g.kd_bangsal=? and o.status='1' and o.kode_kategori=?");
+                    + "WHERE d.no_resep = ? AND g.kd_bangsal=?");
+//                    + "WHERE d.no_resep = ? AND g.kd_bangsal=? and o.status='1' and o.kode_kategori=?");
             psttmn.setString(1, noResep);
             psttmn.setString(2, depo);
-            psttmn.setString(3, jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)?"K01":"K02");
+//            psttmn.setString(3, jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)?"K01":"K02");
             rset = psttmn.executeQuery();
             while (rset.next()) {
                 ObatResep obat = new ObatResep();
@@ -968,6 +971,7 @@ public class ResepDao {
                 obat.setEmbalase(rset.getDouble("embalase"));
                 obat.setTuslah(rset.getDouble("tuslah"));
                 obat.setStok(rset.getDouble("stok"));
+                obat.setStatus(Integer.parseInt(rset.getString("status")));
                 obat.setParent(false);
                 double marginPersen = 28;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {

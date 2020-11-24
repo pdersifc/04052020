@@ -47,6 +47,7 @@ import com.herinoid.rsi.model.MarginObatNonBpjs;
 import com.herinoid.rsi.session.SessionLogin;
 import com.herinoid.rsi.util.Utils;
 import fungsi.sekuel;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -267,9 +268,25 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
             @Override
             public void windowClosed(WindowEvent e) {
                 List<ObatResep> obats = cekHistory.getData();
+                List<ObatResep> obatAmbils = new LinkedList<>();
+                List<String> namaObat = new ArrayList<>();
                 if (obats != null && obats.size() > 0) {
-                    modelPilihan.add(obats);
+
                     for (ObatResep o : obats) {
+                        if (o.getStatus() == 1) {
+                            if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                                if (o.getKategori().equals("FORNAS PLUS") && !o.isParent()) {
+                                    obatAmbils.add(o);
+                                } else if (o.getKategori().equals("NON FORNAS") && !o.isParent()) {
+                                    namaObat.add(o.getNamaObat());
+                                }
+                            } else {
+                                obatAmbils.add(o);
+                            }
+                        } else {
+                            namaObat.add(o.getNamaObat());
+                        }
+
                         double marginPersen = 28;
                         if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                             MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
@@ -289,7 +306,16 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                         total = total + (hpp * o.getJumlah());
                         lblTotal.setText(Utils.format(total, 2));
                     }
-                    tblPilihan.setModel(modelPilihan);
+                    if (namaObat.size() > 0) {
+                        int oke = JOptionPane.showConfirmDialog(null, "Data obat ini : " + namaObat.toString() + " tidak bisa diambil, apakah mau di lanjut?", "Perhatian", JOptionPane.YES_NO_OPTION);
+                        if (oke == 0) {
+                            modelPilihan.add(obatAmbils);
+                            tblPilihan.setModel(modelPilihan);
+                        }
+                    } else {
+                        modelPilihan.add(obatAmbils);
+                        tblPilihan.setModel(modelPilihan);
+                    }
 
                 }
 
@@ -324,11 +350,27 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
             @Override
             public void windowClosed(WindowEvent e) {
                 List<ObatResep> obats = templateResep.getData();
+                List<ObatResep> obatAmbils = new LinkedList<>();
+                List<String> namaObat = new ArrayList<>();
                 if (obats != null && obats.size() > 0) {
                     modelPilihan.add(obats);
                     for (ObatResep o : obats) {
                         if (o.isParent()) {
                             removeDuplicateRacikans(o);
+                        } else {
+                            if (o.getStatus() == 1) {
+                                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                                    if (o.getKategori().equals("FORNAS PLUS") && !o.isParent()) {
+                                        obatAmbils.add(o);
+                                    } else if (o.getKategori().equals("NON FORNAS") && !o.isParent()) {
+                                        namaObat.add(o.getNamaObat());
+                                    }
+                                } else {
+                                    obatAmbils.add(o);
+                                }
+                            } else {
+                                namaObat.add(o.getNamaObat());
+                            }
                         }
                         double marginPersen = 28;
                         if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
@@ -349,7 +391,16 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                         total = total + (hpp * o.getJumlah());
                         lblTotal.setText(Utils.format(total, 2));
                     }
-                    tblPilihan.setModel(modelPilihan);
+                    if (namaObat.size() > 0) {
+                        int oke = JOptionPane.showConfirmDialog(null, "Data obat ini : " + namaObat.toString() + " tidak bisa diambil, apakah mau di lanjut?", "Perhatian", JOptionPane.YES_NO_OPTION);
+                        if (oke == 0) {
+                            modelPilihan.add(obatAmbils);
+                            tblPilihan.setModel(modelPilihan);
+                        }
+                    } else {
+                        modelPilihan.add(obatAmbils);
+                        tblPilihan.setModel(modelPilihan);
+                    }
 
                 }
 
