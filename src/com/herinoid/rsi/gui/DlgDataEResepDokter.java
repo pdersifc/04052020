@@ -1341,18 +1341,26 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             int emmmm = JOptionPane.showConfirmDialog(null, "Anda akan memverifikasi data resep, data yang sudah di verifikasi tidak dapat di verifikasi ulang. silahkan teliti kembali", "Perhatian", dialogButton);
                             if (emmmm == 0) {
                                 if (resep.getObatDetails().size() > 0) {
+                                    System.out.println("mulai verifikasi.. ");
                                     boolean sukses = ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);                                            
+                                    System.out.println("selesai step pertama verifikasi.. ");
                                     if (sukses) {
+                                        System.out.println("validasi sukses.. lanjut simpan obat biling");
                                         ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep(), resep.getJaminan());
+                                        System.out.println("simpan obat biling sukses.. lanjut");
                                         Sequel.saveTrace(SessionLogin.getInstance().getUser(), "simpan validasi dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+                                        System.out.println("simpan trace selesai! lanjut..");
                                         String jenisPasien = Konstan.PASIEN_RALAN;
                                         if (rdoRanap.isSelected()) {
                                             jenisPasien = Konstan.PASIEN_RANAP;
                                         }
                                         
                                         List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                        System.out.println("load data tabel non racikan! lanjut..");
                                         List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                        System.out.println("load data tabel RACIKAN! lanjut..");
                                         showResepData(dataList, dataRacikanList);
+                                        System.out.println("Proses verifikasi selesai..");
                                     }
 
                                 } else {

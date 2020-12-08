@@ -41,8 +41,8 @@ import javax.swing.JOptionPane;
 public class ResepDao {
 
     private static Connection koneksi = koneksiDB.condb();
-    private static PreparedStatement ps;
-    private static ResultSet rs;
+//    private static PreparedStatement ps;
+//    private static ResultSet rs;
 
     public static boolean updateNoResep(String noresep) {
         boolean sukses = true;
@@ -397,6 +397,8 @@ public class ResepDao {
 
     public static List<DataEResep> getResepByDateAndDepo(String fromDate, String toDate, String depo, String tarif, String jenisPasien) {
         List<DataEResep> obatList = new LinkedList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
@@ -762,6 +764,8 @@ public class ResepDao {
 
     public static List<DataEResep> getResepRacikanByDateAndDepo(String fromDate, String toDate, String depo, String tarif, String jenisPasien) {
         List<DataEResep> obatList = new LinkedList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
                     + "e.`status`,r.`kd_pj` FROM e_resep_racikan_rsifc e "
@@ -1196,6 +1200,8 @@ public class ResepDao {
 
     public static List<EtiketObat> getEtiketByNoResep(String noResep, String depo) {
         List<EtiketObat> obatList = new LinkedList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             ps = koneksi.prepareStatement("SELECT e.`no_resep`,e.`no_rawat`,e.`tgl_resep`,e.`jam_resep`,p.`no_rkm_medis`,p.`nm_pasien`,b.`nama_brng`,d.`jml`,s.`satuan`,b.`expire`,d.`aturan_pakai`,l.`nm_bangsal`,k.`nm_poli`,d.kode_racikan FROM obat_validasi_eresep_rsifc d "
                     + "JOIN e_resep_rsifc e ON e.`no_resep`=d.`no_resep` "
@@ -1251,6 +1257,8 @@ public class ResepDao {
 
     public static List<DataEResep> getResepByDokterAndPasien(String kodeDokter, String norm, String depo) {
         List<DataEResep> obatList = new LinkedList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
                     + "e.`status`,r.`kd_pj` FROM e_resep_rsifc e "
@@ -1306,6 +1314,8 @@ public class ResepDao {
 
     public static List<DataEResep> getResepRacikanByDokterAndPasien(String kdDokter, String norm, String depo) {
         List<DataEResep> obatList = new LinkedList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
                     + "e.`status`,r.`kd_pj` FROM e_resep_racikan_rsifc e "
@@ -1520,6 +1530,8 @@ public class ResepDao {
 
     public static List<EtiketObat> getEtiketRacikanByNoResep(String noResep) {
         List<EtiketObat> obatList = new LinkedList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,r.`no_resep`,r.`kd_racik`,r.`nama_racik`,r.`aturan_pakai_farmasi`,r.`jml_dr`,m.`nm_racik`,r.`tgl_perawatan`,r.`jam`,k.`nm_poli`,s.`nm_pasien`,s.`no_rkm_medis` FROM obat_racikan_eresep_rsifc r  "
                     + "JOIN metode_racik m ON r.`metode_racik`=m.`kd_racik` "
@@ -1568,6 +1580,8 @@ public class ResepDao {
     
     public static int getNewRecordEResep() {
         int x = 0;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             ps = koneksi.prepareStatement("SELECT COUNT(*) as jumlah FROM e_resep_rsifc WHERE tgl_resep = CURRENT_DATE");
            
