@@ -834,18 +834,22 @@ public class ResepDao {
         PreparedStatement pst = null;
         try {
             pst = koneksi.prepareStatement("update e_resep_rsifc set validasi = ?, status = ?,user_validator=? where no_resep = ?");
+            koneksi.setAutoCommit(false);
             try {
                 pst.setString(1, Utils.formatDateTimeDb(validasi));
                 pst.setString(2, Resep.STATUS_SUDAH_VERIFIKASI);
                 pst.setString(3, SessionLogin.getInstance().getUser());
                 pst.setString(4, noresep);
                 pst.executeUpdate();
+                koneksi.commit();
             } catch (Exception e) {
+                koneksi.rollback();
                 sukses = false;
                 e.printStackTrace();
                 System.out.println("Notifikasi : " + e);
             } finally {
                 if (pst != null) {
+                    koneksi.setAutoCommit(true);
                     pst.close();
                 }
             }
@@ -895,17 +899,21 @@ public class ResepDao {
         PreparedStatement pst = null;
         try {
             pst = koneksi.prepareStatement("update e_resep_racikan_rsifc set validasi = ?, status = ?,user_validator = ? where no_resep = ?");
+            koneksi.setAutoCommit(false);
             try {
                 pst.setString(1, Utils.formatDateTimeDb(new Date()));
                 pst.setString(2, Resep.STATUS_SUDAH_VERIFIKASI);
                 pst.setString(3, SessionLogin.getInstance().getUser());
                 pst.setString(4, noresep);
                 pst.executeUpdate();
+                koneksi.commit();
             } catch (Exception e) {
+                koneksi.rollback();
                 e.printStackTrace();
                 System.out.println("Notifikasi : " + e);
             } finally {
                 if (pst != null) {
+                    koneksi.setAutoCommit(true);
                     pst.close();
                 }
             }
