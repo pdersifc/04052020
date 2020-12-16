@@ -77,6 +77,7 @@ import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1342,25 +1343,31 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             if (emmmm == 0) {
                                 if (resep.getObatDetails().size() > 0) {
                                     System.out.println("mulai verifikasi.. ");
-                                    boolean sukses = ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);                                            
+                                    boolean sukses = ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);
                                     System.out.println("selesai step pertama verifikasi.. ");
                                     if (sukses) {
-                                        System.out.println("validasi sukses.. lanjut simpan obat biling");
-                                        ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep(), resep.getJaminan());
-                                        System.out.println("simpan obat biling sukses.. lanjut");
-                                        Sequel.saveTrace(SessionLogin.getInstance().getUser(), "simpan validasi dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
-                                        System.out.println("simpan trace selesai! lanjut..");
-                                        String jenisPasien = Konstan.PASIEN_RALAN;
-                                        if (rdoRanap.isSelected()) {
-                                            jenisPasien = Konstan.PASIEN_RANAP;
+                                        try {
+                                            System.out.println("validasi sukses.. lanjut simpan obat biling");
+                                            boolean flagSuses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep(), resep.getJaminan());
+                                            System.out.println("simpan obat biling " + flagSuses + " .. lanjut");
+                                            if (flagSuses) {
+                                                Sequel.saveTrace(SessionLogin.getInstance().getUser(), "simpan validasi dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+                                                System.out.println("simpan trace selesai! lanjut..");
+                                                String jenisPasien = Konstan.PASIEN_RALAN;
+                                                if (rdoRanap.isSelected()) {
+                                                    jenisPasien = Konstan.PASIEN_RANAP;
+                                                }
+
+                                                List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                                System.out.println("load data tabel non racikan! lanjut..");
+                                                List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                                System.out.println("load data tabel RACIKAN! lanjut..");
+                                                showResepData(dataList, dataRacikanList);
+                                                System.out.println("Proses verifikasi selesai..");
+                                            }
+                                        } catch (SQLException ex) {
+                                            Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
                                         }
-                                        
-                                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-                                        System.out.println("load data tabel non racikan! lanjut..");
-                                        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-                                        System.out.println("load data tabel RACIKAN! lanjut..");
-                                        showResepData(dataList, dataRacikanList);
-                                        System.out.println("Proses verifikasi selesai..");
                                     }
 
                                 } else {

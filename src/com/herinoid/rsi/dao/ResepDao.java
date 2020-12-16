@@ -87,7 +87,7 @@ public class ResepDao {
         }
         return sukses;
     }
-    
+
     public static boolean deleteRacikanByNoResep(String noresep) {
         boolean sukses = true;
         PreparedStatement pst = null;
@@ -162,7 +162,9 @@ public class ResepDao {
             try {
                 pst.setString(1, noresep);
                 pst.execute();
+                koneksi.commit();
             } catch (Exception e) {
+                koneksi.rollback();
                 System.out.println("Notifikasi : " + e);
             } finally {
                 if (pst != null) {
@@ -175,7 +177,7 @@ public class ResepDao {
         }
         return sukses;
     }
-    
+
     public static boolean deleteResepByNoResep(String noresep) {
         boolean sukses = true;
         PreparedStatement pst = null;
@@ -185,7 +187,9 @@ public class ResepDao {
                 pst.setString(1, noresep);
                 pst.execute();
                 deleteDetailByNoResep(noresep);
+                koneksi.commit();
             } catch (Exception e) {
+                koneksi.rollback();
                 System.out.println("Notifikasi : " + e);
             } finally {
                 if (pst != null) {
@@ -267,6 +271,7 @@ public class ResepDao {
         try {
 //            String noresep = getNoResepForUpdate();
             psttmn = koneksi.prepareStatement("insert into e_resep_racikan_rsifc(no_resep,tgl_resep,jam_resep,no_rawat,kd_dokter_peresep,status,jenis_pasien) values(?,?,?,?,?,?,?)");
+            koneksi.setAutoCommit(false);
             try {
                 psttmn.setString(1, resep.getNoResep());
                 psttmn.setString(2, Utils.formatDb(resep.getTglResep()));
@@ -277,7 +282,9 @@ public class ResepDao {
                 psttmn.setString(7, resep.getJenisPasien());
                 psttmn.executeUpdate();
                 saveRacikanDetail(resep.getNoRawat(), resep.getNoResep(), resep.getObatResepRacikanDetail());
+                koneksi.commit();
             } catch (Exception e) {
+                koneksi.rollback();
                 System.out.println("Notifikasi : " + e);
             } finally {
                 if (psttmn != null) {
@@ -313,7 +320,9 @@ public class ResepDao {
                 psttmn.setString(11, obat.getAturanPakai());
                 psttmn.setDouble(12, obat.getKandungan());
                 psttmn.executeUpdate();
+                koneksi.commit();
             } catch (Exception e) {
+                koneksi.rollback();
                 System.out.println("Notifikasi : " + e);
             } finally {
                 if (psttmn != null) {
@@ -400,7 +409,7 @@ public class ResepDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            
+
             ps = koneksi.prepareStatement("SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
                     + "e.`status`,r.`kd_pj` FROM e_resep_rsifc e "
                     + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
@@ -421,7 +430,7 @@ public class ResepDao {
                 obat.setDokter(rs.getString("nm_dokter"));
                 obat.setJaminan(rs.getString("png_jawab"));
                 obat.setNorm(rs.getString("no_rkm_medis"));
-                obat.setPasien(rs.getString("nm_pasien") +" ("+rs.getString("no_rkm_medis")+")");
+                obat.setPasien(rs.getString("nm_pasien") + " (" + rs.getString("no_rkm_medis") + ")");
                 obat.setValidasi(rs.getString("validasi"));
                 obat.setDiterima(rs.getString("sampai_pasien"));
                 obat.setPacking(rs.getString("packing"));
@@ -491,19 +500,18 @@ public class ResepDao {
                 double marginPersen = 28;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
-                    if(marginBpjs!=null){
+                    if (marginBpjs != null) {
                         marginPersen = marginBpjs.getRalan();
                     }
-                    
+
                 } else {
                     MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                    if(marginNon!=null){
+                    if (marginNon != null) {
                         marginPersen = marginNon.getMargin();
                     }
-                    
+
                 }
-                
-                
+
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
 //                System.out.println("margin persen = "+marginPersen+" || margin rupiah = "+margin+" || harga beli obat = "+obat.getHargaBeli()+ " || hpp = "+hpp);
@@ -590,9 +598,9 @@ public class ResepDao {
         }
         return obat;
     }
-    
+
     public static boolean isDataKasirExist(String noresep) {
-        boolean exist =  false;
+        boolean exist = false;
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
         try {
@@ -604,7 +612,7 @@ public class ResepDao {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
+        } finally {
             try {
                 if (rs1 != null) {
 
@@ -621,16 +629,29 @@ public class ResepDao {
         return exist;
     }
 
-    public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo, String noResep,String jaminan) {
-        boolean sukses = false;
-        PreparedStatement psttmn = null;
+    public static boolean saveDetailPemberianObat(String sttRawat, String norawat, List<ObatResep> obats, String depo, String noResep, String jaminan) throws SQLException {
+        boolean sukses = true;
+        PreparedStatement psttmn = null, statemenGudang = null, statemenValidasi = null, statemenAturanPakai = null;
         try {
-            RegPeriksa reg = RegPeriksaDao.get(norawat);
-            for (ObatResep obat : obats) {
-                if (obat.isParent() == false) {
-                    Obat obt = ObatDao.getObatForSave(depo, obat.getKodeObat(), jaminan, reg.getKdPj());
-                    psttmn = koneksi.prepareStatement("insert into detail_pemberian_obat(tgl_perawatan,jam,no_rawat,kode_brng,h_beli,biaya_obat,jml,embalase,tuslah,total,status,kd_bangsal,no_batch,no_faktur) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                    try {
+            Connection conDetailObat = koneksiDB.condb();
+            conDetailObat.setAutoCommit(false);
+            Connection conGudang = koneksiDB.condb();
+            conGudang.setAutoCommit(false);
+            Connection conValidasi = koneksiDB.condb();
+            conValidasi.setAutoCommit(false);
+            Connection conAturanPakai = koneksiDB.condb();
+            conAturanPakai.setAutoCommit(false);
+            try {
+                RegPeriksa reg = RegPeriksaDao.get(norawat);
+                int i = 0, x = 0, z = 0, w = 0;
+                psttmn = conDetailObat.prepareStatement("insert into detail_pemberian_obat(tgl_perawatan,jam,no_rawat,kode_brng,h_beli,biaya_obat,jml,embalase,tuslah,total,status,kd_bangsal,no_batch,no_faktur) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                statemenGudang = conGudang.prepareStatement("update gudangbarang set stok = ? where kode_brng = ? and kd_bangsal = ?");
+                statemenValidasi = conValidasi.prepareStatement("insert into obat_validasi_eresep_rsifc(no_resep,kode_brng,is_racikan,kode_racikan,nama_racikan,jml,embalase,tuslah,aturan_pakai,code) values(?,?,?,?,?,?,?,?,?,?)");
+                statemenAturanPakai = conAturanPakai.prepareStatement("update obat_racikan_eresep_rsifc set aturan_pakai_farmasi = ? where no_resep = ? and kd_racik = ?");
+                for (ObatResep obat : obats) {
+                    if (obat.isParent() == false) {
+                        i++;
+                        Obat obt = ObatDao.getObatForSave(depo, obat.getKodeObat(), jaminan, reg.getKdPj());
                         psttmn.setString(1, Utils.formatDb(new Date()));
                         psttmn.setString(2, Utils.formatTime(new Date()));
                         psttmn.setString(3, norawat);
@@ -640,36 +661,170 @@ public class ResepDao {
                         psttmn.setDouble(7, obat.getJumlah());
                         psttmn.setDouble(8, obat.getEmbalase());
                         psttmn.setDouble(9, obat.getTuslah());
-                        psttmn.setDouble(10, Utils.roundUpKhanza((obt.getHarga() * obat.getJumlah()) + obat.getEmbalase() + obat.getTuslah(),100));
-                        psttmn.setString(11, Utils.isBlank(sttRawat)?"Ralan":sttRawat);
+                        psttmn.setDouble(10, Utils.roundUpKhanza((obt.getHarga() * obat.getJumlah()) + obat.getEmbalase() + obat.getTuslah(), 100));
+                        psttmn.setString(11, Utils.isBlank(sttRawat) ? "Ralan" : sttRawat);
                         psttmn.setString(12, depo);
                         psttmn.setString(13, "");
                         psttmn.setString(14, noResep);
-                        psttmn.executeUpdate();
-                        psttmn.close();
-                        updateStokGudang(obat.getStok() - Utils.rounding(obat.getJumlah()), obat.getKodeObat(), depo);
-                        saveObatValidasi(noResep, obat);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        System.out.println("Notifikasi : " + e);
-                    } finally {
-                        if (psttmn != null) {
-                            psttmn.close();
+                        psttmn.addBatch();
+//                        if (i == obats.size()) {
+//                            System.out.println("insert pemberian obat ada "+i+" obat");
+//                            psttmn.executeBatch();
+//                        }
+
+                        if (obat.getStok() > 0) {
+                            x++;
+                            statemenGudang.setDouble(1, obat.getStok() - Utils.rounding(obat.getJumlah()));
+                            statemenGudang.setString(2, obat.getKodeObat());
+                            statemenGudang.setString(3, depo);
+                            statemenGudang.addBatch();
+//                            if (x == obats.size()) {
+//                                System.out.println("update gudang ada " + x + " obat");
+//                                statemenGudang.executeBatch();
+//                            }
+                        }
+                        /// validasi
+                        z++;
+                        statemenValidasi.setString(1, noResep);
+                        statemenValidasi.setString(2, obat.getKodeObat());
+                        statemenValidasi.setBoolean(3, !Utils.isBlank(obat.getRacikan()));
+                        statemenValidasi.setString(4, !Utils.isBlank(obat.getRacikan()) ? obat.getKodeRacikan() : "");
+                        statemenValidasi.setString(5, !Utils.isBlank(obat.getRacikan()) ? obat.getRacikan() : "");
+                        statemenValidasi.setDouble(6, Utils.rounding(obat.getJumlah()));
+                        statemenValidasi.setDouble(7, obat.getEmbalase());
+                        statemenValidasi.setDouble(8, obat.getTuslah());
+                        statemenValidasi.setString(9, obat.getAturanPakai());
+                        statemenValidasi.setString(10, Utils.TSID(new Date()));
+                        statemenValidasi.addBatch();
+//                        if (z == obats.size()) {
+//                            System.out.println("di posisi ini mengexsekusi validasi obat " + z);
+//                            statemenValidasi.executeBatch();
+//                        }
+//                    updateStokGudang(obat.getStok() - Utils.rounding(obat.getJumlah()), obat.getKodeObat(), depo);
+//                    saveObatValidasi(noResep, obat);//                   
+                    } else {
+                        if (isResepRacikanExist(noResep)) {
+                            w++;
+                            statemenAturanPakai.setString(1, obat.getAturanPakai());
+                            statemenAturanPakai.setString(2, noResep);
+                            statemenAturanPakai.setString(3, obat.getKodeObat());
+                            statemenAturanPakai.addBatch();
+//                            if (w == obats.size()) {
+//                                statemenAturanPakai.executeBatch();
+//                            }
+//                        updateAturanPakaiRacikan(obat.getAturanPakai(), noResep, obat.getKodeObat());
                         }
                     }
-                } else {
-                    if (isResepRacikanExist(noResep)) {
-                        updateAturanPakaiRacikan(obat.getAturanPakai(), noResep, obat.getKodeObat());
-                    }
+                }
+                if (i > 0) {
+                    System.out.println("insert pemberian obat ada " + i + " obat");
+                    psttmn.executeBatch();
+                }
+                if (x >0) {
+                    System.out.println("update gudang ada " + x + " obat");
+                    statemenGudang.executeBatch();
+                }
+                if (z > 0) {
+                    System.out.println("di posisi ini mengexsekusi validasi obat " + z);
+                    statemenValidasi.executeBatch();
                 }
 
+                if (w > 0) {
+                    statemenAturanPakai.executeBatch();
+                }
+
+//                for (ObatResep obat : obats) {
+//                    if (obat.isParent() == false) {
+//                        if (obat.getStok() > 0) {
+//                            x++;
+//                            statemenGudang.setDouble(1, obat.getStok() - Utils.rounding(obat.getJumlah()));
+//                            statemenGudang.setString(2, obat.getKodeObat());
+//                            statemenGudang.setString(3, depo);
+//                            statemenGudang.addBatch();
+//                            if (x % 100 == 0 || x == obats.size()) {
+//                                statemenGudang.executeBatch();
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                for (ObatResep obat : obats) {
+//                    if (obat.isParent() == false) {
+//                        z++;
+//                        statemenValidasi.setString(1, noResep);
+//                        statemenValidasi.setString(2, obat.getKodeObat());
+//                        statemenValidasi.setBoolean(3, !Utils.isBlank(obat.getRacikan()));
+//                        statemenValidasi.setString(4, !Utils.isBlank(obat.getRacikan()) ? obat.getKodeRacikan() : "");
+//                        statemenValidasi.setString(5, !Utils.isBlank(obat.getRacikan()) ? obat.getRacikan() : "");
+//                        statemenValidasi.setDouble(6, Utils.rounding(obat.getJumlah()));
+//                        statemenValidasi.setDouble(7, obat.getEmbalase());
+//                        statemenValidasi.setDouble(8, obat.getTuslah());
+//                        statemenValidasi.setString(9, obat.getAturanPakai());
+//                        statemenValidasi.setString(10, Utils.TSID(new Date()));
+//                        statemenValidasi.addBatch();
+//                        if (z % 100 == 0 || z == obats.size()) {
+//                            statemenValidasi.executeBatch();
+//                        }
+//                    }
+//                }
+                sukses = isDataKasirExist(noResep);
+            } catch (Exception e) {
+                sukses = false;
+                e.printStackTrace();
+                System.out.println("Notifikasi : " + e);
+                JOptionPane.showMessageDialog(null, "error : " + e);
+            } finally {
+
+                if (psttmn != null) {
+                    psttmn.close();
+                }
+                if (conDetailObat != null) {
+                    if (sukses) {
+                        conDetailObat.commit();
+                    } else {
+                        conDetailObat.rollback();
+                    }
+//                    conDetailObat.close();
+                }
+
+                if (statemenGudang != null) {
+                    statemenGudang.close();
+                }
+                if (conGudang != null) {
+                    if (sukses) {
+                        conGudang.commit();
+                    } else {
+                        conGudang.rollback();
+                    }
+//                    conGudang.close();
+                }
+
+                if (statemenValidasi != null) {
+                    statemenValidasi.close();
+                }
+                if (conValidasi != null) {
+                    if (sukses) {
+                        conValidasi.commit();
+                    } else {
+                        conValidasi.rollback();
+                    }
+//                    conValidasi.close();
+                }
+
+                if (statemenAturanPakai != null) {
+                    statemenAturanPakai.close();
+                }
+                if (conAturanPakai != null) {
+                    if (sukses) {
+                        conAturanPakai.commit();
+                    } else {
+                        conAturanPakai.rollback();
+                    }
+//                    conAturanPakai.close();
+                }
             }
-            sukses = isDataKasirExist(noResep);
-        } catch (Exception e) {
-            sukses = false;
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Notifikasi : " + e);            
-            JOptionPane.showMessageDialog(null, "error : " + e);
         }
         return sukses;
     }
@@ -787,7 +942,7 @@ public class ResepDao {
                 obat.setDokter(rs.getString("nm_dokter"));
                 obat.setJaminan(rs.getString("png_jawab"));
                 obat.setNorm(rs.getString("no_rkm_medis"));
-                obat.setPasien(rs.getString("nm_pasien") +" ("+rs.getString("no_rkm_medis")+")");
+                obat.setPasien(rs.getString("nm_pasien") + " (" + rs.getString("no_rkm_medis") + ")");
                 obat.setValidasi(rs.getString("validasi"));
                 obat.setDiterima(rs.getString("sampai_pasien"));
                 obat.setPacking(rs.getString("packing"));
@@ -881,7 +1036,7 @@ public class ResepDao {
         }
         return isExist;
     }
-    
+
     public static boolean isResepRacikanExistByNorawat(String norawat) {
         boolean isExist = false;
         PreparedStatement pre = null;
@@ -980,16 +1135,16 @@ public class ResepDao {
                 double marginPersen = 28;
                 if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                     MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obat.getKodeObat());
-                    if(marginBpjs!=null){
+                    if (marginBpjs != null) {
                         marginPersen = marginBpjs.getRalan();
                     }
-                    
+
                 } else {
                     MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                    if(marginNon!=null){
+                    if (marginNon != null) {
                         marginPersen = marginNon.getMargin();
                     }
-                    
+
                 }
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();
@@ -1577,14 +1732,14 @@ public class ResepDao {
         }
         return obatList;
     }
-    
+
     public static int getNewRecordEResep() {
         int x = 0;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             ps = koneksi.prepareStatement("SELECT COUNT(*) as jumlah FROM e_resep_rsifc WHERE tgl_resep = CURRENT_DATE");
-           
+
             rs = ps.executeQuery();
             while (rs.next()) {
                 x = rs.getInt("jumlah");
@@ -1607,7 +1762,7 @@ public class ResepDao {
         }
         return x;
     }
-    
+
     public static boolean isResepRacikanValidasi(String noresep) {
         boolean isVaidasi = false;
         PreparedStatement pre = null;
@@ -1617,10 +1772,10 @@ public class ResepDao {
             pre.setString(1, noresep);
             rset = pre.executeQuery();
             while (rset.next()) {
-                if(rset.getDate("validasi")!=null){
+                if (rset.getDate("validasi") != null) {
                     isVaidasi = true;
                 }
-                
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -1650,7 +1805,7 @@ public class ResepDao {
             pre.setString(1, noresep);
             rset = pre.executeQuery();
             while (rset.next()) {
-                if(rset.getDate("validasi")!=null){
+                if (rset.getDate("validasi") != null) {
                     isVaidasi = true;
                 }
             }
