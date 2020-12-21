@@ -3055,7 +3055,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private widget.Tanggal tgl2;
     // End of variables declaration//GEN-END:variables
 
-    private void tampil() {  
+    private void tampilJaminan() {  
         jml=0;
         for(i=0;i<tabMode.getRowCount();i++){
             if(tabMode.getValueAt(i,0).toString().equals("true")){
@@ -3239,6 +3239,260 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     pstindakan3.setString(2,kelas.trim());
                     pstindakan3.setString(3,"%"+TCariPaket.getText()+"%");
                     pstindakan3.setString(4,kd_pj.equals("BPJ")?"BPJ":kd_pj.equals("U01")?"U01":"-");
+                    pstindakan3.setString(5,kelas.trim());
+                    pstindakan3.setString(6,"%"+TCariPaket.getText()+"%");
+                    rs=pstindakan3.executeQuery();
+                }else if(cara_bayar_operasi.equals("No")&&kelas_operasi.equals("Yes")){
+                    pstindakan4.setString(1,kelas.trim());
+                    pstindakan4.setString(2,"%"+TCariPaket.getText()+"%");
+                    pstindakan4.setString(3,kelas.trim());
+                    pstindakan4.setString(4,"%"+TCariPaket.getText()+"%");
+                    rs=pstindakan4.executeQuery();
+                }
+                
+                while(rs.next()){
+                    tabMode.addRow(new Object[]{false,rs.getString("kode_paket"),
+                                   rs.getString("nm_perawatan"),
+                                   rs.getString("kategori"), 
+                                   rs.getDouble("operator1"), 
+                                   rs.getDouble("operator2"), 
+                                   rs.getDouble("operator3"), 
+                                   rs.getDouble("asisten_operator1"), 
+                                   rs.getDouble("asisten_operator2"), 
+                                   rs.getDouble("asisten_operator3"), 
+                                   rs.getDouble("instrumen"), 
+                                   rs.getDouble("dokter_anak"), 
+                                   rs.getDouble("perawaat_resusitas"), 
+                                   rs.getDouble("dokter_anestesi"), 
+                                   rs.getDouble("asisten_anestesi"), 
+                                   rs.getDouble("asisten_anestesi2"), 
+                                   rs.getDouble("bidan"), 
+                                   rs.getDouble("bidan2"), 
+                                   rs.getDouble("bidan3"), 
+                                   rs.getDouble("perawat_luar"), 
+                                   rs.getDouble("alat"), 
+                                   rs.getDouble("sewa_ok"), 
+                                   rs.getDouble("akomodasi"), 
+                                   rs.getDouble("bagian_rs"), 
+                                   rs.getDouble("omloop"), 
+                                   rs.getDouble("omloop2"), 
+                                   rs.getDouble("omloop3"), 
+                                   rs.getDouble("omloop4"), 
+                                   rs.getDouble("omloop5"), 
+                                   rs.getDouble("sarpras"), 
+                                   rs.getDouble("dokter_pjanak"), 
+                                   rs.getDouble("dokter_umum"), 
+                                   rs.getDouble("jumlah")});
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi : "+e);
+            } finally{
+                if(rs!=null){
+                    rs.close();
+                }
+                if(pstindakan!=null){
+                    pstindakan.close();
+                }
+                if(pstindakan2!=null){
+                    pstindakan2.close();
+                }
+                if(pstindakan3!=null){
+                    pstindakan3.close();
+                }
+                if(pstindakan4!=null){
+                    pstindakan4.close();
+                }
+            }                  
+        }catch(SQLException e){
+            System.out.println("Notifikasi : "+e);
+        }
+        
+    }
+    
+    private void tampil() {  
+        jml=0;
+        for(i=0;i<tabMode.getRowCount();i++){
+            if(tabMode.getValueAt(i,0).toString().equals("true")){
+                jml++;
+            }
+        }
+        
+        pilih=null;
+        pilih=new boolean[jml]; 
+        kode_paket=null;
+        kode_paket=new String[jml];
+        kategori=null;
+        kategori=new String[jml];
+        nm_perawatan=null;
+        nm_perawatan=new String[jml];
+        operator1=null;
+        operator1=new double[jml];
+        operator2=null;
+        operator2=new double[jml];
+        operator3=null;
+        operator3=new double[jml];
+        asisten_operator1=null;
+        asisten_operator1=new double[jml];
+        asisten_operator2=null;
+        asisten_operator2=new double[jml];
+        asisten_operator3=null;
+        asisten_operator3=new double[jml];
+        instrumen=null;
+        instrumen=new double[jml];
+        dokter_anak=null;
+        dokter_anak=new double[jml];
+        perawaat_resusitas=null;
+        perawaat_resusitas=new double[jml];
+        dokter_anestesi=null;
+        dokter_anestesi=new double[jml];
+        asisten_anestesi=null;
+        asisten_anestesi=new double[jml];
+        asisten_anestesi2=null;
+        asisten_anestesi2=new double[jml];
+        bidan=null;
+        bidan=new double[jml];
+        bidan2=null;
+        bidan2=new double[jml];
+        bidan3=null;
+        bidan3=new double[jml];
+        bidan=new double[jml];
+        perawat_luar=null;
+        perawat_luar=new double[jml];   
+        sewa_ok=null;
+        sewa_ok=new double[jml];
+        akomodasi=null;
+        akomodasi=new double[jml];
+        bagian_rs=null;
+        bagian_rs=new double[jml];
+        omloop=null;
+        omloop=new double[jml];
+        omloop2=null;
+        omloop2=new double[jml];
+        omloop3=null;
+        omloop3=new double[jml];
+        omloop4=null;
+        omloop4=new double[jml];
+        omloop5=null;
+        omloop5=new double[jml];
+        sarpras=null;
+        sarpras=new double[jml];
+        alat=null;
+        alat=new double[jml];   
+        dokter_pjanak=null;
+        dokter_pjanak=new double[jml]; 
+        dokter_umum=null;
+        dokter_umum=new double[jml]; 
+        ttltindakan=null;
+        ttltindakan=new double[jml];        
+        index=0;        
+        for(i=0;i<tabMode.getRowCount();i++){
+            if(tabMode.getValueAt(i,0).toString().equals("true")){
+                pilih[index]=true;
+                kode_paket[index]=tabMode.getValueAt(i,1).toString();
+                nm_perawatan[index]=tabMode.getValueAt(i,2).toString();
+                kategori[index]=tabMode.getValueAt(i,3).toString();
+                operator1[index]=Double.parseDouble(tabMode.getValueAt(i,4).toString());
+                operator2[index]=Double.parseDouble(tabMode.getValueAt(i,5).toString());
+                operator3[index]=Double.parseDouble(tabMode.getValueAt(i,6).toString());
+                asisten_operator1[index]=Double.parseDouble(tabMode.getValueAt(i,7).toString());
+                asisten_operator2[index]=Double.parseDouble(tabMode.getValueAt(i,8).toString());
+                asisten_operator3[index]=Double.parseDouble(tabMode.getValueAt(i,9).toString());
+                instrumen[index]=Double.parseDouble(tabMode.getValueAt(i,10).toString());
+                dokter_anak[index]=Double.parseDouble(tabMode.getValueAt(i,11).toString());
+                perawaat_resusitas[index]=Double.parseDouble(tabMode.getValueAt(i,12).toString());
+                dokter_anestesi[index]=Double.parseDouble(tabMode.getValueAt(i,13).toString());
+                asisten_anestesi[index]=Double.parseDouble(tabMode.getValueAt(i,14).toString());
+                asisten_anestesi2[index]=Double.parseDouble(tabMode.getValueAt(i,15).toString());
+                bidan[index]=Double.parseDouble(tabMode.getValueAt(i,16).toString());
+                bidan2[index]=Double.parseDouble(tabMode.getValueAt(i,17).toString());
+                bidan3[index]=Double.parseDouble(tabMode.getValueAt(i,18).toString());
+                perawat_luar[index]=Double.parseDouble(tabMode.getValueAt(i,19).toString());
+                alat[index]=Double.parseDouble(tabMode.getValueAt(i,20).toString());   
+                sewa_ok[index]=Double.parseDouble(tabMode.getValueAt(i,21).toString());
+                akomodasi[index]=Double.parseDouble(tabMode.getValueAt(i,22).toString());  
+                bagian_rs[index]=Double.parseDouble(tabMode.getValueAt(i,23).toString());  
+                omloop[index]=Double.parseDouble(tabMode.getValueAt(i,24).toString()); 
+                omloop2[index]=Double.parseDouble(tabMode.getValueAt(i,25).toString()); 
+                omloop3[index]=Double.parseDouble(tabMode.getValueAt(i,26).toString());   
+                omloop4[index]=Double.parseDouble(tabMode.getValueAt(i,27).toString());   
+                omloop5[index]=Double.parseDouble(tabMode.getValueAt(i,28).toString());   
+                sarpras[index]=Double.parseDouble(tabMode.getValueAt(i,29).toString()); 
+                dokter_pjanak[index]=Double.parseDouble(tabMode.getValueAt(i,30).toString()); 
+                dokter_umum[index]=Double.parseDouble(tabMode.getValueAt(i,31).toString()); 
+                ttltindakan[index]=Double.parseDouble(tabMode.getValueAt(i,32).toString());                
+                index++;
+            }
+        }
+        
+        Valid.tabelKosong(tabMode);
+        for(i=0;i<jml;i++){
+            tabMode.addRow(new Object[]{pilih[i],kode_paket[i],nm_perawatan[i],kategori[i],operator1[i],
+                operator2[i],operator3[i],asisten_operator1[i],asisten_operator2[i],asisten_operator3[i],
+                instrumen[i],dokter_anak[i],perawaat_resusitas[i],dokter_anestesi[i],
+                asisten_anestesi[i],asisten_anestesi2[i],bidan[i],bidan2[i],bidan3[i],perawat_luar[i],
+                alat[i],sewa_ok[i],akomodasi[i],bagian_rs[i],omloop[i],omloop2[i],
+                omloop3[i],omloop4[i],omloop5[i],sarpras[i],dokter_pjanak[i],dokter_umum[i],ttltindakan[i]
+            });
+        }
+        
+        try{
+            pstindakan=koneksi.prepareStatement("select kode_paket, nm_perawatan,kategori, operator1, operator2, operator3, "+
+                   "asisten_operator1, asisten_operator2,asisten_operator3, instrumen, dokter_anak,perawaat_resusitas,"+
+                   "dokter_anestesi, asisten_anestesi, asisten_anestesi2, bidan, bidan2, bidan3, perawat_luar, alat,"+
+                   "sewa_ok,akomodasi,bagian_rs,omloop,omloop2,omloop3,omloop4,omloop5,sarpras,dokter_pjanak,dokter_umum,(operator1+operator2+operator3+"+
+                   "asisten_operator1+asisten_operator2+asisten_operator3+instrumen+dokter_anak+perawaat_resusitas+"+
+                   "alat+dokter_anestesi+asisten_anestesi+asisten_anestesi2+bidan+bidan2+bidan3+perawat_luar+sewa_ok+"+
+                   "akomodasi+bagian_rs+omloop+omloop2+omloop3+omloop4+omloop5+sarpras+dokter_pjanak+dokter_umum) as jumlah "+
+                   "from paket_operasi "+
+                   "where status='1' and (kd_pj=? or kd_pj='-') and kode_paket like ? or "+
+                   "status='1' and (kd_pj=? or kd_pj='-') and nm_perawatan like ? order by nm_perawatan ");
+            pstindakan2=koneksi.prepareStatement("select kode_paket, nm_perawatan,kategori, operator1, operator2, operator3, "+
+                   "asisten_operator1, asisten_operator2,asisten_operator3, instrumen, dokter_anak,perawaat_resusitas,"+
+                   "dokter_anestesi, asisten_anestesi, asisten_anestesi2, bidan, bidan2, bidan3, perawat_luar, alat,"+
+                   "sewa_ok,akomodasi,bagian_rs,omloop,omloop2,omloop3,omloop4,omloop5,sarpras,dokter_pjanak,dokter_umum,(operator1+operator2+operator3+"+
+                   "asisten_operator1+asisten_operator2+asisten_operator3+instrumen+dokter_anak+perawaat_resusitas+"+
+                   "alat+dokter_anestesi+asisten_anestesi+asisten_anestesi2+bidan+bidan2+bidan3+perawat_luar+sewa_ok+"+
+                   "akomodasi+bagian_rs+omloop+omloop2+omloop3+omloop4+omloop5+sarpras+dokter_pjanak+dokter_umum) as jumlah "+
+                   "from paket_operasi "+
+                   "where status='1' and kode_paket like ? or "+
+                   "status='1' and nm_perawatan like ? order by nm_perawatan ");
+            pstindakan3=koneksi.prepareStatement("select kode_paket, nm_perawatan,kategori, operator1, operator2, operator3, "+
+                   "asisten_operator1, asisten_operator2,asisten_operator3, instrumen, dokter_anak,perawaat_resusitas,"+
+                   "dokter_anestesi, asisten_anestesi, asisten_anestesi2, bidan, bidan2, bidan3, perawat_luar, alat,"+
+                   "sewa_ok,akomodasi,bagian_rs,omloop,omloop2,omloop3,omloop4,omloop5,sarpras,dokter_pjanak,dokter_umum,(operator1+operator2+operator3+"+
+                   "asisten_operator1+asisten_operator2+asisten_operator3+instrumen+dokter_anak+perawaat_resusitas+"+
+                   "alat+dokter_anestesi+asisten_anestesi+asisten_anestesi2+bidan+bidan2+bidan3+perawat_luar+sewa_ok+"+
+                   "akomodasi+bagian_rs+omloop+omloop2+omloop3+omloop4+omloop5+sarpras+dokter_pjanak+dokter_umum) as jumlah "+
+                   "from paket_operasi "+
+                   "where status='1' and (kd_pj=? or kd_pj='-') and (kelas=? or kelas='-') and kode_paket like ? or "+
+                   "status='1' and (kd_pj=? or kd_pj='-') and (kelas=? or kelas='-') and nm_perawatan like ? order by nm_perawatan ");
+            pstindakan4=koneksi.prepareStatement("select kode_paket, nm_perawatan,kategori, operator1, operator2, operator3, "+
+                   "asisten_operator1, asisten_operator2,asisten_operator3, instrumen, dokter_anak,perawaat_resusitas,"+
+                   "dokter_anestesi, asisten_anestesi, asisten_anestesi2, bidan, bidan2, bidan3, perawat_luar, alat,"+
+                   "sewa_ok,akomodasi,bagian_rs,omloop,omloop2,omloop3,omloop4,omloop5,sarpras,dokter_pjanak,dokter_umum,(operator1+operator2+operator3+"+
+                   "asisten_operator1+asisten_operator2+asisten_operator3+instrumen+dokter_anak+perawaat_resusitas+"+
+                   "alat+dokter_anestesi+asisten_anestesi+asisten_anestesi2+bidan+bidan2+bidan3+perawat_luar+sewa_ok+"+
+                   "akomodasi+bagian_rs+omloop+omloop2+omloop3+omloop4+omloop5+sarpras+dokter_pjanak+dokter_umum) as jumlah "+
+                   "from paket_operasi "+
+                   "where status='1' and (kelas=? or kelas='-') and kode_paket like ? or "+
+                   "status='1' and (kelas=? or kelas='-') and nm_perawatan like ? order by nm_perawatan ");
+            
+            try {
+                if(cara_bayar_operasi.equals("Yes")&&kelas_operasi.equals("No")){
+                    pstindakan.setString(1,kd_pj.trim());
+                    pstindakan.setString(2,"%"+TCariPaket.getText()+"%");
+                    pstindakan.setString(3,kd_pj.trim());
+                    pstindakan.setString(4,"%"+TCariPaket.getText()+"%");
+                    rs=pstindakan.executeQuery();
+                }else if(cara_bayar_operasi.equals("No")&&kelas_operasi.equals("No")){
+                    pstindakan2.setString(1,"%"+TCariPaket.getText()+"%");
+                    pstindakan2.setString(2,"%"+TCariPaket.getText()+"%");
+                    rs=pstindakan2.executeQuery();
+                }else if(cara_bayar_operasi.equals("Yes")&&kelas_operasi.equals("Yes")){
+                    pstindakan3.setString(1,kd_pj.trim());
+                    pstindakan3.setString(2,kelas.trim());
+                    pstindakan3.setString(3,"%"+TCariPaket.getText()+"%");
+                    pstindakan3.setString(4,kd_pj.trim());
                     pstindakan3.setString(5,kelas.trim());
                     pstindakan3.setString(6,"%"+TCariPaket.getText()+"%");
                     rs=pstindakan3.executeQuery();
