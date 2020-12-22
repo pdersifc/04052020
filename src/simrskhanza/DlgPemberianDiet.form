@@ -421,12 +421,11 @@
                 <Component class="widget.ComboBox" name="cmbJamCari">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="5">
+                      <StringArray count="4">
                         <StringItem index="0" value="Semua"/>
                         <StringItem index="1" value="Pagi"/>
                         <StringItem index="2" value="Siang"/>
                         <StringItem index="3" value="Sore"/>
-                        <StringItem index="4" value="Malam"/>
                       </StringArray>
                     </Property>
                     <Property name="name" type="java.lang.String" value="cmbJamCari" noResource="true"/>
@@ -525,7 +524,7 @@
               <SubComponents>
                 <Component class="widget.Label" name="jLabel19">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Tgl.Rawat :"/>
+                    <Property name="text" type="java.lang.String" value="Tgl.Diet :"/>
                     <Property name="name" type="java.lang.String" value="jLabel19" noResource="true"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[67, 23]"/>
@@ -539,7 +538,7 @@
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="1">
-                        <StringItem index="0" value="19-12-2020"/>
+                        <StringItem index="0" value="22-12-2020"/>
                       </StringArray>
                     </Property>
                     <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -567,7 +566,7 @@
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="1">
-                        <StringItem index="0" value="19-12-2020"/>
+                        <StringItem index="0" value="22-12-2020"/>
                       </StringArray>
                     </Property>
                     <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -751,7 +750,7 @@
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="1">
-                        <StringItem index="0" value="19-12-2020"/>
+                        <StringItem index="0" value="22-12-2020"/>
                       </StringArray>
                     </Property>
                     <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -770,11 +769,10 @@
                 <Component class="widget.ComboBox" name="cmbJam">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="4">
+                      <StringArray count="3">
                         <StringItem index="0" value="Pagi"/>
                         <StringItem index="1" value="Siang"/>
                         <StringItem index="2" value="Sore"/>
-                        <StringItem index="3" value="Malam"/>
                       </StringArray>
                     </Property>
                     <Property name="name" type="java.lang.String" value="cmbJam" noResource="true"/>
