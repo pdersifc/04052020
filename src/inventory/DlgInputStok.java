@@ -1078,7 +1078,7 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                     " where databarang.status='1' order by databarang.nama_brng");
             }else{
                 pstampil=koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, golongan_barang.nama as golongan, "+
-                    "databarang.dasar from databarang inner join jenis on databarang.kdjns=jenis.kdjns and golongan_barang.kode=databarang.kode_golongan "+
+                    "databarang.dasar from databarang inner join jenis inner join golongan_barang on databarang.kdjns=jenis.kdjns and golongan_barang.kode=databarang.kode_golongan "+
                     " where databarang.status='1' and databarang.kode_brng like ? or "+
                     " databarang.status='1' and databarang.nama_brng like ? or "+
                     " databarang.status='1' and golongan_barang.nama like ? or "+
