@@ -43,7 +43,7 @@ public class DlgInputStok extends javax.swing.JDialog {
     private DlgCariBangsal bangsal=new DlgCariBangsal(null,false);
     private double ttl=0,y=0,ttl2=0,y2=0,stokbarang=0,kurang=0,harga=0;
     private int jml=0,i=0,index=0;
-    private String[] real,kodebarang,namabarang,kategori,satuan,nobatch,nofaktur;
+    private String[] real,kodebarang,namabarang,kategori,golongan,nobatch,nofaktur;
     private double[] hargabeli,stok,selisih,lebih,nomihilang,nomilebih;
     private WarnaTable2 warna=new WarnaTable2();
     private boolean aktif=false,sukses=true;
@@ -56,7 +56,7 @@ public class DlgInputStok extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        Object[] row={"Real","Kode Barang","Nama Barang","Kategori","Satuan","Harga","Stok","Selisih","Lebih","Nominal Hilang(Rp)","Nominal Lebih(Rp)","No.Batch","No.Faktur"};
+        Object[] row={"Real","Kode Barang","Nama Barang","Kategori","Golongan","Harga","Stok","Selisih","Lebih","Nominal Hilang(Rp)","Nominal Lebih(Rp)","No.Batch","No.Faktur"};
         tabMode=new DefaultTableModel(null,row){
             @Override public boolean isCellEditable(int rowIndex, int colIndex){
                 boolean a = false;
@@ -88,13 +88,13 @@ public class DlgInputStok extends javax.swing.JDialog {
             }else if(i==1){
                 column.setPreferredWidth(90);
             }else if(i==2){
-                column.setPreferredWidth(150);
+                column.setPreferredWidth(200);
             }else if(i==3){
                 column.setPreferredWidth(100);
             }else if(i==4){
-                column.setPreferredWidth(50);
+                column.setPreferredWidth(130);
             }else if(i==5){
-                column.setPreferredWidth(80);
+                column.setPreferredWidth(48);
             }else if(i==6){
                 column.setPreferredWidth(42);
             }else if(i==7){
@@ -1033,7 +1033,7 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             kodebarang=new String[jml];
             namabarang=new String[jml];
             kategori=new String[jml];
-            satuan=new String[jml];
+            golongan=new String[jml];
             hargabeli=new double[jml];
             stok=new double[jml];
             selisih=new double[jml];
@@ -1050,7 +1050,7 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                     kodebarang[index]=tbDokter.getValueAt(i,1).toString();
                     namabarang[index]=tbDokter.getValueAt(i,2).toString();
                     kategori[index]=tbDokter.getValueAt(i,3).toString();
-                    satuan[index]=tbDokter.getValueAt(i,4).toString();
+                    golongan[index]=tbDokter.getValueAt(i,4).toString();
                     hargabeli[index]=Double.parseDouble(tbDokter.getValueAt(i,5).toString());
                     stok[index]=Double.parseDouble(tbDokter.getValueAt(i,6).toString());
                     selisih[index]=Double.parseDouble(tbDokter.getValueAt(i,7).toString());
@@ -1066,22 +1066,22 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             Valid.tabelKosong(tabMode);
             for(i=0;i<jml;i++){
                 tabMode.addRow(new Object[]{
-                    real[i],kodebarang[i],namabarang[i],kategori[i],satuan[i],
+                    real[i],kodebarang[i],namabarang[i],kategori[i],golongan[i],
                     hargabeli[i],stok[i],selisih[i],lebih[i],nomihilang[i],nomilebih[i],
                     nobatch[i],nofaktur[i]
                 });
             }
             
             if(TCari.getText().trim().equals("")){
-                pstampil=koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat, "+
-                    "databarang.dasar from databarang inner join jenis on databarang.kdjns=jenis.kdjns "+
+                pstampil=koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, golongan_barang.nama as golongan, "+
+                    "databarang.dasar from databarang inner join golongan_barang inner join jenis on databarang.kdjns=jenis.kdjns and golongan_barang.kode=databarang.kode_golongan "+
                     " where databarang.status='1' order by databarang.nama_brng");
             }else{
-                pstampil=koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat, "+
-                    "databarang.dasar from databarang inner join jenis on databarang.kdjns=jenis.kdjns "+
+                pstampil=koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, golongan_barang.nama as golongan, "+
+                    "databarang.dasar from databarang inner join jenis on databarang.kdjns=jenis.kdjns and golongan_barang.kode=databarang.kode_golongan "+
                     " where databarang.status='1' and databarang.kode_brng like ? or "+
                     " databarang.status='1' and databarang.nama_brng like ? or "+
-                    " databarang.status='1' and databarang.kode_sat like ? or "+
+                    " databarang.status='1' and golongan_barang.nama like ? or "+
                     " databarang.status='1' and jenis.nama like ? order by databarang.nama_brng");
             }
                 
@@ -1097,7 +1097,7 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                     tabMode.addRow(new Object[]{"",rstampil.getString("kode_brng"),
                                    rstampil.getString("nama_brng"),
                                    rstampil.getString("nama"),
-                                   rstampil.getString("kode_sat"),
+                                   rstampil.getString("golongan"),
                                    rstampil.getDouble("dasar"),0,0,0,0,0,"",""});
                 }  
             } catch (Exception e) {
