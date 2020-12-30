@@ -831,21 +831,21 @@ public class DlgPemberianDiet extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null,"Maaf, data sudah habis. Tidak ada data yang bisa anda print...!!!!");
             BtnBatal.requestFocus();
         }else if(tabMode.getRowCount()!=0){
-            Map<String, Object> param = new HashMap<>();  
-             
+            Map<String, Object> param = new HashMap<>();
+            //param.put("statusse", Sequel.cariIsi("SELECT stts_pulang FROM kamar_inap order by tgl_keluar desc" )); 
             Valid.MyReportqry("rptBrDiet.jasper","report","::[ Data Pemberian Diet ]::","select detail_beri_diet.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien, " +
-                "concat(detail_beri_diet.kd_kamar,', ',bangsal.nm_bangsal) as kd_kamar,detail_beri_diet.tanggal,detail_beri_diet.waktu,diet.nama_diet,kamar_inap.stts_pulang " +
+                "concat(detail_beri_diet.kd_kamar,', ',bangsal.nm_bangsal) as kd_kamar,detail_beri_diet.tanggal,detail_beri_diet.waktu,diet.nama_diet,detail_beri_diet.status,detail_beri_diet.create_at,kamar_inap.stts_pulang " +
                 "from detail_beri_diet inner join reg_periksa inner join pasien inner join diet inner join kamar inner join bangsal inner join kamar_inap " +
                 "on detail_beri_diet.no_rawat=reg_periksa.no_rawat " +
                 "and detail_beri_diet.kd_kamar=kamar.kd_kamar "+
-                "and reg_periksa.no_rawat=kamar_inap.no_rawat "+
+                "and kamar_inap.no_rawat=reg_periksa.no_rawat "+
                 "and kamar.kd_bangsal=bangsal.kd_bangsal "+
                 "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                 "and detail_beri_diet.kd_diet=diet.kd_diet " +
-                "where detail_beri_diet.tanggal between '"+Valid.SetTgl(DTPCari1.getSelectedItem()+"")+"' and '"+Valid.SetTgl(DTPCari2.getSelectedItem()+"")+"' and detail_beri_diet.waktu like '"+cmbJamCari.getSelectedItem().toString().replaceAll("Semua","").trim()+"%' and bangsal.nm_bangsal like '%"+NmBangsalCari.getText().trim()+"%' and detail_beri_diet.no_rawat like '%"+TCari.getText().trim()+"%' or "+
-                "detail_beri_diet.tanggal between '"+Valid.SetTgl(DTPCari1.getSelectedItem()+"")+"' and '"+Valid.SetTgl(DTPCari2.getSelectedItem()+"")+"' and detail_beri_diet.waktu like '"+cmbJamCari.getSelectedItem().toString().replaceAll("Semua","").trim()+"%' and bangsal.nm_bangsal like '%"+NmBangsalCari.getText().trim()+"%' and reg_periksa.no_rkm_medis like '%"+TCari.getText().trim()+"%' or "+
-                "detail_beri_diet.tanggal between '"+Valid.SetTgl(DTPCari1.getSelectedItem()+"")+"' and '"+Valid.SetTgl(DTPCari2.getSelectedItem()+"")+"' and detail_beri_diet.waktu like '"+cmbJamCari.getSelectedItem().toString().replaceAll("Semua","").trim()+"%' and bangsal.nm_bangsal like '%"+NmBangsalCari.getText().trim()+"%' and pasien.nm_pasien like '%"+TCari.getText().trim()+"%' "+
-                "order by detail_beri_diet.kd_kamar,bangsal.nm_bangsal,kamar_inap.stts_pulang desc",param);
+                "where kamar_inap.stts_pulang NOT REGEXP 'Pindah Kamar' and detail_beri_diet.tanggal between '"+Valid.SetTgl(DTPCari1.getSelectedItem()+"")+"' and '"+Valid.SetTgl(DTPCari2.getSelectedItem()+"")+"' and detail_beri_diet.waktu like '"+cmbJamCari.getSelectedItem().toString().replaceAll("Semua","").trim()+"%' and bangsal.nm_bangsal like '%"+NmBangsalCari.getText().trim()+"%' and detail_beri_diet.no_rawat like '%"+TCari.getText().trim()+"%' or "+
+                "kamar_inap.stts_pulang NOT REGEXP 'Pindah Kamar' and detail_beri_diet.tanggal between '"+Valid.SetTgl(DTPCari1.getSelectedItem()+"")+"' and '"+Valid.SetTgl(DTPCari2.getSelectedItem()+"")+"' and detail_beri_diet.waktu like '"+cmbJamCari.getSelectedItem().toString().replaceAll("Semua","").trim()+"%' and bangsal.nm_bangsal like '%"+NmBangsalCari.getText().trim()+"%' and reg_periksa.no_rkm_medis like '%"+TCari.getText().trim()+"%' or "+
+                "kamar_inap.stts_pulang NOT REGEXP 'Pindah Kamar' and detail_beri_diet.tanggal between '"+Valid.SetTgl(DTPCari1.getSelectedItem()+"")+"' and '"+Valid.SetTgl(DTPCari2.getSelectedItem()+"")+"' and detail_beri_diet.waktu like '"+cmbJamCari.getSelectedItem().toString().replaceAll("Semua","").trim()+"%' and bangsal.nm_bangsal like '%"+NmBangsalCari.getText().trim()+"%' and pasien.nm_pasien like '%"+TCari.getText().trim()+"%' "+
+                "GROUP BY diet.kd_diet,kamar_inap.no_rawat order by detail_beri_diet.kd_kamar,bangsal.nm_bangsal desc",param);
         }
         this.setCursor(Cursor.getDefaultCursor());
 }//GEN-LAST:event_BtnPrintActionPerformed
@@ -1158,7 +1158,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 "where detail_beri_diet.tanggal between ? and ? and detail_beri_diet.waktu like ? and detail_beri_diet.status like ? and bangsal.nm_bangsal like ? and detail_beri_diet.no_rawat like ? or "+
                 "detail_beri_diet.tanggal between ? and ? and detail_beri_diet.waktu like ? and detail_beri_diet.status like ? and bangsal.nm_bangsal like ? and reg_periksa.no_rkm_medis like ? or "+
                 "detail_beri_diet.tanggal between ? and ? and detail_beri_diet.waktu like ? and detail_beri_diet.status like ? and bangsal.nm_bangsal like ? and pasien.nm_pasien like ? "+
-                "order by detail_beri_diet.kd_kamar,bangsal.nm_bangsal");
+                "order by detail_beri_diet.kd_kamar,bangsal.nm_bangsal desc");
             try {
                 ps.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+""));
                 ps.setString(2,Valid.SetTgl(DTPCari2.getSelectedItem()+""));
@@ -1184,7 +1184,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                         rs.getString(1),rs.getString(2)+", "+rs.getString(3),
                         rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),
                         Sequel.cariIsi("select diagnosa_awal from kamar_inap where no_rawat=? order by tgl_masuk desc",rs.getString(1)),rs.getString(8),rs.getString(9),
-                        Sequel.cariIsi("SELECT stts_pulang FROM kamar_inap WHERE no_rawat=? order by tgl_keluar desc",rs.getString(1))
+                        Sequel.cariIsi("SELECT stts_pulang FROM kamar_inap WHERE kamar_inap.stts_pulang NOT REGEXP 'Pindah Kamar' and no_rawat=? order by tgl_keluar desc",rs.getString(1))
                     });
                 }
             } catch (Exception e) {
@@ -1279,9 +1279,9 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }
 
     private void isRawat() {
-         Sequel.cariIsi("select pasien.nm_pasien from reg_periksa inner join pasien "+
-                        "on pasien.no_rkm_medis=reg_periksa.no_rkm_medis where reg_periksa.no_rawat=? ",TPasien,TNoRw.getText());
+         Sequel.cariIsi("select pasien.nm_pasien from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis where reg_periksa.no_rawat=? ",TPasien,TNoRw.getText());
          Sequel.cariIsi("select kd_kamar from kamar_inap where no_rawat=? order by tgl_masuk desc limit 1",Kamar,TNoRw.getText());
+         //Sequel.cariIsi("SELECT stts_pulang FROM kamar_inap WHERE no_rawat=? order by tgl_keluar desc",StatusInap,TNoRw.getText());
     }
     
     public void setNoRm(String norwt,Date tgl1,Date tgl2) {
