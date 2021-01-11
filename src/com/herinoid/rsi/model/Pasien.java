@@ -9,6 +9,7 @@ package com.herinoid.rsi.model;
  *
  * @author Hewrei
  */
+
 public class Pasien {
     private String norm;
     private String nama;
@@ -16,16 +17,18 @@ public class Pasien {
     private String noTelp;
     private String namaIbu;
     private String tglLahir;
+    private String noKtp;
     
     public Pasien(){}
     
-    public Pasien(String norm,String nama,String alamat,String noTelp,String namaIbu,String tglLahir){
+    public Pasien(String norm,String nama,String alamat,String noTelp,String namaIbu,String tglLahir,String noKtp){
         this.norm = norm;
         this.nama = nama;
         this.alamat = alamat;
         this.noTelp = noTelp;
         this.namaIbu = namaIbu;
         this.tglLahir = tglLahir;
+        this.noKtp = noKtp;
     }
 
     /**
@@ -110,6 +113,20 @@ public class Pasien {
      */
     public void setTglLahir(String tglLahir) {
         this.tglLahir = tglLahir;
+    }
+
+    /**
+     * @return the noKtp
+     */
+    public String getNoKtp() {
+        return noKtp;
+    }
+
+    /**
+     * @param noKtp the noKtp to set
+     */
+    public void setNoKtp(String noKtp) {
+        this.noKtp = noKtp;
     }
     
     
