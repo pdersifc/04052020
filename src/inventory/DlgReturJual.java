@@ -600,6 +600,11 @@ public class DlgReturJual extends javax.swing.JDialog {
         Subtotal.setEditable(false);
         Subtotal.setName("Subtotal"); // NOI18N
         Subtotal.setPreferredSize(new java.awt.Dimension(80, 23));
+        Subtotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SubtotalActionPerformed(evt);
+            }
+        });
         panelisi4.add(Subtotal);
         Subtotal.setBounds(770, 40, 100, 23);
 
@@ -1287,6 +1292,10 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPengurangKeyPressed
 
+    private void SubtotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubtotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SubtotalActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -1442,7 +1451,7 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     
     private void isHitung(){
         if((!Jmlretur.getText().equals(""))&&(!Hargaretur.getText().equals(""))){
-            Subtotal.setText(Utils.format(Double.parseDouble(Jmlretur.getText())* (Double.parseDouble(Hargaretur.getText()) - (Double.parseDouble(txtPengurang.getText())*Double.parseDouble(Hargaretur.getText())/100)),0));
+            Subtotal.setText(""+Utils.roundUpKhanza(Double.parseDouble(Jmlretur.getText())* (Double.parseDouble(Hargaretur.getText()) - (Double.parseDouble(txtPengurang.getText())*Double.parseDouble(Hargaretur.getText())/100)),2));
                     
             
         }else{
