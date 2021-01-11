@@ -37,7 +37,7 @@ public class PasienDao {
             ps.setString(1, norm);
             rs = ps.executeQuery();
             while (rs.next()) {
-                pasien = new Pasien(rs.getString("no_rkm_medis"),rs.getString("nm_pasien"),rs.getString("alamat"),rs.getString("no_tlp"),rs.getString("nm_ibu"),rs.getString("tgl_lahir"));               
+                pasien = new Pasien(rs.getString("no_rkm_medis"),rs.getString("nm_pasien"),rs.getString("alamat"),rs.getString("no_tlp"),rs.getString("nm_ibu"),rs.getString("tgl_lahir"),rs.getString("no_ktp"));               
             }
         } catch (Exception ex) {
             ex.printStackTrace();
