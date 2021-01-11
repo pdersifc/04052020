@@ -1881,6 +1881,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         parameters.put("pasien", pasien.getNama());
         parameters.put("tglLahir", Utils.format(Utils.getDateFromString(pasien.getTglLahir())) + " (" + age + ")");
         parameters.put("noRm", pasien.getNorm());
+        parameters.put("alamat",pasien.getAlamat());
         parameters.put("beratBadan", "0 Kg");
         parameters.put("jaminan", eresep.getJaminan());
         List<ObatResep> dokters = PemberianObatDetailDao.getResepByNoresep(eresep.getNoResep(), kdBangsal, eresep.getJaminan(), reg.getKdPj());
