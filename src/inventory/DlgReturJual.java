@@ -991,7 +991,8 @@ public class DlgReturJual extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null,"Maaf, Pilih dulu data yang akan Anda hapus dengan menklik data pada tabel...!!!");
             tbDokter.requestFocus();
         }else{
-            Valid.hapusTable(tabMode,Kdbar," tampreturjual","no_batch='"+NoBatch.getText()+"' and nota_jual='"+NoNota.getText()+"' and no_faktur='"+NoFaktur.getText()+"' and petugas='"+akses.getkode()+"' and kode_brng");
+            Sequel.queryu("delete from tampreturjual where kode_brng = '"+tbDokter.getValueAt(tbDokter.getSelectedRow(), 1)+"' and petugas='"+akses.getkode()+"'");
+//            Valid.hapusTable(tabMode,Kdbar," tampreturjual","no_batch='"+NoBatch.getText()+"' and nota_jual='"+NoNota.getText()+"' and no_faktur='"+NoFaktur.getText()+"' and petugas='"+akses.getkode()+"' and kode_brng");
             tampil();
             emptTeks();
         }
