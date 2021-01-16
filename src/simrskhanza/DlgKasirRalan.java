@@ -28,6 +28,8 @@ import inventory.DlgCariObat;
 import inventory.DlgPenjualan;
 import inventory.DlgPeresepanDokter;
 import inventory.DlgPiutang;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Window;
@@ -49,6 +51,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import keuangan.DlgBilingParsialRalan;
@@ -130,7 +133,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             "Kd.Dokter", "Dokter Dituju", "No.RM", "Pasien",
             "Poliklinik", "Penanggung Jawab", "Alamat P.J.", "Hubungan P.J.",
             "Biaya Reg", "Jenis Bayar", "Status", "No.Rawat", "Tanggal",
-            "Jam", "No.Reg", "Status Bayar", "Stts Poli", "Kd PJ", "Kd Poli"}) {
+            "Jam", "No.Reg", "Status Bayar", "Stts Poli", "Kd PJ", "Kd Poli", "Sudah Resep"}) {
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
                 return false;
@@ -141,7 +144,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         tbKasirRalan.setPreferredScrollableViewportSize(new Dimension(800, 800));
         tbKasirRalan.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 19; i++) {
+        for (i = 0; i < 20; i++) {
             TableColumn column = tbKasirRalan.getColumnModel().getColumn(i);
             if (i == 0) {
                 column.setPreferredWidth(70);
@@ -183,10 +186,12 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             } else if (i == 18) {
                 column.setMinWidth(0);
                 column.setMaxWidth(0);
+            } else if (i == 19) {
+                column.setPreferredWidth(60);
             }
         }
-        tbKasirRalan.setDefaultRenderer(Object.class, new WarnaTable());
-
+        tbKasirRalan.setDefaultRenderer(Object.class, new WarnaTable());       
+        getNewRenderedTable(tbKasirRalan);
         tabModekasir2 = new DefaultTableModel(null, new String[]{
             "Kd.Dokter", "Dokter Rujukan", "Nomer RM", "Pasien",
             "Poliklinik Rujukan", "Penanggung Jawab", "Alamat P.J.", "Hubungan P.J.",
@@ -8473,7 +8478,7 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
             }
             if (tbKasirRalan.getSelectedRow() != -1) {
                 if (tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 15).toString().equals("Belum Bayar")) {
-                    
+
                     DlgEResepDokter resep = new DlgEResepDokter(null, false);
                     String jenisBayar = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 9).toString();
                     String norawat = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 11).toString();
@@ -8504,7 +8509,7 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                         if (jenisBayar.equalsIgnoreCase("BPJS KESEHATAN")) {
                             kategoriObat = "K01";
                         }
-                        
+
                         PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRalanByNoRawat(norawat);
                         resep.setData(kdDokter, nmDokter, depoObat, kategoriObat, Konstan.PASIEN_RALAN, periksaRalan);
                         resep.setPasien(norawat, norm, nmPasien, jenisBayar, Konstan.PASIEN_RALAN, poli);
@@ -8895,12 +8900,16 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
 
                 rskasir = pskasir.executeQuery();
                 while (rskasir.next()) {
+                    String isResep = "Belum";
+                    if (ResepDao.isResepExistByNorawat(rskasir.getString("no_rawat")) || ResepDao.isResepRacikanExistByNorawat(rskasir.getString("no_rawat"))) {
+                        isResep = "Sudah";
+                    }
                     tabModekasir.addRow(new String[]{
                         rskasir.getString(5), rskasir.getString(6), rskasir.getString(7), rskasir.getString(8) + " (" + rskasir.getString("umur") + ")",
                         rskasir.getString(9), rskasir.getString(10), rskasir.getString(11), rskasir.getString(12), Valid.SetAngka(rskasir.getDouble(13)),
                         rskasir.getString("png_jawab"), rskasir.getString(14), rskasir.getString("no_rawat"), rskasir.getString("tgl_registrasi"),
                         rskasir.getString("jam_reg"), rskasir.getString(1), rskasir.getString("status_bayar"), rskasir.getString("status_poli"),
-                        rskasir.getString("kd_pj"), rskasir.getString("kd_poli")
+                        rskasir.getString("kd_pj"), rskasir.getString("kd_poli"), isResep
                     });
                 }
             } catch (Exception e) {
@@ -9454,6 +9463,26 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
             JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
             tbKasirRalan.requestFocus();
         }
+    }
+
+    private static JTable getNewRenderedTable(final JTable table) {
+        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+                Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, 1);
+                String status = (String) table.getModel().getValueAt(row, 19);                
+                if ("Sudah".equalsIgnoreCase(status)) {
+                    comp.setBackground(Color.black);
+                    comp.setForeground(Color.white);
+                } else {
+                    comp.setBackground(Color.white);
+                    comp.setForeground(Color.black);
+                }
+                return this;
+            }
+        });
+        return table;
     }
 
 }
