@@ -114,6 +114,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     private int i = 0, pilihan = 0, sudah = 0, jmlparsial = 0;
     public DlgKamarInap kamarinap = new DlgKamarInap(null, false);
     private DlgRawatJalan dlgrwjl2 = new DlgRawatJalan(null, false);
+    private DlgEResepDokter resep = new DlgEResepDokter(null, false);
     private boolean semua;
 
     /**
@@ -519,6 +520,40 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         } catch (Exception ex) {
             System.out.println("Notif Load XML : " + ex);
         }
+        
+        //  refresh table
+        resep.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                tampilkasir();
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
+        });
+
+        
     }
 
     /**
@@ -8479,7 +8514,7 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
             if (tbKasirRalan.getSelectedRow() != -1) {
                 if (tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 15).toString().equals("Belum Bayar")) {
 
-                    DlgEResepDokter resep = new DlgEResepDokter(null, false);
+//                    DlgEResepDokter resep = new DlgEResepDokter(null, false);
                     String jenisBayar = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 9).toString();
                     String norawat = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 11).toString();
                     String norm = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 2).toString();
@@ -9489,5 +9524,5 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
         });
         return table;
     }
-
+   
 }
