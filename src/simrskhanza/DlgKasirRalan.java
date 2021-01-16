@@ -190,7 +190,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                 column.setPreferredWidth(60);
             }
         }
-        tbKasirRalan.setDefaultRenderer(Object.class, new WarnaTable());       
+        tbKasirRalan.setDefaultRenderer(Object.class, new WarnaTable());
         getNewRenderedTable(tbKasirRalan);
         tabModekasir2 = new DefaultTableModel(null, new String[]{
             "Kd.Dokter", "Dokter Rujukan", "Nomer RM", "Pasien",
@@ -9470,16 +9470,21 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
             @Override
             public Component getTableCellRendererComponent(JTable table,
                     Object value, boolean isSelected, boolean hasFocus, int row, int col) {
-                Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, 1);
-                String status = (String) table.getModel().getValueAt(row, 19);                
-                if ("Sudah".equalsIgnoreCase(status)) {
-                    comp.setBackground(Color.black);
-                    comp.setForeground(Color.white);
+                Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+                String status = (String) table.getModel().getValueAt(row, 19);
+                if (col == 1) {
+                    if ("Sudah".equalsIgnoreCase(status)) {
+                        comp.setBackground(Color.black);
+                        comp.setForeground(Color.white);
+                    } else {
+                        comp.setBackground(Color.white);
+                        comp.setForeground(Color.black);
+                    }
                 } else {
                     comp.setBackground(Color.white);
                     comp.setForeground(Color.black);
                 }
-                return this;
+                return comp;
             }
         });
         return table;
