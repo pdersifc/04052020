@@ -1,14 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * DlgKamar.java
- *
- * Created on May 23, 2010, 12:07:21 AM
- */
-
 package bridging;
 
 import fungsi.akses;
@@ -16,7 +5,7 @@ import java.awt.Cursor;
 
 /**
  *
- * @author dosen
+ * @author wkwkwkwkwkwk
  */
 public final class PilihanBridgingAsuransi extends javax.swing.JDialog {
    private int lebar=0,tinggi=0;
