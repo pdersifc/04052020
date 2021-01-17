@@ -1906,4 +1906,12 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             tampil();
         }
     }
+
+    public JTable getTable(){
+        return tbObat;
+    }
+    
+//    public Object getTable() {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 }
