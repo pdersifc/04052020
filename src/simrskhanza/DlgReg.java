@@ -9038,16 +9038,21 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             Map<String, Object> param = new HashMap<>();
+            param.put("nama", TPasien.getText());
+            param.put("alamat", Sequel.cariIsi("select date_format(tgl_lahir,'%d/%m/%Y') from pasien where no_rkm_medis=?", TNoRM.getText()));
+            param.put("norm", TNoRM.getText());
+            param.put("parameter", "%" + TCari.getText().trim() + "%");
             param.put("namars", akses.getnamars());
             param.put("alamatrs", akses.getalamatrs());
             param.put("kotars", akses.getkabupatenrs());
             param.put("propinsirs", akses.getpropinsirs());
             param.put("kontakrs", akses.getkontakrs());
             param.put("emailrs", akses.getemailrs());
-            param.put("logo", Sequel.cariGambar("select logo from setting"));
+//            label pasien
             Valid.MyReportqry("rptBarcodeRawat.jasper", "report", "::[ Barcode No.Rawat ]::",
                     "SELECT reg_periksa.no_rawat,pasien.nm_pasien,reg_periksa.no_rkm_medis,pasien.tgl_lahir,pasien.no_ktp FROM reg_periksa INNER JOIN pasien ON reg_periksa.no_rkm_medis=pasien.no_rkm_medis WHERE reg_periksa.no_rawat='" + TNoRw.getText() + "'", param);
             this.setCursor(Cursor.getDefaultCursor());
+//            bukti registrasi
             Valid.MyReportqry("rptBuktiRegister.jasper", "report", "::[ Bukti Register ]::",
                     "select CONCAT(substring(jadwal.ruang, 7),replace(reg_periksa.no_reg, '0','')) AS no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,pasien.no_tlp,"
                     + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.umur as umur,poliklinik.nm_poli,"
@@ -9056,7 +9061,8 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
                     + "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                     + "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli AND reg_periksa.kd_poli=jadwal.kd_poli where reg_periksa.no_rawat='" + TNoRw.getText() + "' limit 1 ", param);
             this.setCursor(Cursor.getDefaultCursor());
-			Valid.MyReportqry("rptBarcodeRawat2.jasper", "report", "::[ Barcode No.Rawat ]::",
+//            kartu pasien
+            Valid.MyReportqry("rptBarcodeRawat2.jasper", "report", "::[ Barcode No.Rawat ]::",
                     "select reg_periksa.no_rawat from reg_periksa where no_rawat='" + TNoRw.getText() + "'", param);
             this.setCursor(Cursor.getDefaultCursor());
         }
