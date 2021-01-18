@@ -199,13 +199,13 @@ public final class DlgPilihanCetakDokumen extends javax.swing.JDialog {
                     param.put("kontakrs",akses.getkontakrs());
                     param.put("emailrs",akses.getemailrs());
                     param.put("logo",Sequel.cariGambar("select logo from setting"));
-                    Valid.MyReportqry("rptBuktiRegister.jasper","report","::[ Bukti Register ]::",
-                           "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,pasien.no_tlp,"+
-                           "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.umur as umur,poliklinik.nm_poli,"+
-                           "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab "+
-                           "from reg_periksa inner join dokter inner join pasien inner join poliklinik inner join penjab "+
-                           "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                           "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli where reg_periksa.no_rawat='"+NoRawat+"' ",param);
+                    Valid.MyReportqry("rptBuktiRegister.jasper", "report", "::[ Bukti Register ]::",
+                            "select CONCAT(substring(jadwal.ruang, 7),replace(reg_periksa.no_reg, '0','')) AS no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,pasien.no_tlp,"
+                            + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.umur as umur,poliklinik.nm_poli,"
+                            + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab "
+                            + "from jadwal inner join reg_periksa inner join dokter inner join pasien inner join poliklinik inner join penjab "
+                            + "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                            + "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli AND reg_periksa.kd_poli=jadwal.kd_poli where reg_periksa.no_rawat='" + TNoRw.getText() + "' limit 1 ", param);
                     this.setCursor(Cursor.getDefaultCursor());
                 }else if(tbData.getValueAt(i,1).toString().equals("Label Pasien")){
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -281,13 +281,13 @@ public final class DlgPilihanCetakDokumen extends javax.swing.JDialog {
                     param.put("emailrs",akses.getemailrs());
                     param.put("logo",Sequel.cariGambar("select bpjs from gambar")); 
                     param.put("prb",Sequel.cariIsi("select prb from bpjs_prb where no_sep=?",NoSEP));
-                    Valid.MyReportqry("rptBuktiRegister.jasper","report","::[ Bukti Register ]::",
-                           "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,pasien.no_tlp,"+
-                           "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.umur as umur,poliklinik.nm_poli,"+
-                           "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab "+
-                           "from reg_periksa inner join dokter inner join pasien inner join poliklinik inner join penjab "+
-                           "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                           "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli where reg_periksa.no_rawat='"+NoRawat+"' ",param);
+                    Valid.MyReportqry("rptBuktiRegister.jasper", "report", "::[ Bukti Register ]::",
+                            "select CONCAT(substring(jadwal.ruang, 7),replace(reg_periksa.no_reg, '0','')) AS no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,pasien.no_tlp,"
+                            + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.umur as umur,poliklinik.nm_poli,"
+                            + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab "
+                            + "from jadwal inner join reg_periksa inner join dokter inner join pasien inner join poliklinik inner join penjab "
+                            + "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                            + "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli AND reg_periksa.kd_poli=jadwal.kd_poli where reg_periksa.no_rawat='" + TNoRw.getText() + "' limit 1 ", param);
                     this.setCursor(Cursor.getDefaultCursor());
                     Valid.MyReportqry("rptBarcodeRawat.jasper","report","::[ Barcode No.Rawat ]::",
                             "SELECT reg_periksa.no_rawat,pasien.nm_pasien,reg_periksa.no_rkm_medis,pasien.tgl_lahir,pasien.no_ktp FROM reg_periksa INNER JOIN pasien ON reg_periksa.no_rkm_medis=pasien.no_rkm_medis WHERE reg_periksa.no_rawat='"+NoRawat+"'",param); 
