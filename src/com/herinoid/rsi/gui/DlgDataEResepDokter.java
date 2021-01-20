@@ -1347,7 +1347,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                     boolean sukses = ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);
                                     System.out.println("selesai step pertama verifikasi.. ");
                                     if (sukses) {
-//                                        try {
+                                        try {
                                             System.out.println("validasi sukses.. lanjut simpan obat biling");
                                             boolean flagSuses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep(), resep.getJaminan());
                                             System.out.println("simpan obat biling " + flagSuses + " .. lanjut");
@@ -1366,9 +1366,9 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                                 showResepData(dataList, dataRacikanList);
                                                 System.out.println("Proses verifikasi selesai..");
                                             }
-//                                        } catch (SQLException ex) {
-//                                            Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
-//                                        }
+                                        } catch (SQLException ex) {
+                                            Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
                                     }
 
                                 } else {
