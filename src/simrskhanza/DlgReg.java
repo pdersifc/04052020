@@ -6827,7 +6827,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
                     + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.umur as umur,poliklinik.nm_poli,"
                     + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab "
                     + "from jadwal inner join reg_periksa inner join dokter inner join pasien inner join poliklinik inner join penjab "
-                    + "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                    + "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis AND jadwal.kd_dokter=dokter.kd_dokter "
                     + "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli AND reg_periksa.kd_poli=jadwal.kd_poli where reg_periksa.no_rawat='" + TNoRw.getText() + "' limit 1 ", param);
             this.setCursor(Cursor.getDefaultCursor());
         }
@@ -9075,7 +9075,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
                     + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.umur as umur,poliklinik.nm_poli,"
                     + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab "
                     + "from jadwal inner join reg_periksa inner join dokter inner join pasien inner join poliklinik inner join penjab "
-                    + "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                    + "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis AND jadwal.kd_dokter=dokter.kd_dokter "
                     + "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli AND reg_periksa.kd_poli=jadwal.kd_poli where reg_periksa.no_rawat='" + TNoRw.getText() + "' limit 1 ", param);
             this.setCursor(Cursor.getDefaultCursor());
 //            kartu pasien
@@ -9697,7 +9697,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             TStatus.setText(tbPetugas.getValueAt(tbPetugas.getSelectedRow(), 17).toString());
             kdpoli.setText(tbPetugas.getValueAt(tbPetugas.getSelectedRow(), 21).toString());
             kdpnj.setText(tbPetugas.getValueAt(tbPetugas.getSelectedRow(), 22).toString());
-            Sequel.cariIsi("SELECT jadwal.ruang FROM jadwal INNER JOIN reg_periksa INNER JOIN dokter INNER JOIN poliklinik ON jadwal.kd_poli=reg_periksa.kd_poli and dokter.kd_dokter=reg_periksa.kd_dokter and reg_periksa.kd_poli=poliklinik.kd_poli WHERE reg_periksa.no_rawat=? LIMIT 1", KdRuang, tbPetugas.getValueAt(tbPetugas.getSelectedRow(), 2).toString());
+            Sequel.cariIsi("SELECT jadwal.ruang FROM jadwal INNER JOIN reg_periksa INNER JOIN dokter INNER JOIN poliklinik ON jadwal.kd_poli=reg_periksa.kd_poli and dokter.kd_dokter=reg_periksa.kd_dokter and reg_periksa.kd_poli=poliklinik.kd_poli AND jadwal.kd_dokter=dokter.kd_dokter WHERE reg_periksa.no_rawat=? LIMIT 1", KdRuang, tbPetugas.getValueAt(tbPetugas.getSelectedRow(), 2).toString());
             Sequel.cariIsi("select perujuk from rujuk_masuk where no_rawat=?", AsalRujukan, tbPetugas.getValueAt(tbPetugas.getSelectedRow(), 2).toString());
             TNoRw.setText(tbPetugas.getValueAt(tbPetugas.getSelectedRow(), 2).toString());
             TNoReg.setText(tbPetugas.getValueAt(tbPetugas.getSelectedRow(), 1).toString());
