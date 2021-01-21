@@ -205,7 +205,7 @@ public final class DlgPilihanCetakDokumen extends javax.swing.JDialog {
                             + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab "
                             + "from jadwal inner join reg_periksa inner join dokter inner join pasien inner join poliklinik inner join penjab "
                             + "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis AND jadwal.kd_dokter=dokter.kd_dokter "
-                            + "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli AND reg_periksa.kd_poli=jadwal.kd_poli where reg_periksa.no_rawat='" + TNoRw.getText() + "' limit 1 ", param);
+                            + "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli AND reg_periksa.kd_poli=jadwal.kd_poli where reg_periksa.no_rawat='"+NoRawat+"' limit 1 ", param);
                     this.setCursor(Cursor.getDefaultCursor());
                 }else if(tbData.getValueAt(i,1).toString().equals("Label Pasien")){
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -287,7 +287,7 @@ public final class DlgPilihanCetakDokumen extends javax.swing.JDialog {
                             + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab "
                             + "from jadwal inner join reg_periksa inner join dokter inner join pasien inner join poliklinik inner join penjab "
                             + "on reg_periksa.kd_dokter=dokter.kd_dokter and reg_periksa.no_rkm_medis=pasien.no_rkm_medis AND jadwal.kd_dokter=dokter.kd_dokter "
-                            + "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli AND reg_periksa.kd_poli=jadwal.kd_poli where reg_periksa.no_rawat='" + TNoRw.getText() + "' limit 1 ", param);
+                            + "and reg_periksa.kd_pj=penjab.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli AND reg_periksa.kd_poli=jadwal.kd_poli where reg_periksa.no_rawat='"+NoRawat+"' limit 1 ", param);
                     this.setCursor(Cursor.getDefaultCursor());
                     Valid.MyReportqry("rptBarcodeRawat.jasper","report","::[ Barcode No.Rawat ]::",
                             "SELECT reg_periksa.no_rawat,pasien.nm_pasien,reg_periksa.no_rkm_medis,pasien.tgl_lahir,pasien.no_ktp FROM reg_periksa INNER JOIN pasien ON reg_periksa.no_rkm_medis=pasien.no_rkm_medis WHERE reg_periksa.no_rawat='"+NoRawat+"'",param); 
