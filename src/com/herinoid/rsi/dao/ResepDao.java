@@ -968,7 +968,7 @@ public class ResepDao {
                     + "INNER JOIN kamar_inap i ON r.`no_rawat` =i.`no_rawat` "
                     + "INNER JOIN kamar k ON k.`kd_kamar` =i.`kd_kamar` "
                     + "INNER JOIN bangsal b ON b.`kd_bangsal` =k.`kd_bangsal` "
-                    + "WHERE e.tgl_resep BETWEEN ? AND ? AND e.jenis_pasien = ? ORDER BY e.`no_resep`";
+                    + "WHERE e.tgl_resep BETWEEN ? AND ? AND e.jenis_pasien = ? GROUP BY r.no_rawat ORDER BY i.tgl_masuk,e.`no_resep` ";
             if(jenisPasien.equals(Konstan.PASIEN_RALAN)){
                  ps = koneksi.prepareStatement(queriSatu);
             }else{
