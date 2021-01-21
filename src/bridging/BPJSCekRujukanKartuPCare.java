@@ -1048,30 +1048,30 @@ public final class BPJSCekRujukanKartuPCare extends javax.swing.JDialog {
                 if(dpjp.getTable().getSelectedRow()!= -1){  
                     KdDPJP.setText(dpjp.getTable().getValueAt(dpjp.getTable().getSelectedRow(),1).toString());
                     NmDPJP.setText(dpjp.getTable().getValueAt(dpjp.getTable().getSelectedRow(),2).toString());
-                    try{
-                        ps=koneksi.prepareStatement(
-                                "select maping_dokter_dpjpvclaim.kd_dokter,dokter.nm_dokter from maping_dokter_dpjpvclaim inner join dokter "+
-                                "on maping_dokter_dpjpvclaim.kd_dokter=dokter.kd_dokter where maping_dokter_dpjpvclaim.kd_dokter_bpjs=?");
-                        try{
-                            ps.setString(1,KdDPJP.getText());
-                            rs=ps.executeQuery();
-                            if(rs.next()){
-                                kddokter.setText(rs.getString("kd_dokter"));
-                                TDokter.setText(rs.getString("nm_dokter"));
-                            }
-                        }catch(Exception ex){
-                            System.out.println("Notif : "+ex);
-                        }finally{
-                            if(rs!=null){
-                                rs.close();
-                            }
-                            if(ps!=null){
-                                ps.close();
-                            }  
-                        }
-                    }catch(Exception ex){
-                        System.out.println("Notif : "+ex);
-                    }
+//                    try{
+//                        ps=koneksi.prepareStatement(
+//                                "select maping_dokter_dpjpvclaim.kd_dokter,dokter.nm_dokter from maping_dokter_dpjpvclaim inner join dokter "+
+//                                "on maping_dokter_dpjpvclaim.kd_dokter=dokter.kd_dokter where maping_dokter_dpjpvclaim.kd_dokter_bpjs=?");
+//                        try{
+//                            ps.setString(1,KdDPJP.getText());
+//                            rs=ps.executeQuery();
+//                            if(rs.next()){
+//                                kddokter.setText(rs.getString("kd_dokter"));
+//                                TDokter.setText(rs.getString("nm_dokter"));
+//                            }
+//                        }catch(Exception ex){
+//                            System.out.println("Notif : "+ex);
+//                        }finally{
+//                            if(rs!=null){
+//                                rs.close();
+//                            }
+//                            if(ps!=null){
+//                                ps.close();
+//                            }  
+//                        }
+//                    }catch(Exception ex){
+//                        System.out.println("Notif : "+ex);
+//                    }
                     KdDPJP.requestFocus();             
                 }  
             }
@@ -1284,7 +1284,10 @@ public final class BPJSCekRujukanKartuPCare extends javax.swing.JDialog {
             @Override
             public void windowClosed(WindowEvent e) {
                 if(historiPelayanan.getTable().getSelectedRow()!= -1){                   
-                    NoRujukan.setText(historiPelayanan.getTable().getValueAt(historiPelayanan.getTable().getSelectedRow(),7).toString());
+                    NoRujukan.setText(historiPelayanan.getTable().getValueAt(historiPelayanan.getTable().getSelectedRow(),6).toString());
+                    AsalRujukan.setSelectedIndex(1);
+                    KdPpkRujukan.setText("1112R002");      
+                    NmPpkRujukan.setText("RS ISLAM FATIMAH - KAB. CILACAP");
                     NoRujukan.requestFocus();
                 }                  
             }
@@ -1770,7 +1773,7 @@ public final class BPJSCekRujukanKartuPCare extends javax.swing.JDialog {
 
         DTPLahir.setEditable(false);
         DTPLahir.setForeground(new java.awt.Color(50, 70, 50));
-        DTPLahir.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-01-2021" }));
+        DTPLahir.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-01-2021" }));
         DTPLahir.setDisplayFormat("dd-MM-yyyy");
         DTPLahir.setName("DTPLahir"); // NOI18N
         DTPLahir.setOpaque(false);
@@ -2267,7 +2270,7 @@ public final class BPJSCekRujukanKartuPCare extends javax.swing.JDialog {
         FormKelengkapanPasien.add(TNo);
         TNo.setBounds(107, 25, 160, 23);
 
-        DTPDaftar.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-01-2021" }));
+        DTPDaftar.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-01-2021" }));
         DTPDaftar.setDisplayFormat("dd-MM-yyyy");
         DTPDaftar.setName("DTPDaftar"); // NOI18N
         DTPDaftar.setOpaque(false);
@@ -3092,7 +3095,7 @@ public final class BPJSCekRujukanKartuPCare extends javax.swing.JDialog {
         FormKelengkapanSEP.add(jLabel23);
         jLabel23.setBounds(550, 55, 50, 23);
 
-        TanggalSEP.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-01-2021 20:15:45" }));
+        TanggalSEP.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-01-2021 19:39:39" }));
         TanggalSEP.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         TanggalSEP.setName("TanggalSEP"); // NOI18N
         TanggalSEP.setOpaque(false);
@@ -3111,7 +3114,7 @@ public final class BPJSCekRujukanKartuPCare extends javax.swing.JDialog {
         FormKelengkapanSEP.add(jLabel30);
         jLabel30.setBounds(350, 295, 40, 23);
 
-        TanggalRujuk.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-01-2021" }));
+        TanggalRujuk.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-01-2021" }));
         TanggalRujuk.setDisplayFormat("dd-MM-yyyy");
         TanggalRujuk.setName("TanggalRujuk"); // NOI18N
         TanggalRujuk.setOpaque(false);
@@ -3532,7 +3535,7 @@ public final class BPJSCekRujukanKartuPCare extends javax.swing.JDialog {
         jLabel47.setBounds(744, 55, 70, 23);
 
         TanggalKKL.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalKKL.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-01-2021" }));
+        TanggalKKL.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-01-2021" }));
         TanggalKKL.setDisplayFormat("dd-MM-yyyy");
         TanggalKKL.setName("TanggalKKL"); // NOI18N
         TanggalKKL.setOpaque(false);
@@ -3750,7 +3753,7 @@ public final class BPJSCekRujukanKartuPCare extends javax.swing.JDialog {
         FormKelengkapanSEP.add(btnSKDP1);
         btnSKDP1.setBounds(460, 145, 28, 23);
 
-        DTPReg.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "18-01-2021" }));
+        DTPReg.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-01-2021" }));
         DTPReg.setDisplayFormat("dd-MM-yyyy");
         DTPReg.setName("DTPReg"); // NOI18N
         DTPReg.setOpaque(false);
