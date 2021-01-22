@@ -19,9 +19,11 @@ import fungsi.validasi;
 import fungsi.akses;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Window;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -181,9 +183,11 @@ public final class DlgPilihanCetakDokumen extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
+    
+    
     private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarActionPerformed
-       dispose();
+        isTutup();
+        this.dispose();
     }//GEN-LAST:event_BtnKeluarActionPerformed
 
     private void BtnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrintActionPerformed
@@ -514,6 +518,17 @@ public final class DlgPilihanCetakDokumen extends javax.swing.JDialog {
             this.PenanggungJawab=PenanggungJawab;
             this.TanggalDaftar=TanggalDaftar;
             this.JenisPelayanan=JenisPelayanan;
+    }
+    
+    private void isTutup() {
+//        FlayMenu.setVisible(false);
+        akses.setform("frmUtama");
+        Window[] wins = Window.getWindows();
+        for (Window win : wins) {
+            if (win instanceof JDialog) {
+                win.dispose();
+            }
+        }
     }
 
     public void setNoRm(String text, String text0, String nosep, String text1, String text2, String text3, String text4, String string, String text5, String SetTgl, String ranap) {
