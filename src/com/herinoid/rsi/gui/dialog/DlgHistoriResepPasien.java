@@ -77,6 +77,8 @@ public final class DlgHistoriResepPasien extends javax.swing.JDialog {
     private sekuel Sequel = new sekuel();
     private DlgAturanPakai aturanpakai = new DlgAturanPakai(null, false);
     private List<ObatResep> obatReseps;
+    
+    private boolean isAmbil = false;
 
     /**
      * Creates new form DlgPenyakit
@@ -182,6 +184,10 @@ public final class DlgHistoriResepPasien extends javax.swing.JDialog {
         return this.obatReseps;
     }
 
+    public boolean isDuplikate() {
+        return this.isAmbil;
+    }
+    
     private List<ObatResep> getAllObatListByNoResep(List<ObatResep> dataObats, String noResep) {
 
         List<ObatResep> nonRacikans = new LinkedList<>();
@@ -540,6 +546,7 @@ public final class DlgHistoriResepPasien extends javax.swing.JDialog {
 
 
     private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarActionPerformed
+        isAmbil = false;
         dispose();
     }//GEN-LAST:event_BtnKeluarActionPerformed
 
@@ -551,6 +558,7 @@ public final class DlgHistoriResepPasien extends javax.swing.JDialog {
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
         if (row > -1) {
+            isAmbil = true;
             obatReseps = modelPilihan.getAll();
             dispose();
         } else {

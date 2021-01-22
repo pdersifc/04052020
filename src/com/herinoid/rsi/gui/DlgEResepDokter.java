@@ -267,56 +267,57 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
 
             @Override
             public void windowClosed(WindowEvent e) {
-                List<ObatResep> obats = cekHistory.getData();
-                List<ObatResep> obatAmbils = new LinkedList<>();
-                List<String> namaObat = new ArrayList<>();
-                if (obats != null && obats.size() > 0) {
-
-                    for (ObatResep o : obats) {
-                        if (o.getStatus() == 1) {
-                            if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                                if (o.getKategori().equals("FORNAS PLUS") && !o.isParent()) {
+                if (cekHistory.isDuplikate()) {
+                    List<ObatResep> obats = cekHistory.getData();
+                    List<ObatResep> obatAmbils = new LinkedList<>();
+                    List<String> namaObat = new ArrayList<>();
+                    if (obats != null && obats.size() > 0) {
+                        for (ObatResep o : obats) {
+                            if (o.getStatus() == 1) {
+                                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                                    if (o.getKategori().equals("FORNAS PLUS") && !o.isParent()) {
+                                        obatAmbils.add(o);
+                                    } else if (o.getKategori().equals("NON FORNAS") && !o.isParent()) {
+                                        namaObat.add(o.getNamaObat());
+                                    }
+                                } else {
                                     obatAmbils.add(o);
-                                } else if (o.getKategori().equals("NON FORNAS") && !o.isParent()) {
-                                    namaObat.add(o.getNamaObat());
                                 }
                             } else {
-                                obatAmbils.add(o);
+                                namaObat.add(o.getNamaObat());
+                            }
+
+                            double marginPersen = 28;
+                            if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                                MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
+                                if (marginBpjs != null) {
+                                    marginPersen = marginBpjs.getRalan();
+                                }
+
+                            } else {
+                                MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                                if (marginNon != null) {
+                                    marginPersen = marginNon.getMargin();
+                                }
+
+                            }
+                            double margin = (o.getHargaBeli() * marginPersen) / 100;
+                            double hpp = margin + o.getHargaBeli();
+                            total = total + (hpp * o.getJumlah());
+                            lblTotal.setText(Utils.format(total, 2));
+                        }
+                        if (namaObat.size() > 0) {
+                            int oke = JOptionPane.showConfirmDialog(null, "Data obat ini : " + namaObat.toString() + " tidak bisa diambil, apakah mau di lanjut?", "Perhatian", JOptionPane.YES_NO_OPTION);
+                            if (oke == 0) {
+                                modelPilihan.add(obatAmbils);
+                                tblPilihan.setModel(modelPilihan);
                             }
                         } else {
-                            namaObat.add(o.getNamaObat());
-                        }
-
-                        double marginPersen = 28;
-                        if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                            MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
-                            if (marginBpjs != null) {
-                                marginPersen = marginBpjs.getRalan();
-                            }
-
-                        } else {
-                            MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                            if (marginNon != null) {
-                                marginPersen = marginNon.getMargin();
-                            }
-
-                        }
-                        double margin = (o.getHargaBeli() * marginPersen) / 100;
-                        double hpp = margin + o.getHargaBeli();
-                        total = total + (hpp * o.getJumlah());
-                        lblTotal.setText(Utils.format(total, 2));
-                    }
-                    if (namaObat.size() > 0) {
-                        int oke = JOptionPane.showConfirmDialog(null, "Data obat ini : " + namaObat.toString() + " tidak bisa diambil, apakah mau di lanjut?", "Perhatian", JOptionPane.YES_NO_OPTION);
-                        if (oke == 0) {
                             modelPilihan.add(obatAmbils);
                             tblPilihan.setModel(modelPilihan);
                         }
-                    } else {
-                        modelPilihan.add(obatAmbils);
-                        tblPilihan.setModel(modelPilihan);
-                    }
 
+                    }
                 }
 
             }
