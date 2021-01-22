@@ -594,7 +594,7 @@ public final class DlgHistoriResepPasien extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_tblEditorMouseClicked
 
-    private void clean() {
+    public void clean() {
         racikanList = new LinkedList<>();
         model.removeAllElements();
         modelPilihan.removeAllElements();

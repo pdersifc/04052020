@@ -82,6 +82,7 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
     private sekuel Sequel = new sekuel();
     private DlgAturanPakai aturanpakai = new DlgAturanPakai(null, false);
     private List<ObatResep> obatReseps;
+    private boolean isBatal = false;
 
     /**
      * Creates new form DlgPenyakit
@@ -170,6 +171,10 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
 
     public List<ObatResep> getData() {
         return this.obatReseps;
+    }
+    
+    public boolean batal(){
+        return isBatal;
     }
 
     private List<ObatResep> getAllObatListByNoResep(List<ObatResep> dataObats, String noResep) {
@@ -282,7 +287,7 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
         tblTemplate.setRowSorter(rowSorter);
         setComboList();
     }
-
+  
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -494,6 +499,7 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
 
 
     private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarActionPerformed
+        isBatal= true;
         dispose();
     }//GEN-LAST:event_BtnKeluarActionPerformed
 
@@ -507,6 +513,7 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
         if (row > -1) {
+            isBatal = false;
             obatReseps = modelPilihan.getAll();
             dispose();
         } else {
@@ -553,7 +560,7 @@ public final class DlgTemplateResepDokter extends javax.swing.JDialog {
         tblTemplate.setRowSorter(rowSorter);
     }//GEN-LAST:event_cmbDokterActionPerformed
 
-    private void clean() {
+    public void clean() {
         racikanList = new LinkedList<>();
         model.removeAllElements();
         modelPilihan.removeAllElements();
