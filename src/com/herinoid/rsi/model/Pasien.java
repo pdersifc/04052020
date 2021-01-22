@@ -128,6 +128,10 @@ public class Pasien {
     public void setNoKtp(String noKtp) {
         this.noKtp = noKtp;
     }
+
+    public Object getnoKtp() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
 }
