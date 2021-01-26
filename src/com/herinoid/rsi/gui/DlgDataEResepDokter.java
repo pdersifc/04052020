@@ -1306,7 +1306,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         lblDepoResep.setText(bangsal.getNama());
         List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
         List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-//        System.out.println("jenis pasien = " + jenisPasien + " || and data ada berapa = " + dataRacikanList.size());
         showResepData(dataList, dataRacikanList);
     }//GEN-LAST:event_btnCariDataActionPerformed
 
@@ -2140,7 +2139,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             newDataList.remove(d);
                             d.getObatDetails().addAll(r.getObatDetails());
                             newDataList.add(d);
-                        } else {
+                        } else if(!d.getNoResep().equals(r.getNoResep())) {
                             if (!newDataList.contains(d)) {
                                 newDataList.add(d);
                             }

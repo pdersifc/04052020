@@ -426,7 +426,7 @@ public class ResepDao {
                     + "INNER JOIN kamar_inap i ON r.`no_rawat` =i.`no_rawat` "
                     + "INNER JOIN kamar k ON k.`kd_kamar` =i.`kd_kamar` "
                     + "INNER JOIN bangsal b ON b.`kd_bangsal` =k.`kd_bangsal` "
-                    + "WHERE e.tgl_resep BETWEEN ? AND ? AND e.jenis_pasien = ? GROUP BY r.no_rawat,d.`kd_dokter` ORDER BY i.tgl_masuk,e.`no_resep`";
+                    + "WHERE i.`tgl_masuk`=(SELECT MAX(tgl_masuk) FROM kamar_inap WHERE no_rawat=r.`no_rawat`) AND e.tgl_resep BETWEEN ? AND ? AND e.jenis_pasien = ? ORDER BY i.tgl_masuk,e.`no_resep`";
             if (jenisPasien.equals(Konstan.PASIEN_RALAN)) {
                 ps = koneksi.prepareStatement(queriRajal);
             } else {
@@ -950,7 +950,7 @@ public class ResepDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String queriSatu = "SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
+            String queriRajal = "SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,p.`nm_poli`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
                     + "e.`status`,r.`kd_pj` FROM e_resep_racikan_rsifc e "
                     + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
                     + "INNER JOIN poliklinik p ON p.`kd_poli`=r.`kd_poli` "
@@ -959,7 +959,7 @@ public class ResepDao {
                     + "INNER JOIN pasien s ON r.`no_rkm_medis` =s.`no_rkm_medis` "
                     + "WHERE e.tgl_resep BETWEEN ? AND ? AND e.jenis_pasien = ? ORDER BY e.`no_resep`";
             
-            String queriDuwa = "SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,b.`nm_bangsal`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
+            String queriRanap = "SELECT r.`no_rawat`,e.`no_resep`,e.`tgl_resep`,e.`jam_resep`,b.`nm_bangsal`,j.`png_jawab`,d.`nm_dokter`,s.`no_rkm_medis`,s.`nm_pasien`,e.`validasi`,e.`packing`,e.`sampai_pasien`,"
                     + "e.`status`,r.`kd_pj` FROM e_resep_racikan_rsifc e "
                     + "INNER JOIN reg_periksa r ON r.`no_rawat`=e.`no_rawat` "
                     + "INNER JOIN penjab j ON j.`kd_pj`=r.`kd_pj` "
@@ -968,11 +968,11 @@ public class ResepDao {
                     + "INNER JOIN kamar_inap i ON r.`no_rawat` =i.`no_rawat` "
                     + "INNER JOIN kamar k ON k.`kd_kamar` =i.`kd_kamar` "
                     + "INNER JOIN bangsal b ON b.`kd_bangsal` =k.`kd_bangsal` "
-                    + "WHERE e.tgl_resep BETWEEN ? AND ? AND e.jenis_pasien = ? GROUP BY r.no_rawat,d.`kd_dokter` ORDER BY i.tgl_masuk,e.`no_resep` ";
+                    + "WHERE i.`tgl_masuk`=(SELECT MAX(tgl_masuk) FROM kamar_inap WHERE no_rawat=r.`no_rawat`) AND e.tgl_resep BETWEEN ? AND ? AND e.jenis_pasien = ? ORDER BY i.tgl_masuk,e.`no_resep` ";
             if(jenisPasien.equals(Konstan.PASIEN_RALAN)){
-                 ps = koneksi.prepareStatement(queriSatu);
+                 ps = koneksi.prepareStatement(queriRajal);
             }else{
-                 ps = koneksi.prepareStatement(queriDuwa);
+                 ps = koneksi.prepareStatement(queriRanap);
             }           
             ps.setString(1, fromDate);
             ps.setString(2, toDate);
