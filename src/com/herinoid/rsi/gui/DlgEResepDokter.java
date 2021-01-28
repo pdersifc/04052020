@@ -318,7 +318,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                         }
                         cekHistory.clean();
                     }
-                }else{
+                } else {
                     cekHistory.clean();
                 }
 
@@ -407,7 +407,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                         }
                         templateResep.clean();
                     }
-                }else{
+                } else {
                     templateResep.clean();
                 }
             }
@@ -1212,20 +1212,37 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 resep.setObatResepDetail(biasas);
                 boolean sukses = false;
                 String noresep = ResepDao.getNoResepForUpdate();
-                resep.setNoResep(noresep);
-                if (biasas.size() > 0) {
-                    sukses = ResepDao.save(resep);
+                if (noresep != null) {
+                    resep.setNoResep(noresep);
+                    if (biasas.size() > 0) {
+                        ResepDao.save(resep);
+                        sukses = ResepDao.isResepExistByNoResep(noresep);
+                        if (sukses) {
+                            Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep obat tunggal dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+                            clean();
+                            JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
+                            dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "RESEP GAGAL DISIMPAN", "GAGAL!", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    if (racikans.size() > 0) {
+                        ResepDao.saveRacikan(resep);
+                        sukses = ResepDao.isResepRacikanExistByNoResep(noresep);
+                        if (sukses) {
+                            Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep racikan dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+                            clean();
+                            JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP RACIKAN", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
+                            dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "RESEP RACIKAN GAGAL DISIMPAN", "GAGAL!", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                } else {
+                    sukses = false;
+                    JOptionPane.showMessageDialog(null, "RESEP GAGAL DISIMPAN, Terkendala dalam mendapatkan No. Resep dari database", "NO.RESEP GAGAL!", JOptionPane.ERROR_MESSAGE);
                 }
-                if (racikans.size() > 0) {
-                    sukses = ResepDao.saveRacikan(resep);
 
-                }
-                if (sukses) {
-                    Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
-                    clean();
-                    dispose();
-
-                }
             }
         }
 
