@@ -520,7 +520,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         } catch (Exception ex) {
             System.out.println("Notif Load XML : " + ex);
         }
-        
+
         //  refresh table
         resep.addWindowListener(new WindowListener() {
             @Override
@@ -553,7 +553,6 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             }
         });
 
-        
     }
 
     /**
@@ -8898,17 +8897,32 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
         Valid.tabelKosong(tabModekasir);
         try {
             semua = caripenjab.equals("") && CrPoli.getText().trim().equals("") && CrPtg.getText().trim().equals("") && cmbStatus.getSelectedItem().toString().equals("Semua") && cmbStatusBayar.getSelectedItem().toString().equals("Semua") && TCari.getText().trim().equals("");
+//            pskasir = koneksi.prepareStatement("select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,"
+//                    + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,poliklinik.nm_poli,"
+//                    + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts,penjab.png_jawab,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur, "
+//                    + "reg_periksa.status_bayar,reg_periksa.status_poli,reg_periksa.kd_pj,reg_periksa.kd_poli "
+//                    + "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+//                    + "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj where  "
+//                    + "reg_periksa.tgl_registrasi between ? and ? and reg_periksa.status_lanjut='Ralan' "
+//                    + (semua ? "" : "and reg_periksa.kd_pj like ? and poliklinik.nm_poli like ? and dokter.nm_dokter like ? and reg_periksa.stts like ? and reg_periksa.status_bayar like ? and "
+//                            + "(reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or poliklinik.nm_poli like ? or "
+//                            + "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or reg_periksa.almt_pj like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ?)")
+//                    + "order by " + order);
             pskasir = koneksi.prepareStatement("select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,"
                     + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,poliklinik.nm_poli,"
                     + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts,penjab.png_jawab,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur, "
-                    + "reg_periksa.status_bayar,reg_periksa.status_poli,reg_periksa.kd_pj,reg_periksa.kd_poli "
+                    + "reg_periksa.status_bayar,reg_periksa.status_poli,reg_periksa.kd_pj,reg_periksa.kd_poli,IFNULL( e_resep_rsifc.`no_resep`,'Belum') AS resep, IFNULL( e_resep_racikan_rsifc.`no_resep`,'Belum') AS racikan  "
                     + "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                    + "LEFT JOIN e_resep_rsifc ON reg_periksa.`no_rawat`=e_resep_rsifc.`no_rawat` "
+                    + "LEFT JOIN e_resep_racikan_rsifc ON e_resep_racikan_rsifc.`no_rawat`=reg_periksa.`no_rawat` "
                     + "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj where  "
-                    + "reg_periksa.tgl_registrasi between ? and ? and reg_periksa.status_lanjut='Ralan' "
+                    + "reg_periksa.tgl_registrasi between ? and ? and reg_periksa.status_lanjut='Ralan' and "
+                    + "( e_resep_rsifc.`no_rawat`=reg_periksa.`no_rawat` OR e_resep_rsifc.`no_rawat` IS NULL) AND "
+                    + "( e_resep_racikan_rsifc.`no_rawat`=reg_periksa.`no_rawat` OR e_resep_racikan_rsifc.`no_rawat` IS NULL) "
                     + (semua ? "" : "and reg_periksa.kd_pj like ? and poliklinik.nm_poli like ? and dokter.nm_dokter like ? and reg_periksa.stts like ? and reg_periksa.status_bayar like ? and "
                             + "(reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or poliklinik.nm_poli like ? or "
                             + "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or reg_periksa.almt_pj like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ?)")
-                    + "order by " + order);
+                    + "GROUP BY reg_periksa.`no_rawat` order by " + order);
             try {
                 pskasir.setString(1, Valid.SetTgl(DTPCari1.getSelectedItem() + ""));
                 pskasir.setString(2, Valid.SetTgl(DTPCari2.getSelectedItem() + ""));
@@ -8936,7 +8950,10 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 rskasir = pskasir.executeQuery();
                 while (rskasir.next()) {
                     String isResep = "Belum";
-                    if (ResepDao.isResepExistByNorawat(rskasir.getString("no_rawat")) || ResepDao.isResepRacikanExistByNorawat(rskasir.getString("no_rawat"))) {
+//                    if (ResepDao.isResepExistByNorawat(rskasir.getString("no_rawat")) || ResepDao.isResepRacikanExistByNorawat(rskasir.getString("no_rawat"))) {
+//                        isResep = "Sudah";
+//                    }
+                    if (!rskasir.getString("resep").contains("Belum") || !rskasir.getString("racikan").contains("Belum")) {
                         isResep = "Sudah";
                     }
                     tabModekasir.addRow(new String[]{
@@ -9524,5 +9541,5 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
         });
         return table;
     }
-   
+
 }
