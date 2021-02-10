@@ -10007,7 +10007,7 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     kategoriObat = "K01";
                 }
                 PemeriksaanRalan periksaRalan = PemeriksaanDao.getPemeriksaanRanapByNoRawat(norawat);
-                resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RALAN,periksaRalan);
+                resep.setData(kdDokter,nmDokter,depoObat, kategoriObat, Konstan.PASIEN_RANAP,periksaRalan);
                 resep.setPasien(norawat, norm, nmPasien, jenisBayar,Konstan.PASIEN_RANAP,poli);
                 resep.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                 resep.setLocationRelativeTo(internalFrame1);
