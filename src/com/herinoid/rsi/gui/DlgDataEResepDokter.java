@@ -89,7 +89,6 @@ import org.json.JSONObject;
  *
  * @author herinoid
  */
-
 public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private TabelDataResep model;
@@ -1562,6 +1561,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         int baris = tblData.getSelectedRow();
         if (baris > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
+
             if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
                 JOptionPane.showMessageDialog(null, "Tidak bisa mencetak etiket karena Resep dengan No. " + resep.getNoResep() + " belum divalidasi");
             } else {
@@ -1574,11 +1574,18 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                 param.put("emailrs", akses.getemailrs());
                 param.put("logo", Sequel.cariGambar("select logo from setting"));
                 List<EtiketObat> data = ResepDao.getEtiketByNoResep(resep.getNoResep(), depo);
+                if (rdoRanap.isSelected()) {
+                    data = ResepDao.getEtiketRanapByNoResep(resep.getNoResep(), depo);
+                }
+
                 if (ResepDao.isResepRacikanExist(resep.getNoResep())) {
                     if (data == null) {
                         data = new LinkedList<>();
                     }
                     List<EtiketObat> data2 = ResepDao.getEtiketRacikanByNoResep(resep.getNoResep());
+                    if (rdoRanap.isSelected()) {
+                        data2 = ResepDao.getEtiketRacikanRanapByNoResep(resep.getNoResep());
+                    }
                     data.addAll(data2);
                 }
                 if (data != null) {
@@ -1881,8 +1888,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         parameters.put("pasien", pasien.getNama());
         parameters.put("tglLahir", Utils.format(Utils.getDateFromString(pasien.getTglLahir())) + " (" + age + ")");
         parameters.put("noRm", pasien.getNorm());
-        parameters.put("alamat",pasien.getAlamat());
-        parameters.put("nik",pasien.getNoKtp());
+        parameters.put("alamat", pasien.getAlamat());
+        parameters.put("nik", pasien.getNoKtp());
         parameters.put("beratBadan", "0 Kg");
         parameters.put("jaminan", eresep.getJaminan());
         List<ObatResep> dokters = PemberianObatDetailDao.getResepByNoresep(eresep.getNoResep(), kdBangsal, eresep.getJaminan(), reg.getKdPj());
@@ -2139,7 +2146,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             newDataList.remove(d);
                             d.getObatDetails().addAll(r.getObatDetails());
                             newDataList.add(d);
-                        } else if(!d.getNoResep().equals(r.getNoResep())) {
+                        } else if (!d.getNoResep().equals(r.getNoResep())) {
                             if (!newDataList.contains(d)) {
                                 newDataList.add(d);
                             }

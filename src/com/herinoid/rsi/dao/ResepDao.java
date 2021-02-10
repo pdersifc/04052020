@@ -159,7 +159,7 @@ public class ResepDao {
                         psttmn.addBatch();
                     }
                 }
-                if(x>0){
+                if (x > 0) {
                     psttObtRck.executeBatch();
                 }
                 if (i > 0) {
@@ -1203,7 +1203,7 @@ public class ResepDao {
         }
         return isExist;
     }
-    
+
     public static boolean isResepExistByNoResep(String noresep) {
         boolean isExist = false;
         PreparedStatement pre = null;
@@ -1233,7 +1233,7 @@ public class ResepDao {
         }
         return isExist;
     }
-    
+
     public static boolean isResepRacikanExistByNoResep(String noresep) {
         boolean isExist = false;
         PreparedStatement pre = null;
@@ -1577,6 +1577,66 @@ public class ResepDao {
         return obatList;
     }
 
+    public static List<EtiketObat> getEtiketRanapByNoResep(String noResep, String depo) {
+        List<EtiketObat> obatList = new LinkedList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = koneksi.prepareStatement("SELECT e.`no_resep`,e.`no_rawat`,e.`tgl_resep`,e.`jam_resep`,p.`no_rkm_medis`,p.`nm_pasien`,b.`nama_brng`,d.`jml`,s.`satuan`,b.`expire`,d.`aturan_pakai`,bg.nm_bangsal,d.kode_racikan "
+                    + "FROM obat_validasi_eresep_rsifc d "
+                    + "JOIN e_resep_rsifc e ON e.`no_resep`=d.`no_resep` "
+                    + "JOIN databarang b ON d.kode_brng = b.kode_brng "
+                    + "JOIN gudangbarang g ON b.`kode_brng`=g.`kode_brng` "
+                    + "JOIN bangsal l ON l.`kd_bangsal`= g.`kd_bangsal` "
+                    + "JOIN kodesatuan s ON s.`kode_sat` = b.`kode_sat` "
+                    + "JOIN reg_periksa r ON r.`no_rawat` = e.`no_rawat` "
+                    + "JOIN kamar_inap i ON r.`no_rawat` =i.`no_rawat` "
+                    + "JOIN kamar k ON k.`kd_kamar` =i.`kd_kamar` "
+                    + "JOIN bangsal bg ON bg.`kd_bangsal` =k.`kd_bangsal` "
+                    + "JOIN pasien p ON p.`no_rkm_medis` = r.`no_rkm_medis` "
+                    + "WHERE d.`no_resep` = ? AND g.`kd_bangsal` = ?");
+            ps.setString(1, noResep);
+            ps.setString(2, depo);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                if (Utils.isBlank(rs.getString("kode_racikan"))) {
+                    EtiketObat obat = new EtiketObat();
+                    obat.setNoResep(rs.getString("no_resep"));
+                    obat.setNoRawat(rs.getString("no_rawat"));
+                    obat.setTanggal(Utils.formatDateSql(rs.getDate("tgl_resep")));
+                    obat.setJam(rs.getString("jam_resep"));
+                    obat.setNoRekamMedis(rs.getString("no_rkm_medis"));
+                    obat.setPasien(rs.getString("nm_pasien"));
+                    obat.setObat(rs.getString("nama_brng"));
+                    obat.setSatuan(rs.getString("satuan"));
+                    obat.setJml(rs.getInt("jml"));
+                    obat.setExpire(rs.getDate("expire") == null ? "00:00:00" : Utils.formatDateSql(rs.getDate("expire")));
+                    obat.setAturanPakai(rs.getString("aturan_pakai"));
+                    obat.setLokasi(rs.getString("nm_bangsal"));
+                    obatList.add(obat);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obatList;
+    }
+
     public static List<DataEResep> getResepByDokterAndPasien(String kodeDokter, String norm, String depo) {
         List<DataEResep> obatList = new LinkedList<>();
         PreparedStatement ps = null;
@@ -1876,6 +1936,58 @@ public class ResepDao {
                 obat.setExpire(Utils.getNextMonthDate(rs.getDate("tgl_perawatan")));
                 obat.setAturanPakai(rs.getString("aturan_pakai_farmasi"));
                 obat.setLokasi(rs.getString("nm_poli"));
+                obat.setNoRekamMedis(rs.getString("no_rkm_medis"));
+                obatList.add(obat);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(ResepDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+
+                    rs.close();
+
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                Logger.getLogger(ObatDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return obatList;
+    }
+    
+    public static List<EtiketObat> getEtiketRacikanRanapByNoResep(String noResep) {
+        List<EtiketObat> obatList = new LinkedList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = koneksi.prepareStatement("SELECT r.`no_rawat`,r.`no_resep`,r.`kd_racik`,r.`nama_racik`,r.`aturan_pakai_farmasi`,r.`jml_dr`,m.`nm_racik`,r.`tgl_perawatan`,r.`jam`,bg.`nm_bangsal`,s.`nm_pasien`,s.`no_rkm_medis` FROM obat_racikan_eresep_rsifc r  "
+                    + "JOIN metode_racik m ON r.`metode_racik`=m.`kd_racik` "
+                    + "JOIN reg_periksa p ON p.`no_rawat` = r.`no_rawat`  "
+                    + "JOIN kamar_inap i ON p.`no_rawat` =i.`no_rawat` "
+                    + "JOIN kamar k ON k.`kd_kamar` =i.`kd_kamar` "
+                    + "JOIN bangsal bg ON bg.`kd_bangsal` =k.`kd_bangsal` "
+                    + "JOIN pasien s ON s.`no_rkm_medis` = p.`no_rkm_medis`  "
+                    + "WHERE r.`no_resep` = ?");
+            ps.setString(1, noResep);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                EtiketObat obat = new EtiketObat();
+                obat.setNoResep(rs.getString("no_resep"));
+                obat.setNoRawat(rs.getString("no_rawat"));
+                obat.setTanggal(Utils.formatDateSql(rs.getDate("tgl_perawatan")));
+                obat.setJam(rs.getString("jam"));
+                obat.setPasien(rs.getString("nm_pasien"));
+                obat.setObat(rs.getString("nama_racik"));
+                obat.setSatuan(rs.getString("nm_racik"));
+                obat.setJml(rs.getInt("jml_dr"));
+                obat.setExpire(Utils.getNextMonthDate(rs.getDate("tgl_perawatan")));
+                obat.setAturanPakai(rs.getString("aturan_pakai_farmasi"));
+                obat.setLokasi(rs.getString("nm_bangsal"));
                 obat.setNoRekamMedis(rs.getString("no_rkm_medis"));
                 obatList.add(obat);
             }
