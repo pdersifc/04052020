@@ -38,17 +38,29 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import kepegawaian.DlgCariDokter;
 import com.herinoid.rsi.dao.BangsalDao;
+import com.herinoid.rsi.dao.DisplayDao;
 import com.herinoid.rsi.dao.MarginDao;
 import com.herinoid.rsi.gui.dialog.DlgHistoriResepPasien;
 import com.herinoid.rsi.gui.dialog.DlgTemplateResepDokter;
 import com.herinoid.rsi.model.Bangsal;
+import com.herinoid.rsi.model.ClientData;
+import com.herinoid.rsi.model.DisplayFarmasi;
 import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
 import com.herinoid.rsi.session.SessionLogin;
 import com.herinoid.rsi.util.Utils;
 import fungsi.sekuel;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import org.apache.commons.httpclient.Header;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -72,6 +84,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
     private String depoKode, kdJaminan, jaminan;
     private double total;
     private sekuel Sequel = new sekuel();
+    private String kodePoli;
 
     /**
      * Creates new form DlgPenyakit
@@ -455,6 +468,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
 
     public void setPasien(String norawat, String norm, String nmPasien, String jaminan, String jenisPasien, String poli) {
         RegPeriksa reg = RegPeriksaDao.get(norawat);
+        this.kodePoli=reg.getKdPoli();
         LblNoRawat.setText(norawat);
         LblNoRM.setText(norm);
         LblNamaPasien.setText(nmPasien);
@@ -1185,6 +1199,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
+        List<DisplayFarmasi> displays = DisplayDao.getAllDisplayFarmasi();
         if (LblNoRawat.getText().trim().equals("") || LblNamaPasien.getText().trim().equals("")) {
             Valid.textKosong(LblNoRawat, "pasien");
         } else if (txtKodeDokter.getText().trim().equals("") || txtKodeDokter.getText().trim().equals("xxx")) {
@@ -1219,8 +1234,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                         sukses = ResepDao.isResepExistByNoResep(noresep);
                         if (sukses) {
                             Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep obat tunggal dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
-                            clean();
+                            ClientData data = new ClientData();
+                            data.setUnit(Konstan.getPoli(this.kodePoli));
+                            data.setNonracik(true);
+                            data.setTunggal(1);
+                            for(DisplayFarmasi f:displays){
+                                sendToDisplay(data,f.getIp());
+                            }
+                            
                             JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
+                            clean();
                             dispose();
                         } else {
                             JOptionPane.showMessageDialog(null, "RESEP GAGAL DISIMPAN", "GAGAL!", JOptionPane.ERROR_MESSAGE);
@@ -1231,8 +1254,15 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                         sukses = ResepDao.isResepRacikanExistByNoResep(noresep);
                         if (sukses) {
                             Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep racikan dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
-                            clean();
+                            ClientData data = new ClientData();
+                            data.setUnit(Konstan.getPoli(this.kodePoli));
+                            data.setNonracik(false);
+                            data.setRacik(1);
+                            for(DisplayFarmasi f:displays){
+                                sendToDisplay(data,f.getIp());
+                            }
                             JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP RACIKAN", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
+                            clean();
                             dispose();
                         } else {
                             JOptionPane.showMessageDialog(null, "RESEP RACIKAN GAGAL DISIMPAN", "GAGAL!", JOptionPane.ERROR_MESSAGE);
@@ -1248,6 +1278,24 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     }//GEN-LAST:event_btnSimpanActionPerformed
 
+    private void sendToDisplay(ClientData data,String ip){
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            RestTemplate restTemplate = new RestTemplate();
+            List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+            MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+            converter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
+            messageConverters.add(converter);
+            restTemplate.setMessageConverters(messageConverters);
+            HttpEntity<ClientData> requestEntity = new HttpEntity<>(data,headers);
+            restTemplate.postForObject("http://"+ip+":1981", requestEntity, ClientData.class);
+        } catch (Exception e) {           
+        }
+    }
+    
+    
+    
     private void tblPilihanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPilihanMouseClicked
         // TODO add your handling code here:
 
