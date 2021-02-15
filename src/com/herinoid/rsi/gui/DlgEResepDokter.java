@@ -1239,6 +1239,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             data.setNonracik(true);
                             data.setTunggal(1);
                             for(DisplayFarmasi f:displays){
+                                System.out.println("no ip = "+f.getIp());
                                 sendToDisplay(data,f.getIp());
                             }
                             
