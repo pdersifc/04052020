@@ -47,6 +47,7 @@ import com.herinoid.rsi.table.TabelResepRincian;
 import com.herinoid.rsi.util.Konstan;
 import com.herinoid.rsi.widget.KeySelectionRenderer;
 import com.herinoid.rsi.dao.PemeriksaanDao;
+import com.herinoid.rsi.dao.PoliklinikDao;
 import com.herinoid.rsi.model.Pasien;
 import com.herinoid.rsi.model.RegPeriksa;
 import com.herinoid.rsi.dao.RegPeriksaDao;
@@ -54,6 +55,7 @@ import com.herinoid.rsi.model.Age;
 import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
 import com.herinoid.rsi.model.NotaResep;
+import com.herinoid.rsi.model.Poliklinik;
 import com.herinoid.rsi.model.report.ResepReport;
 import com.herinoid.rsi.session.SessionLogin;
 import com.herinoid.rsi.util.AgeCalculator;
@@ -276,8 +278,8 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         } catch (IOException ex) {
             Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        setCmbData();
 
+        loadDataPoli();
         aturanpakai.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -322,6 +324,45 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             reloadLiveData();
         }
 
+    }
+
+    private void loadDataPoli() {
+        cmbTarif.removeAllItems();
+        if (rdoRajal.isSelected()) {
+            lblPolibangsal.setText("Poliklinik");
+            for (Poliklinik p : PoliklinikDao.getAllPoliklinik()) {
+                cmbTarif.addItem(p);
+            }
+            KeySelectionRenderer renderer = new KeySelectionRenderer(cmbTarif) {
+                @Override
+                public String getDisplayValue(Object value) {
+                    Poliklinik poli = (Poliklinik) value;
+                    return poli.getNmPoli();
+                }
+            };
+        }else{
+            lblPolibangsal.setText("Bangsal");
+            cmbTarif.removeAllItems();
+            Poliklinik pol = new Poliklinik();
+               pol.setKdPoli("-");
+               pol.setNmPoli("-");
+                cmbTarif.addItem(pol);
+           for (Bangsal b : BangsalDao.getAllBangsal()) {
+               Poliklinik p = new Poliklinik();
+               p.setKdPoli(b.getKode());
+               p.setNmPoli(b.getNama());
+                cmbTarif.addItem(p);
+            }
+            KeySelectionRenderer renderer = new KeySelectionRenderer(cmbTarif) {
+                @Override
+                public String getDisplayValue(Object value) {
+                    Poliklinik bangsal = (Poliklinik) value;
+                    return bangsal.getNmPoli();
+                }
+            }; 
+        }
+
+        cmbTarif.setSelectedIndex(0);
     }
 
     private List<ObatResep> getAllObatListByNoResep(List<ObatResep> dataObats, String noResep) {
@@ -409,17 +450,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         rowSorter = new TableRowSorter<>(tblData.getModel());
         tblData.setRowSorter(rowSorter);
 
-    }
-
-    private void setCmbData() {
-        cmbTarif.addItem(Konstan.PASIEN_RALAN);
-        cmbTarif.addItem(Konstan.PASIEN_BELILUAR);
-        cmbTarif.addItem(Konstan.PASIEN_KARYAWAN);
-        cmbTarif.addItem(Konstan.PASIEN_KELAS1);
-        cmbTarif.addItem(Konstan.PASIEN_KELAS2);
-        cmbTarif.addItem(Konstan.PASIEN_KELAS3);
-        cmbTarif.addItem(Konstan.PASIEN_KELAS_VIP);
-        cmbTarif.addItem(Konstan.PASIEN_KELAS_VVIP);
     }
 
     private void setResepVerifikasi(String noRawat, String kdBangsal, String noresep, String jaminan) {
@@ -600,8 +630,9 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         }
 
         lblDepoResep.setText(bangsal.getNama());
-        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(new Date()), Utils.formatDb(new Date()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(new Date()), Utils.formatDb(new Date()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+        Poliklinik poli = (Poliklinik) cmbTarif.getItemAt(cmbTarif.getSelectedIndex());
+        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(new Date()), Utils.formatDb(new Date()), depo, poli.getKdPoli(), jenisPasien);
+        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(new Date()), Utils.formatDb(new Date()), depo, poli.getKdPoli(), jenisPasien);
         showResepData(dataList, dataRacikanList);
     }
 
@@ -645,7 +676,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         btnSimpan = new widget.Button();
         BtnKeluar = new widget.Button();
         FormInput = new widget.PanelBiasa();
-        jLabel5 = new widget.Label();
+        lblPolibangsal = new widget.Label();
         cmbTanggalTo = new widget.Tanggal();
         cmbTarif = new widget.ComboBox();
         btnCariData = new widget.Button();
@@ -952,15 +983,15 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         FormInput.setPreferredSize(new java.awt.Dimension(983, 120));
         FormInput.setLayout(null);
 
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel5.setText("Tarif : ");
-        jLabel5.setName("jLabel5"); // NOI18N
-        jLabel5.setPreferredSize(new java.awt.Dimension(68, 23));
-        FormInput.add(jLabel5);
-        jLabel5.setBounds(370, 40, 60, 23);
+        lblPolibangsal.setForeground(new java.awt.Color(0, 0, 0));
+        lblPolibangsal.setText("Poliklinik : ");
+        lblPolibangsal.setName("lblPolibangsal"); // NOI18N
+        lblPolibangsal.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(lblPolibangsal);
+        lblPolibangsal.setBounds(370, 40, 60, 23);
 
         cmbTanggalTo.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "30-09-2020" }));
+        cmbTanggalTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "16-02-2021" }));
         cmbTanggalTo.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalTo.setName("cmbTanggalTo"); // NOI18N
         cmbTanggalTo.setOpaque(false);
@@ -1005,7 +1036,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             }
         });
         FormInput.add(rdoRajal);
-        rdoRajal.setBounds(130, 10, 120, 23);
+        rdoRajal.setBounds(130, 10, 120, 21);
 
         perawatanGrup.add(rdoRanap);
         rdoRanap.setText("Rawat Inap");
@@ -1017,10 +1048,10 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             }
         });
         FormInput.add(rdoRanap);
-        rdoRanap.setBounds(261, 10, 130, 23);
+        rdoRanap.setBounds(261, 10, 130, 21);
 
         cmbTanggalfrom.setForeground(new java.awt.Color(50, 70, 50));
-        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "30-09-2020" }));
+        cmbTanggalfrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "16-02-2021" }));
         cmbTanggalfrom.setDisplayFormat("dd-MM-yyyy");
         cmbTanggalfrom.setName("cmbTanggalfrom"); // NOI18N
         cmbTanggalfrom.setOpaque(false);
@@ -1303,8 +1334,9 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
         }
 
         lblDepoResep.setText(bangsal.getNama());
-        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+        Poliklinik poli = (Poliklinik) cmbTarif.getItemAt(cmbTarif.getSelectedIndex());
+        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, poli.getKdPoli(), jenisPasien);
+        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, poli.getKdPoli(), jenisPasien);
         showResepData(dataList, dataRacikanList);
     }//GEN-LAST:event_btnCariDataActionPerformed
 
@@ -1420,11 +1452,13 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void rdoRajalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoRajalActionPerformed
         // TODO add your handling code here:
         sttRawat = "Ralan";
+        loadDataPoli();
     }//GEN-LAST:event_rdoRajalActionPerformed
 
     private void rdoRanapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoRanapActionPerformed
         // TODO add your handling code here:
         sttRawat = "Ranap";
+         loadDataPoli();
     }//GEN-LAST:event_rdoRanapActionPerformed
 
     private void tblEditorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEditorMouseClicked
@@ -2081,7 +2115,6 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.Label jLabel17;
     private widget.Label jLabel18;
     private widget.Label jLabel19;
-    private widget.Label jLabel5;
     private widget.Label jLabel6;
     private widget.Label jLabel7;
     private javax.swing.JPanel jPanel1;
@@ -2105,6 +2138,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private widget.Label lblDepo;
     private widget.Label lblDepoResep;
     private widget.Label lblPasien;
+    private widget.Label lblPolibangsal;
     private widget.Label lblTelp;
     private widget.Label lblTotal;
     private widget.Label lblTotalValidasi;
