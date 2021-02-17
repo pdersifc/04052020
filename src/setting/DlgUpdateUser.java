@@ -2025,6 +2025,10 @@ public class DlgUpdateUser extends javax.swing.JDialog {
                         tabMode.addRow(new Object[]{false,"[K]Klaim Baru Manual INACBG 2",rs.getBoolean("inacbg_klaim_baru_manual2")});
                     }
                     
+                    if("[K]Klaim Baru CORONA INACBG".toLowerCase().contains(TCari.getText().toLowerCase())){
+                        tabMode.addRow(new Object[]{false,"[K]Klaim Baru CORONA INACBG",rs.getBoolean("klaim_inacbg_corona")});
+                    }
+                    
                     if("[K]Referensi Prosedur VClaim".toLowerCase().contains(TCari.getText().toLowerCase())){
                         tabMode.addRow(new Object[]{false,"[K]Referensi Prosedur VClaim",rs.getBoolean("bpjs_cek_prosedur")});
                     }
@@ -4522,6 +4526,10 @@ public class DlgUpdateUser extends javax.swing.JDialog {
 
             if("[K]Klaim Baru Manual INACBG 2".equals(tbUser.getValueAt(i,1).toString())){
                 Sequel.mengedit("user","id_user=AES_ENCRYPT('"+TKd.getText()+"','nur')","inacbg_klaim_baru_manual2='"+tbUser.getValueAt(i,2).toString()+"'");
+            }
+            
+            if("[K]Klaim Baru CORONA INACBG".equals(tbUser.getValueAt(i,1).toString())){
+                Sequel.mengedit("user","id_user=AES_ENCRYPT('"+TKd.getText()+"','nur')","klaim_inacbg_corona='"+tbUser.getValueAt(i,2).toString()+"'");
             }
 
             if("[K]Referensi Prosedur VClaim".equals(tbUser.getValueAt(i,1).toString())){
