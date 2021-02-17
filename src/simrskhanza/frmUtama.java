@@ -64,6 +64,7 @@ import bridging.CoronaDiagnosa;
 import bridging.INACBGCariCoderNIK;
 import bridging.INACBGCoderNIK;
 import bridging.INACBGHybrid;
+import bridging.INACBGHybrid1;
 import bridging.InhealthCekEligibilitas;
 import bridging.InhealthCekReferensiFaskes;
 import bridging.InhealthCekReferensiPoli;
@@ -657,7 +658,9 @@ public class frmUtama extends javax.swing.JFrame {
     private final DlgReg reg=new DlgReg(this,false);
     private final DlgAbout About=new DlgAbout(this,false);   
     private final INACBGHybrid inacbgklaim=new INACBGHybrid(this,false);
+    private final INACBGHybrid1 inacbgklaim1=new INACBGHybrid1(this,false);
     private final INACBGCariCoderNIK cariNIK=new INACBGCariCoderNIK(this,false);
+    private final INACBGCariCoderNIK cariNIK1=new INACBGCariCoderNIK(this,false);
     private final InformasiKamarInap informasikamar=new InformasiKamarInap(this,false);
     private final InformasiAnalisaKamin analisakamin=new InformasiAnalisaKamin(this,false);
     private static frmUtama myInstance;
@@ -703,8 +706,37 @@ public class frmUtama extends javax.swing.JFrame {
 
                         inacbgklaim.setJudul(judulform);
                         inacbgklaim.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
-                        inacbgklaim.setLocationRelativeTo(PanelUtama);                    
-                        inacbgklaim.setVisible(true);        
+                        inacbgklaim.setLocationRelativeTo(PanelUtama);
+                        inacbgklaim.setVisible(true);
+                        DlgHome.dispose();
+                        setCursor(Cursor.getDefaultCursor());
+                    }                         
+                }                
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {}
+        });
+        
+        cariNIK1.getTable().addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode()==KeyEvent.VK_SPACE){
+                    if(cariNIK1.getTable().getSelectedRow()!= -1){                   
+                        coder_nik=cariNIK1.getTable().getValueAt(cariNIK1.getTable().getSelectedRow(),2).toString();
+                        isTutup();
+                        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                        try {
+                            inacbgklaim1.loadURL("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+prop.getProperty("PORTWEB")+"/"+prop.getProperty("HYBRIDWEB")+"/"+"inacbg_corona/login.php?act=login&usere=admin&passwordte=akusayangsamakamu&page="+pilihpage+"&codernik="+coder_nik);                    
+                        } catch (Exception ex) {
+                            System.out.println("Notifikasi : "+ex);
+                        }
+
+                        inacbgklaim1.setJudul(judulform);
+                        inacbgklaim1.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
+                        inacbgklaim1.setLocationRelativeTo(PanelUtama);
+                        inacbgklaim1.setVisible(true);
                         DlgHome.dispose();
                         setCursor(Cursor.getDefaultCursor());
                     }                         
@@ -1094,6 +1126,7 @@ public class frmUtama extends javax.swing.JFrame {
         btnGrafikRadRalanPerTahun = new widget.ButtonBig();
         btnCekEntryRalan = new widget.ButtonBig();
         btnInaCBGKlaimBaruManual2 = new widget.ButtonBig();
+        btnInaCBGKlaimBaruManual3 = new widget.ButtonBig();
         btnPermintaanMedis = new widget.ButtonBig();
         btnRekapPermintaanMedis = new widget.ButtonBig();
         btnSuratPemesananMedis = new widget.ButtonBig();
@@ -1558,7 +1591,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         tanggal.setEditable(false);
         tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27/01/2021" }));
+        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "17/02/2021" }));
         tanggal.setDisplayFormat("dd/MM/yyyy");
         tanggal.setName("tanggal"); // NOI18N
         tanggal.setOpaque(false);
@@ -4654,6 +4687,17 @@ public class frmUtama extends javax.swing.JFrame {
             }
         });
 
+        btnInaCBGKlaimBaruManual3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/1485358050_receptionist.png"))); // NOI18N
+        btnInaCBGKlaimBaruManual3.setText("Klaim Baru CORONA INACBG");
+        btnInaCBGKlaimBaruManual3.setIconTextGap(0);
+        btnInaCBGKlaimBaruManual3.setName("btnInaCBGKlaimBaruManual3"); // NOI18N
+        btnInaCBGKlaimBaruManual3.setPreferredSize(new java.awt.Dimension(200, 90));
+        btnInaCBGKlaimBaruManual3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInaCBGKlaimBaruManual3ActionPerformed(evt);
+            }
+        });
+
         btnPermintaanMedis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/if_packing_49602.png"))); // NOI18N
         btnPermintaanMedis.setText("Permintaan Obat & BHP");
         btnPermintaanMedis.setIconTextGap(0);
@@ -7005,7 +7049,7 @@ public class frmUtama extends javax.swing.JFrame {
         jLabel9.setForeground(new java.awt.Color(50, 50, 50));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); // NOI18N
-        jLabel9.setText("PDE.RSIFC Update 26/01/2021 (NEW NORMAL)");
+        jLabel9.setText("PDE.RSIFC Update 17/02/2021 (NEW NORMAL)");
         jLabel9.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jLabel9.setIconTextGap(3);
         jLabel9.setName("jLabel9"); // NOI18N
@@ -13967,6 +14011,41 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_MnDisplayPoliActionPerformed
 
+    private void btnInaCBGKlaimBaruManual3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInaCBGKlaimBaruManual3ActionPerformed
+        // TODO add your handling code here:
+        if(akses.getkode().equals("Admin Utama")){
+            pilihpage="KlaimBaruManual2";
+            judulform="::[ Klaim Corona Ke INACBG ]::";
+            isTutup();
+            DlgHome.dispose();
+            cariNIK1.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
+            cariNIK1.setLocationRelativeTo(PanelUtama);
+            cariNIK1.setVisible(true);
+        }else{
+            coder_nik=Sequel.cariIsi("select no_ik from inacbg_coder_nik where nik=?",akses.getkode());
+            if(!coder_nik.equals("")){
+                isTutup();
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                try {
+                    inacbgklaim1.loadURL("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+prop.getProperty("PORTWEB")+"/"+prop.getProperty("HYBRIDWEB")+"/"+"inacbg_corona/login.php?act=login&usere=admin&passwordte=akusayangsamakamu&page=KlaimBaruManual2&codernik="+coder_nik);                    
+                } catch (Exception ex) {
+                    System.out.println("Notifikasi : "+ex);
+                }
+
+                inacbgklaim1.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
+                inacbgklaim1.setLocationRelativeTo(PanelUtama);
+                inacbgklaim1.setJudul("::[ Klaim Corona Ke INACBG ]::");
+                inacbgklaim1.setVisible(true);        
+                DlgHome.dispose();
+                this.setCursor(Cursor.getDefaultCursor());
+            }else{
+                isTutup();
+                DlgHome.dispose();
+                JOptionPane.showMessageDialog(null,"Coder NIK tidak ditemukan, silahkan hubungi Admin Utama..!!");
+            }            
+        }
+    }//GEN-LAST:event_btnInaCBGKlaimBaruManual3ActionPerformed
+
     private void btnKategoriPerpustakaanActionPerformed(java.awt.event.ActionEvent evt) {
         isTutup();
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16137,6 +16216,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
     private widget.ButtonBig btnInaCBGCoderNIK;
     private widget.ButtonBig btnInaCBGKlaimBaruManual;
     private widget.ButtonBig btnInaCBGKlaimBaruManual2;
+    private widget.ButtonBig btnInaCBGKlaimBaruManual3;
     private widget.ButtonBig btnInaCBGKlaimBaruOtomatis;
     private widget.ButtonBig btnIndustriFarmasi;
     private widget.ButtonBig btnInhealthSJP;
@@ -18389,6 +18469,11 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             
             if(akses.getinacbg_klaim_baru_manual2()==true){
                 Panelmenu.add(btnInaCBGKlaimBaruManual2);
+                jmlmenu++;
+            } 
+            
+            if(akses.getklaim_inacbg_corona()==true){
+                Panelmenu.add(btnInaCBGKlaimBaruManual3);
                 jmlmenu++;
             } 
 
@@ -21483,7 +21568,12 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         if(akses.getinacbg_klaim_baru_manual2()==true){
             Panelmenu.add(btnInaCBGKlaimBaruManual2);
             jmlmenu++;
-        } 
+        }
+        
+        if(akses.getklaim_inacbg_corona()==true){
+            Panelmenu.add(btnInaCBGKlaimBaruManual3);
+            jmlmenu++;
+        }
 
         if(akses.getinhealth_referensi_jenpel_ruang_rawat()==true){
             Panelmenu.add(btnReferensiKamarInhealth);
@@ -25261,7 +25351,14 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
                 Panelmenu.add(btnInaCBGKlaimBaruManual2);
                 jmlmenu++;
             }                
-        } 
+        }
+        
+        if(akses.getklaim_inacbg_corona()==true){
+            if(btnInaCBGKlaimBaruManual3.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
+                Panelmenu.add(btnInaCBGKlaimBaruManual3);
+                jmlmenu++;
+            }                
+        }
 
         if(akses.getinhealth_referensi_jenpel_ruang_rawat()==true){
             if(btnReferensiKamarInhealth.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
