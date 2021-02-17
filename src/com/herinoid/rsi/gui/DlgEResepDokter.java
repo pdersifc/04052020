@@ -1199,7 +1199,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
-        List<DisplayFarmasi> displays = DisplayDao.getAllDisplayFarmasi();
+//        List<DisplayFarmasi> displays = DisplayDao.getAllDisplayFarmasi();
         if (LblNoRawat.getText().trim().equals("") || LblNamaPasien.getText().trim().equals("")) {
             Valid.textKosong(LblNoRawat, "pasien");
         } else if (txtKodeDokter.getText().trim().equals("") || txtKodeDokter.getText().trim().equals("xxx")) {
@@ -1234,14 +1234,14 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                         sukses = ResepDao.isResepExistByNoResep(noresep);
                         if (sukses) {
                             Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep obat tunggal dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
-                            ClientData data = new ClientData();
-                            data.setUnit(Konstan.getPoli(this.kodePoli));
-                            data.setNonracik(true);
-                            data.setTunggal(1);
-                            for(DisplayFarmasi f:displays){
-                                System.out.println("no ip = "+f.getIp());
-                                sendToDisplay(data,f.getIp());
-                            }
+//                            ClientData data = new ClientData();
+//                            data.setUnit(Konstan.getPoli(this.kodePoli));
+//                            data.setNonracik(true);
+//                            data.setTunggal(1);
+//                            for(DisplayFarmasi f:displays){
+//                                System.out.println("no ip = "+f.getIp());
+//                                sendToDisplay(data,f.getIp());
+//                            }
                             
                             JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
                             clean();
@@ -1255,13 +1255,13 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                         sukses = ResepDao.isResepRacikanExistByNoResep(noresep);
                         if (sukses) {
                             Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep racikan dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
-                            ClientData data = new ClientData();
-                            data.setUnit(Konstan.getPoli(this.kodePoli));
-                            data.setNonracik(false);
-                            data.setRacik(1);
-                            for(DisplayFarmasi f:displays){
-                                sendToDisplay(data,f.getIp());
-                            }
+//                            ClientData data = new ClientData();
+//                            data.setUnit(Konstan.getPoli(this.kodePoli));
+//                            data.setNonracik(false);
+//                            data.setRacik(1);
+//                            for(DisplayFarmasi f:displays){
+//                                sendToDisplay(data,f.getIp());
+//                            }
                             JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP RACIKAN", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
                             clean();
                             dispose();
