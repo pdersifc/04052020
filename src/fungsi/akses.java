@@ -67,7 +67,7 @@ public final class akses {
             pcare_cek_penyakit = false, grafik_kunjungan_statusbataltanggal = false, kategori_barang = false, golongan_barang = false, pemberian_obat_pertanggal = false,
             penjualan_obat_pertanggal = false, pcare_cek_kesadaran = false, pembatalan_periksa_dokter = false, pembayaran_per_unit = false, rekap_pembayaran_per_unit = false,
             grafik_kunjungan_percarabayar = false, ipsrs_pengadaan_pertanggal = false, ipsrs_stokkeluar_pertanggal = false, grafik_kunjungan_ranaptahun = false,
-            pcare_cek_rujukan = false, grafik_lab_ralantahun = false, grafik_rad_ralantahun = false, cek_entry_ralan = false, inacbg_klaim_baru_manual2 = false,
+            pcare_cek_rujukan = false, grafik_lab_ralantahun = false, grafik_rad_ralantahun = false, cek_entry_ralan = false, inacbg_klaim_baru_manual2 = false, klaim_inacbg_corona = false,
             permintaan_medis = false, rekap_permintaan_medis = false, surat_pemesanan_medis = false, permintaan_non_medis = false, rekap_permintaan_non_medis = false,
             surat_pemesanan_non_medis = false, grafik_per_perujuk = false, bpjs_cek_prosedur = false, bpjs_cek_kelas_rawat = false, bpjs_cek_dokter = false,
             bpjs_cek_spesialistik = false, bpjs_cek_ruangrawat = false, bpjs_cek_carakeluar = false, bpjs_cek_pasca_pulang = false, detail_tindakan_okvk = false,
@@ -454,6 +454,7 @@ public final class akses {
                     akses.grafik_rad_ralantahun = true;;
                     akses.cek_entry_ralan = true;
                     akses.inacbg_klaim_baru_manual2 = true;
+                    akses.klaim_inacbg_corona = true;
                     akses.permintaan_medis = true;
                     akses.rekap_permintaan_medis = true;
                     akses.surat_pemesanan_medis = true;
@@ -1113,6 +1114,7 @@ public final class akses {
                     akses.grafik_rad_ralantahun = rs2.getBoolean("grafik_rad_ralantahun");
                     akses.cek_entry_ralan = rs2.getBoolean("cek_entry_ralan");
                     akses.inacbg_klaim_baru_manual2 = rs2.getBoolean("inacbg_klaim_baru_manual2");
+                    akses.klaim_inacbg_corona = rs2.getBoolean("klaim_inacbg_corona");
                     akses.permintaan_medis = rs2.getBoolean("permintaan_medis");
                     akses.rekap_permintaan_medis = rs2.getBoolean("rekap_permintaan_medis");
                     akses.surat_pemesanan_medis = rs2.getBoolean("surat_pemesanan_medis");
@@ -1771,6 +1773,7 @@ public final class akses {
                     akses.grafik_rad_ralantahun = false;
                     akses.cek_entry_ralan = false;
                     akses.inacbg_klaim_baru_manual2 = false;
+                    akses.klaim_inacbg_corona = false;
                     akses.permintaan_medis = false;
                     akses.rekap_permintaan_medis = false;
                     akses.surat_pemesanan_medis = false;
@@ -3405,6 +3408,10 @@ public final class akses {
 
     public static boolean getinacbg_klaim_baru_manual2() {
         return akses.inacbg_klaim_baru_manual2;
+    }
+    
+    public static boolean getklaim_inacbg_corona() {
+        return akses.klaim_inacbg_corona;
     }
 
     public static boolean getpermintaan_medis() {
