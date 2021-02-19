@@ -239,7 +239,6 @@ public class ObatDao {
                     if(marginNon!=null){
                         marginPersen = marginNon.getMargin();
                     }
-                    
                 }
                 double margin = (obat.getHargaBeli() * marginPersen) / 100;
                 double hpp = margin + obat.getHargaBeli();

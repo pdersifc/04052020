@@ -1374,7 +1374,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             if (emmmm == 0) {
                                 if (resep.getObatDetails().size() > 0) {
                                     System.out.println("mulai verifikasi.. ");
-                                    boolean sukses = ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date(), newDetails);
+                                    boolean sukses = ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date());
                                     System.out.println("selesai step pertama verifikasi.. ");
                                     if (sukses) {
                                         try {

@@ -744,17 +744,17 @@ public class ResepDao {
                 for (ObatResep obat : obats) {
                     if (obat.isParent() == false) {
                         i++;
-                        Obat obt = ObatDao.getObatForSave(depo, obat.getKodeObat(), jaminan, reg.getKdPj());
+//                        Obat obt = ObatDao.getObatForSave(depo, obat.getKodeObat(), jaminan, reg.getKdPj());
                         psttmn.setString(1, Utils.formatDb(new Date()));
                         psttmn.setString(2, Utils.formatTime(new Date()));
                         psttmn.setString(3, norawat);
                         psttmn.setString(4, obat.getKodeObat());
-                        psttmn.setDouble(5, obt.getHargaDasar());
-                        psttmn.setDouble(6, obt.getHarga());
+                        psttmn.setDouble(5, obat.getHargaBeli());
+                        psttmn.setDouble(6, obat.getHarga());
                         psttmn.setDouble(7, obat.getJumlah());
                         psttmn.setDouble(8, obat.getEmbalase());
                         psttmn.setDouble(9, obat.getTuslah());
-                        psttmn.setDouble(10, Utils.roundUpKhanza((obt.getHarga() * obat.getJumlah()) + obat.getEmbalase() + obat.getTuslah(), 100));
+                        psttmn.setDouble(10, Utils.roundUpKhanza((obat.getHarga() * obat.getJumlah()) + obat.getEmbalase() + obat.getTuslah(), 100));
                         psttmn.setString(11, Utils.isBlank(sttRawat) ? "Ralan" : sttRawat);
                         psttmn.setString(12, depo);
                         psttmn.setString(13, "");
@@ -921,7 +921,7 @@ public class ResepDao {
         return sukses;
     }
 
-    public static boolean updateValidasi(String norawat, String noresep, Date validasi, List<ObatResep> reseps) {
+    public static boolean updateValidasi(String norawat, String noresep, Date validasi) {
         boolean sukses = true;
         PreparedStatement pst = null;
         try {
