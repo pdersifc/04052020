@@ -5,11 +5,13 @@
  */
 package com.herinoid.rsi.model.api;
 
+import java.io.Serializable;
+
 /**
  *
  * @author HEWRIE
  */
-public class BaseResponse {
+public class BaseResponse implements Serializable{
     private String responseCode;
     private String responseMessage;
 
