@@ -56,6 +56,9 @@ import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
 import com.herinoid.rsi.model.NotaResep;
 import com.herinoid.rsi.model.Poliklinik;
+import com.herinoid.rsi.model.api.BaseResponse;
+import com.herinoid.rsi.model.api.ResepValidasiRequest;
+import com.herinoid.rsi.model.api.RestFull;
 import com.herinoid.rsi.model.report.ResepReport;
 import com.herinoid.rsi.session.SessionLogin;
 import com.herinoid.rsi.util.AgeCalculator;
@@ -340,17 +343,17 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                     return poli.getNmPoli();
                 }
             };
-        }else{
+        } else {
             lblPolibangsal.setText("Bangsal");
             cmbTarif.removeAllItems();
             Poliklinik pol = new Poliklinik();
-               pol.setKdPoli("-");
-               pol.setNmPoli("-");
-                cmbTarif.addItem(pol);
-           for (Bangsal b : BangsalDao.getAllBangsal()) {
-               Poliklinik p = new Poliklinik();
-               p.setKdPoli(b.getKode());
-               p.setNmPoli(b.getNama());
+            pol.setKdPoli("-");
+            pol.setNmPoli("-");
+            cmbTarif.addItem(pol);
+            for (Bangsal b : BangsalDao.getAllBangsal()) {
+                Poliklinik p = new Poliklinik();
+                p.setKdPoli(b.getKode());
+                p.setNmPoli(b.getNama());
                 cmbTarif.addItem(p);
             }
             KeySelectionRenderer renderer = new KeySelectionRenderer(cmbTarif) {
@@ -359,7 +362,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                     Poliklinik bangsal = (Poliklinik) value;
                     return bangsal.getNmPoli();
                 }
-            }; 
+            };
         }
 
         cmbTarif.setSelectedIndex(0);
@@ -1348,6 +1351,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
         String depo = pro.getProperty("DEPOOBAT");
+        String viaWS = pro.getProperty("VIA_WS");
         int dialogButton = JOptionPane.YES_NO_OPTION;
         if (tblData.getSelectedRow() > -1) {
             DataEResep resep = model.get(tblData.convertRowIndexToModel(tblData.getSelectedRow()));
@@ -1373,34 +1377,58 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             int emmmm = JOptionPane.showConfirmDialog(null, "Anda akan memverifikasi data resep, data yang sudah di verifikasi tidak dapat di verifikasi ulang. silahkan teliti kembali", "Perhatian", dialogButton);
                             if (emmmm == 0) {
                                 if (resep.getObatDetails().size() > 0) {
-                                    System.out.println("mulai verifikasi.. ");
-                                    boolean sukses = ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date());
-                                    System.out.println("selesai step pertama verifikasi.. ");
-                                    if (sukses) {
-                                        try {
-                                            System.out.println("validasi sukses.. lanjut simpan obat biling");
-                                            boolean flagSuses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep(), resep.getJaminan());
-                                            System.out.println("simpan obat biling " + flagSuses + " .. lanjut");
-                                            if (flagSuses) {
-                                                Sequel.saveTrace(SessionLogin.getInstance().getUser(), "simpan validasi dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
-                                                System.out.println("simpan trace selesai! lanjut..");
-                                                String jenisPasien = Konstan.PASIEN_RALAN;
-                                                if (rdoRanap.isSelected()) {
-                                                    jenisPasien = Konstan.PASIEN_RANAP;
-                                                }
+                                    if (viaWS.equalsIgnoreCase("1")) {
+                                        String jenisRawat = "Ralan";
+                                        String jenisPasien = Konstan.PASIEN_RALAN;
+                                        if (rdoRanap.isSelected()) {
+                                            jenisPasien = Konstan.PASIEN_RANAP;
+                                            jenisRawat = "Ranap";
+                                        }
+                                        ResepValidasiRequest request = new ResepValidasiRequest();
+                                        request.setDepo(depo);
+                                        request.setKdPoli(reg.getKdPoli());
+                                        request.setNorawat(reg.getNoRawat());
+                                        request.setNoresep(resep.getNoResep());
+                                        request.setUser(SessionLogin.getInstance().getUser());
+                                        request.setJenisRawat(jenisRawat);
+                                        request.setObatResepList(newDetails);
+                                        BaseResponse response = RestFull.postValidasi(request);
+                                        JOptionPane.showMessageDialog(null, response.getResponseMessage());
+                                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                       
+                                        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                      
+                                        showResepData(dataList, dataRacikanList);
+                                        System.out.println("Proses verifikasi selesai..");
+                                    } else {
+                                        System.out.println("mulai verifikasi.. ");
+                                        boolean sukses = ResepDao.updateValidasi(resep.getNoRawat(), resep.getNoResep(), new Date());
+                                        System.out.println("selesai step pertama verifikasi.. ");
+                                        if (sukses) {
+                                            try {
+                                                System.out.println("validasi sukses.. lanjut simpan obat biling");
+                                                boolean flagSuses = ResepDao.saveDetailPemberianObat(sttRawat, resep.getNoRawat(), newDetails, depo, resep.getNoResep(), resep.getJaminan());
+                                                System.out.println("simpan obat biling " + flagSuses + " .. lanjut");
+                                                if (flagSuses) {
+                                                    Sequel.saveTrace(SessionLogin.getInstance().getUser(), "simpan validasi dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+                                                    System.out.println("simpan trace selesai! lanjut..");
+                                                    String jenisPasien = Konstan.PASIEN_RALAN;
+                                                    if (rdoRanap.isSelected()) {
+                                                        jenisPasien = Konstan.PASIEN_RANAP;
+                                                    }
 
-                                                List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-                                                System.out.println("load data tabel non racikan! lanjut..");
-                                                List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
-                                                System.out.println("load data tabel RACIKAN! lanjut..");
-                                                showResepData(dataList, dataRacikanList);
-                                                System.out.println("Proses verifikasi selesai..");
+                                                    List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                                    System.out.println("load data tabel non racikan! lanjut..");
+                                                    List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
+                                                    System.out.println("load data tabel RACIKAN! lanjut..");
+                                                    showResepData(dataList, dataRacikanList);
+                                                    System.out.println("Proses verifikasi selesai..");
+                                                }
+                                            } catch (SQLException ex) {
+                                                Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
                                             }
-                                        } catch (SQLException ex) {
-                                            Logger.getLogger(DlgDataEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
                                         }
                                     }
-
                                 } else {
                                     JOptionPane.showMessageDialog(null, "data obat kosong");
                                 }
@@ -1458,7 +1486,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private void rdoRanapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoRanapActionPerformed
         // TODO add your handling code here:
         sttRawat = "Ranap";
-         loadDataPoli();
+        loadDataPoli();
     }//GEN-LAST:event_rdoRanapActionPerformed
 
     private void tblEditorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEditorMouseClicked
