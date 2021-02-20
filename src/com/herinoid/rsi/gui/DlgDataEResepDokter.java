@@ -1394,6 +1394,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                         request.setObatResepList(newDetails);
                                         BaseResponse response = RestFull.postValidasi(request);
                                         JOptionPane.showMessageDialog(null, response.getResponseMessage());
+                                        Sequel.saveTrace(SessionLogin.getInstance().getUser(), "simpan validasi dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
                                         List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
                                        
                                         List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, cmbTarif.getSelectedItem().toString(), jenisPasien);
