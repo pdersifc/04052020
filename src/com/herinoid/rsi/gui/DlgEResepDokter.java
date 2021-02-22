@@ -47,13 +47,21 @@ import com.herinoid.rsi.model.ClientData;
 import com.herinoid.rsi.model.DisplayFarmasi;
 import com.herinoid.rsi.model.MarginBpjs;
 import com.herinoid.rsi.model.MarginObatNonBpjs;
+import com.herinoid.rsi.model.api.BaseResponse;
+import com.herinoid.rsi.model.api.CreateResepRequest;
+import com.herinoid.rsi.model.api.RestFull;
 import com.herinoid.rsi.session.SessionLogin;
 import com.herinoid.rsi.util.Utils;
 import fungsi.sekuel;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.httpclient.Header;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -85,6 +93,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
     private double total;
     private sekuel Sequel = new sekuel();
     private String kodePoli;
+    private Properties pro = new Properties();
 
     /**
      * Creates new form DlgPenyakit
@@ -94,287 +103,200 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
      */
     public DlgEResepDokter(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        initComponents();
-        racikanList = new LinkedList<>();
-        model = new TabelCariObatResep();
-        modelPilihan = new TabelObatResepPilihan();
-        this.setLocation(10, 2);
-        setSize(656, 250);
-        txtCari.getDocument().addDocumentListener(new DocumentListener() {
+        try {
+            initComponents();
+            racikanList = new LinkedList<>();
+            model = new TabelCariObatResep();
+            modelPilihan = new TabelObatResepPilihan();
+            this.setLocation(10, 2);
+            setSize(656, 250);
+            pro.loadFromXML(new FileInputStream("setting/database.xml"));
+            txtCari.getDocument().addDocumentListener(new DocumentListener() {
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                String text = txtCari.getText();
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    String text = txtCari.getText();
 
-                if (text.trim().length() == 0) {
-                    rowSorter.setRowFilter(null);
-                } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                String text = txtCari.getText();
-
-                if (text.trim().length() == 0) {
-                    rowSorter.setRowFilter(null);
-                } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-                }
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-        });
-
-        addQty.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                obatFromDialog = addQty.getData();
-                if (obatFromDialog != null) {
-                    if (obatFromDialog.isFlag()) {
-                        if (obatFromDialog.isEdit()) {
-                            modelPilihan.remove(tblPilihan.getSelectedRow());
-                        }
-
-                        double marginPersen = 28;
-                        if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                            MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obatFromDialog.getKodeObat());
-                            if (marginBpjs != null) {
-                                marginPersen = marginBpjs.getRalan();
-                            }
-                        } else {
-                            MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                            if (marginNon != null) {
-                                marginPersen = marginNon.getMargin();
-                            }
-                        }
-                        double margin = (obatFromDialog.getHargaBeli() * marginPersen) / 100;
-                        double hpp = margin + obatFromDialog.getHargaBeli();
-                        total = total + (hpp * obatFromDialog.getJumlah());
-                        lblTotal.setText(Utils.format(total, 2));
-
-                        removeDuplicate(obatFromDialog);
-                        tblPilihan.setModel(modelPilihan);
+                    if (text.trim().length() == 0) {
+                        rowSorter.setRowFilter(null);
+                    } else {
+                        rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                     }
                 }
 
-            }
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    String text = txtCari.getText();
 
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
-        dlgRacikan.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                obatFromDialog = dlgRacikan.getData();
-                if (obatFromDialog != null) {
-                    if (obatFromDialog.isFlag()) {
-                        if (obatFromDialog.isEdit()) {
-                            modelPilihan.remove(tblPilihan.getSelectedRow());
-                        } else {
-                            removeDuplicateRacikans(obatFromDialog);
-                        }
-                        modelPilihan.add(obatFromDialog);
-                        tblPilihan.setModel(modelPilihan);
-//                        
+                    if (text.trim().length() == 0) {
+                        rowSorter.setRowFilter(null);
+                    } else {
+                        rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                     }
                 }
 
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
-
-        dokter.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                if (dokter.getTable().getSelectedRow() != -1) {
-                    txtKodeDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(), 0).toString());
-                    txtNamaDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(), 1).toString());
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
-                txtKodeDokter.requestFocus();
-            }
 
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
+            });
 
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
+            addQty.addWindowListener(new WindowListener() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+                }
 
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
+                @Override
+                public void windowClosing(WindowEvent e) {
+                }
 
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
-        jam();
-
-        cekHistory.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                if (cekHistory.isDuplikate()) {
-                    List<ObatResep> obats = cekHistory.getData();
-                    List<ObatResep> obatAmbils = new LinkedList<>();
-                    List<String> namaObat = new ArrayList<>();
-                    if (obats != null && obats.size() > 0) {
-                        for (ObatResep o : obats) {
-                            if (o.getStatus() == 1) {
-                                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                                    if (o.getKategori().equals("FORNAS PLUS") && !o.isParent()) {
-                                        obatAmbils.add(o);
-                                    } else if (o.getKategori().equals("NON FORNAS") && !o.isParent()) {
-                                        namaObat.add(o.getNamaObat());
-                                    }
-                                } else {
-                                    obatAmbils.add(o);
-                                }
-                            } else {
-                                namaObat.add(o.getNamaObat());
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    obatFromDialog = addQty.getData();
+                    if (obatFromDialog != null) {
+                        if (obatFromDialog.isFlag()) {
+                            if (obatFromDialog.isEdit()) {
+                                modelPilihan.remove(tblPilihan.getSelectedRow());
                             }
 
                             double marginPersen = 28;
                             if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                                MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
+                                MarginBpjs marginBpjs = MarginDao.getMarginBpjs(obatFromDialog.getKodeObat());
                                 if (marginBpjs != null) {
                                     marginPersen = marginBpjs.getRalan();
                                 }
-
                             } else {
                                 MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
                                 if (marginNon != null) {
                                     marginPersen = marginNon.getMargin();
                                 }
-
                             }
-                            double margin = (o.getHargaBeli() * marginPersen) / 100;
-                            double hpp = margin + o.getHargaBeli();
-                            total = total + (hpp * o.getJumlah());
+                            double margin = (obatFromDialog.getHargaBeli() * marginPersen) / 100;
+                            double hpp = margin + obatFromDialog.getHargaBeli();
+                            total = total + (hpp * obatFromDialog.getJumlah());
                             lblTotal.setText(Utils.format(total, 2));
-                        }
-                        if (namaObat.size() > 0) {
-                            int oke = JOptionPane.showConfirmDialog(null, "Data obat ini : " + namaObat.toString() + " tidak bisa diambil, apakah mau di lanjut?", "Perhatian", JOptionPane.YES_NO_OPTION);
-                            if (oke == 0) {
-                                modelPilihan.add(obatAmbils);
-                                tblPilihan.setModel(modelPilihan);
-                            }
-                        } else {
-                            modelPilihan.add(obatAmbils);
+
+                            removeDuplicate(obatFromDialog);
                             tblPilihan.setModel(modelPilihan);
                         }
-                        cekHistory.clean();
                     }
-                } else {
-                    cekHistory.clean();
+
                 }
 
-            }
+                @Override
+                public void windowIconified(WindowEvent e) {
+                }
 
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+                }
 
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
+                @Override
+                public void windowActivated(WindowEvent e) {
+                }
 
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                }
+            });
+            dlgRacikan.addWindowListener(new WindowListener() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+                }
 
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
+                @Override
+                public void windowClosing(WindowEvent e) {
+                }
 
-        templateResep.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                if (!templateResep.batal()) {
-                    List<ObatResep> obats = templateResep.getData();
-                    List<ObatResep> obatAmbils = new LinkedList<>();
-                    List<String> namaObat = new ArrayList<>();
-                    if (obats != null && obats.size() > 0) {
-                        modelPilihan.add(obats);
-                        for (ObatResep o : obats) {
-                            if (o.isParent()) {
-                                removeDuplicateRacikans(o);
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    obatFromDialog = dlgRacikan.getData();
+                    if (obatFromDialog != null) {
+                        if (obatFromDialog.isFlag()) {
+                            if (obatFromDialog.isEdit()) {
+                                modelPilihan.remove(tblPilihan.getSelectedRow());
                             } else {
+                                removeDuplicateRacikans(obatFromDialog);
+                            }
+                            modelPilihan.add(obatFromDialog);
+                            tblPilihan.setModel(modelPilihan);
+//
+                        }
+                    }
+
+                }
+
+                @Override
+                public void windowIconified(WindowEvent e) {
+                }
+
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+                }
+
+                @Override
+                public void windowActivated(WindowEvent e) {
+                }
+
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                }
+            });
+
+            dokter.addWindowListener(new WindowListener() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+                }
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+                }
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    if (dokter.getTable().getSelectedRow() != -1) {
+                        txtKodeDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(), 0).toString());
+                        txtNamaDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(), 1).toString());
+                    }
+                    txtKodeDokter.requestFocus();
+                }
+
+                @Override
+                public void windowIconified(WindowEvent e) {
+                }
+
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+                }
+
+                @Override
+                public void windowActivated(WindowEvent e) {
+                }
+
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                }
+            });
+            jam();
+
+            cekHistory.addWindowListener(new WindowListener() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+                }
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+                }
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    if (cekHistory.isDuplikate()) {
+                        List<ObatResep> obats = cekHistory.getData();
+                        List<ObatResep> obatAmbils = new LinkedList<>();
+                        List<String> namaObat = new ArrayList<>();
+                        if (obats != null && obats.size() > 0) {
+                            for (ObatResep o : obats) {
                                 if (o.getStatus() == 1) {
                                     if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
                                         if (o.getKategori().equals("FORNAS PLUS") && !o.isParent()) {
@@ -388,59 +310,151 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
                                 } else {
                                     namaObat.add(o.getNamaObat());
                                 }
-                            }
-                            double marginPersen = 28;
-                            if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                                MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
-                                if (marginBpjs != null) {
-                                    marginPersen = marginBpjs.getRalan();
-                                }
 
+                                double marginPersen = 28;
+                                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                                    MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
+                                    if (marginBpjs != null) {
+                                        marginPersen = marginBpjs.getRalan();
+                                    }
+
+                                } else {
+                                    MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                                    if (marginNon != null) {
+                                        marginPersen = marginNon.getMargin();
+                                    }
+
+                                }
+                                double margin = (o.getHargaBeli() * marginPersen) / 100;
+                                double hpp = margin + o.getHargaBeli();
+                                total = total + (hpp * o.getJumlah());
+                                lblTotal.setText(Utils.format(total, 2));
+                            }
+                            if (namaObat.size() > 0) {
+                                int oke = JOptionPane.showConfirmDialog(null, "Data obat ini : " + namaObat.toString() + " tidak bisa diambil, apakah mau di lanjut?", "Perhatian", JOptionPane.YES_NO_OPTION);
+                                if (oke == 0) {
+                                    modelPilihan.add(obatAmbils);
+                                    tblPilihan.setModel(modelPilihan);
+                                }
                             } else {
-                                MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
-                                if (marginNon != null) {
-                                    marginPersen = marginNon.getMargin();
-                                }
-
-                            }
-                            double margin = (o.getHargaBeli() * marginPersen) / 100;
-                            double hpp = margin + o.getHargaBeli();
-                            total = total + (hpp * o.getJumlah());
-                            lblTotal.setText(Utils.format(total, 2));
-                        }
-                        if (namaObat.size() > 0) {
-                            int oke = JOptionPane.showConfirmDialog(null, "Data obat ini : " + namaObat.toString() + " tidak bisa diambil, apakah mau di lanjut?", "Perhatian", JOptionPane.YES_NO_OPTION);
-                            if (oke == 0) {
                                 modelPilihan.add(obatAmbils);
                                 tblPilihan.setModel(modelPilihan);
                             }
-                        } else {
-                            modelPilihan.add(obatAmbils);
-                            tblPilihan.setModel(modelPilihan);
+                            cekHistory.clean();
                         }
+                    } else {
+                        cekHistory.clean();
+                    }
+
+                }
+
+                @Override
+                public void windowIconified(WindowEvent e) {
+                }
+
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+                }
+
+                @Override
+                public void windowActivated(WindowEvent e) {
+                }
+
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                }
+            });
+
+            templateResep.addWindowListener(new WindowListener() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+                }
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+                }
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    if (!templateResep.batal()) {
+                        List<ObatResep> obats = templateResep.getData();
+                        List<ObatResep> obatAmbils = new LinkedList<>();
+                        List<String> namaObat = new ArrayList<>();
+                        if (obats != null && obats.size() > 0) {
+                            modelPilihan.add(obats);
+                            for (ObatResep o : obats) {
+                                if (o.isParent()) {
+                                    removeDuplicateRacikans(o);
+                                } else {
+                                    if (o.getStatus() == 1) {
+                                        if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                                            if (o.getKategori().equals("FORNAS PLUS") && !o.isParent()) {
+                                                obatAmbils.add(o);
+                                            } else if (o.getKategori().equals("NON FORNAS") && !o.isParent()) {
+                                                namaObat.add(o.getNamaObat());
+                                            }
+                                        } else {
+                                            obatAmbils.add(o);
+                                        }
+                                    } else {
+                                        namaObat.add(o.getNamaObat());
+                                    }
+                                }
+                                double marginPersen = 28;
+                                if (jaminan.equals(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                                    MarginBpjs marginBpjs = MarginDao.getMarginBpjs(o.getKodeObat());
+                                    if (marginBpjs != null) {
+                                        marginPersen = marginBpjs.getRalan();
+                                    }
+
+                                } else {
+                                    MarginObatNonBpjs marginNon = MarginDao.getMarginNonBpjs(kdJaminan);
+                                    if (marginNon != null) {
+                                        marginPersen = marginNon.getMargin();
+                                    }
+
+                                }
+                                double margin = (o.getHargaBeli() * marginPersen) / 100;
+                                double hpp = margin + o.getHargaBeli();
+                                total = total + (hpp * o.getJumlah());
+                                lblTotal.setText(Utils.format(total, 2));
+                            }
+                            if (namaObat.size() > 0) {
+                                int oke = JOptionPane.showConfirmDialog(null, "Data obat ini : " + namaObat.toString() + " tidak bisa diambil, apakah mau di lanjut?", "Perhatian", JOptionPane.YES_NO_OPTION);
+                                if (oke == 0) {
+                                    modelPilihan.add(obatAmbils);
+                                    tblPilihan.setModel(modelPilihan);
+                                }
+                            } else {
+                                modelPilihan.add(obatAmbils);
+                                tblPilihan.setModel(modelPilihan);
+                            }
+                            templateResep.clean();
+                        }
+                    } else {
                         templateResep.clean();
                     }
-                } else {
-                    templateResep.clean();
                 }
-            }
 
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
+                @Override
+                public void windowIconified(WindowEvent e) {
+                }
 
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+                }
 
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
+                @Override
+                public void windowActivated(WindowEvent e) {
+                }
 
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                }
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(DlgEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setData(String kdDokter, String nmDokter, String kodeDepo, String kategoriObat, String jenisPasien, PemeriksaanRalan periksa) {
@@ -468,7 +482,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
 
     public void setPasien(String norawat, String norm, String nmPasien, String jaminan, String jenisPasien, String poli) {
         RegPeriksa reg = RegPeriksaDao.get(norawat);
-        this.kodePoli=reg.getKdPoli();
+        this.kodePoli = reg.getKdPoli();
         LblNoRawat.setText(norawat);
         LblNoRM.setText(norm);
         LblNamaPasien.setText(nmPasien);
@@ -1200,6 +1214,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
 //        List<DisplayFarmasi> displays = DisplayDao.getAllDisplayFarmasi();
+        String viaWS = pro.getProperty("VIA_WS");
         if (LblNoRawat.getText().trim().equals("") || LblNamaPasien.getText().trim().equals("")) {
             Valid.textKosong(LblNoRawat, "pasien");
         } else if (txtKodeDokter.getText().trim().equals("") || txtKodeDokter.getText().trim().equals("xxx")) {
@@ -1207,33 +1222,59 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         } else {
             int oke = JOptionPane.showConfirmDialog(null, "Apakah data sudah benar, silahkan cek kembali sebelum disimpan?", "Perhatian", JOptionPane.YES_NO_OPTION);
             if (oke == 0) {
-                Resep resep = new Resep();
-                resep.setKdDokter(txtKodeDokter.getText());
-                resep.setNoRawat(LblNoRawat.getText());
-                resep.setTglResep(cmbTanggal.getDate());
-                resep.setJamResep(cmbJam.getSelectedItem().toString() + ":" + cmbMnt.getSelectedItem().toString() + ":" + cmbDtk.getSelectedItem().toString());
-                resep.setStatus(Resep.STATUS_BELUM_VERIFIKASI);
-                resep.setJenisPasien(jenisPasien);
-                List<ObatResep> biasas = new LinkedList<>();
-                List<ObatResep> racikans = new LinkedList<>();
-                for (ObatResep o : modelPilihan.getAll()) {
-                    if (o.getJenisObat().equals(Obat.OBAT_RACIKAN)) {
-                        racikans.add(o);
-                    } else {
-                        biasas.add(o);
+                if (viaWS.equals("1")) {
+                    CreateResepRequest request = new CreateResepRequest();
+                    request.setNoRawat(LblNoRawat.getText());
+                    request.setJenisPasien(jenisPasien);
+                    request.setKdDokter(txtKodeDokter.getText());
+                    List<ObatResep> biasas = new LinkedList<>();
+                    List<ObatResep> racikans = new LinkedList<>();
+                    for (ObatResep o : modelPilihan.getAll()) {
+                        if (o.getJenisObat().equals(Obat.OBAT_RACIKAN)) {
+                            racikans.add(o);
+                        } else {
+                            biasas.add(o);
+                        }
                     }
-                }
-                resep.setObatResepRacikanDetail(racikans);
-                resep.setObatResepDetail(biasas);
-                boolean sukses = false;
-                String noresep = ResepDao.getNoResepForUpdate();
-                if (noresep != null) {
-                    resep.setNoResep(noresep);
-                    if (biasas.size() > 0) {
-                        ResepDao.save(resep);
-                        sukses = ResepDao.isResepExistByNoResep(noresep);
-                        if (sukses) {
-                            Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep obat tunggal dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+                    request.setObatResepDetail(biasas);
+                    request.setObatResepRacikanDetail(racikans);
+                    BaseResponse response = RestFull.postSimpanResep(request);
+                    if (response.getResponseCode().equalsIgnoreCase("200")) {
+                        JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
+//                        Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep obat tunggal dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+                        clean();
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "RESEP GAGAL DISIMPAN", "GAGAL!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    Resep resep = new Resep();
+                    resep.setKdDokter(txtKodeDokter.getText());
+                    resep.setNoRawat(LblNoRawat.getText());
+                    resep.setTglResep(cmbTanggal.getDate());
+                    resep.setJamResep(cmbJam.getSelectedItem().toString() + ":" + cmbMnt.getSelectedItem().toString() + ":" + cmbDtk.getSelectedItem().toString());
+                    resep.setStatus(Resep.STATUS_BELUM_VERIFIKASI);
+                    resep.setJenisPasien(jenisPasien);
+                    List<ObatResep> biasas = new LinkedList<>();
+                    List<ObatResep> racikans = new LinkedList<>();
+                    for (ObatResep o : modelPilihan.getAll()) {
+                        if (o.getJenisObat().equals(Obat.OBAT_RACIKAN)) {
+                            racikans.add(o);
+                        } else {
+                            biasas.add(o);
+                        }
+                    }
+                    resep.setObatResepRacikanDetail(racikans);
+                    resep.setObatResepDetail(biasas);
+                    boolean sukses = false;
+                    String noresep = ResepDao.getNoResepForUpdate();
+                    if (noresep != null) {
+                        resep.setNoResep(noresep);
+                        if (biasas.size() > 0) {
+                            ResepDao.save(resep);
+                            sukses = ResepDao.isResepExistByNoResep(noresep);
+                            if (sukses) {
+                                Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep obat tunggal dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
 //                            ClientData data = new ClientData();
 //                            data.setUnit(Konstan.getPoli(this.kodePoli));
 //                            data.setNonracik(true);
@@ -1242,19 +1283,19 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 //                                System.out.println("no ip = "+f.getIp());
 //                                sendToDisplay(data,f.getIp());
 //                            }
-                            
-                            JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
-                            clean();
-                            dispose();
-                        } else {
-                            JOptionPane.showMessageDialog(null, "RESEP GAGAL DISIMPAN", "GAGAL!", JOptionPane.ERROR_MESSAGE);
+
+                                JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
+                                clean();
+                                dispose();
+                            } else {
+                                JOptionPane.showMessageDialog(null, "RESEP GAGAL DISIMPAN", "GAGAL!", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
-                    }
-                    if (racikans.size() > 0) {
-                        ResepDao.saveRacikan(resep);
-                        sukses = ResepDao.isResepRacikanExistByNoResep(noresep);
-                        if (sukses) {
-                            Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep racikan dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+                        if (racikans.size() > 0) {
+                            ResepDao.saveRacikan(resep);
+                            sukses = ResepDao.isResepRacikanExistByNoResep(noresep);
+                            if (sukses) {
+                                Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep racikan dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
 //                            ClientData data = new ClientData();
 //                            data.setUnit(Konstan.getPoli(this.kodePoli));
 //                            data.setNonracik(false);
@@ -1262,24 +1303,24 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 //                            for(DisplayFarmasi f:displays){
 //                                sendToDisplay(data,f.getIp());
 //                            }
-                            JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP RACIKAN", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
-                            clean();
-                            dispose();
-                        } else {
-                            JOptionPane.showMessageDialog(null, "RESEP RACIKAN GAGAL DISIMPAN", "GAGAL!", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP RACIKAN", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
+                                clean();
+                                dispose();
+                            } else {
+                                JOptionPane.showMessageDialog(null, "RESEP RACIKAN GAGAL DISIMPAN", "GAGAL!", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
+                    } else {
+                        sukses = false;
+                        JOptionPane.showMessageDialog(null, "RESEP GAGAL DISIMPAN, Terkendala dalam mendapatkan No. Resep dari database", "NO.RESEP GAGAL!", JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    sukses = false;
-                    JOptionPane.showMessageDialog(null, "RESEP GAGAL DISIMPAN, Terkendala dalam mendapatkan No. Resep dari database", "NO.RESEP GAGAL!", JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         }
 
     }//GEN-LAST:event_btnSimpanActionPerformed
 
-    private void sendToDisplay(ClientData data,String ip){
+    private void sendToDisplay(ClientData data, String ip) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -1289,14 +1330,13 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             converter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
             messageConverters.add(converter);
             restTemplate.setMessageConverters(messageConverters);
-            HttpEntity<ClientData> requestEntity = new HttpEntity<>(data,headers);
-            restTemplate.postForObject("http://"+ip+":1981", requestEntity, ClientData.class);
-        } catch (Exception e) {           
+            HttpEntity<ClientData> requestEntity = new HttpEntity<>(data, headers);
+            restTemplate.postForObject("http://" + ip + ":1981", requestEntity, ClientData.class);
+        } catch (Exception e) {
         }
     }
-    
-    
-    
+
+
     private void tblPilihanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPilihanMouseClicked
         // TODO add your handling code here:
 

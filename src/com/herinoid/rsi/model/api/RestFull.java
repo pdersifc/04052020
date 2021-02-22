@@ -30,8 +30,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class RestFull {
 
-    private static String base_url = "http://192.168.10.8:8117/resep/";
-//    private static String base_url = "http://localhost:8080/resep/";
+//    private static String base_url = "http://192.168.10.8:8117/resep/";
+    private static String base_url = "http://localhost:8080/resep/";
     private static ObjectMapper mapper;
 
     public static BaseResponse getValidasi() throws Exception {
@@ -62,48 +62,40 @@ public class RestFull {
         return response;
     }
 
-    public static BaseResponse postValidasi(ResepValidasiRequest request) {
-        mapper = new ObjectMapper();
-        BaseResponse response = new BaseResponse();
+    public static BaseResponse postSimpanResep(CreateResepRequest request) {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpResponse response;
         try {
-            URL url = new URL(base_url + "validasi");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json; utf-8");
-            conn.setRequestProperty("Authorization", "Basic " + BasicAuth.auth());
-
-            String input = mapper.writeValueAsString(request);
-            OutputStream os = conn.getOutputStream();
-            os.write(input.getBytes());
-            os.flush();
-
-            if (conn.getResponseCode() != 201) {
-                response.setResponseCode("301");
-                response.setResponseMessage("Gagal Validasi");
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String json = ow.writeValueAsString(request);
+            HttpPost httpPost = new HttpPost(base_url + "desktop/new");
+            StringEntity params = null;
+            params = new StringEntity(json);
+            httpPost.addHeader("Authorization", "Basic " + BasicAuth.auth());
+            httpPost.addHeader("content-type", "application/json");
+            httpPost.setEntity(params);
+            response = httpClient.execute(httpPost);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuilder builder = new StringBuilder();
+            String str = "";
+            while ((str = rd.readLine()) != null) {
+                builder.append(str);
+            }
+            String text = builder.toString();
+            if (!Utils.isBlank(text)) {
+                System.out.println(text);
+                Gson gson = new Gson();
+                return gson.fromJson(text, BaseResponse.class);
             }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            String output;
-            if (br.readLine() != null) {
-                System.out.println("response : " + br.readLine());
-                response.setResponseCode("201");
-                response.setResponseMessage("Validasi resep Berhasil!");
-            }
-            conn.disconnect();
-        } catch (MalformedURLException e) {
-
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
-        return response;
+        return null;
     }
 
     public static BaseResponse postResepValidasi(ResepValidasiRequest request) {
