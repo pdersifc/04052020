@@ -29,9 +29,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
  * @author HEWRIE
  */
 public class RestFull {
-
-//    private static String base_url = "http://192.168.10.8:8117/resep/";
-    private static String base_url = "http://localhost:8080/resep/";
     private static ObjectMapper mapper;
 
     public static BaseResponse getValidasi(String ipws) throws Exception {
