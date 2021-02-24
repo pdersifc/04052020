@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import javax.swing.JOptionPane;
 import widget.ComboBox;
 
 /**
@@ -44,7 +45,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
 
     public void setData(Obat obat, List<ObatResep> racikans) {
         this.racikanList = racikans;
-        this.obatResep = new ObatResep(obat.getKodeObat(), obat.getNamaObat(), obat.getKapasitas(), obat.getSatuan(), obat.getKategori(), obat.getJenisObat(), obat.getStok(),obat.getHargaBeli());
+        this.obatResep = new ObatResep(obat.getKodeObat(), obat.getNamaObat(), obat.getKapasitas(), obat.getSatuan(), obat.getKategori(), obat.getJenisObat(), obat.getStok(), obat.getHargaBeli());
         lblObat.setText(obat.getNamaObat());
         obatResep.setEdit(false);
         racikanList.sort((f1, f2) -> Integer.compare(f2.getUrutan(), f1.getUrutan()));
@@ -477,32 +478,35 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
-        obatResep.setJumlah(Double.parseDouble(txtJumlah.getText().replace(",", ".")));
-        obatResep.setAturanPakai(txtAturanPakai.getText());
-        obatResep.setFlag(true);
-        obatResep.setEmbalase(0);
-        obatResep.setTuslah(0);
-        if (cekRacikan.isSelected()) {
-            if (racikanList.size() > 0) {
-                ObatResep obatRacik = (ObatResep) cmbRacikan.getSelectedItem();
-                if (obatRacik != null) {
-                    obatResep.setRacikan(obatRacik.getNamaObat());
-                    obatResep.setKodeRacikan(obatRacik.getKodeObat());
-                    obatResep.setJenisObat(Obat.OBAT_RACIKAN);
-                    obatResep.setKandungan(Double.parseDouble(txtKandungan.getText().replace(",", ".")));
-                    obatResep.setPembilang(Integer.parseInt(txtPembilang.getText()));
-                    obatResep.setPenyebut(Integer.parseInt(txtPenyebut.getText()));
-                    obatResep.setJmlRacik(obatRacik.getJumlah());
-
-                }
-            }
+        if (Utils.isBlank(txtJumlah.getText())) {
+            JOptionPane.showMessageDialog(null, "Jumlah Obat tidak boleh kosong!");
         } else {
-            obatResep.setRacikan("-");
+            obatResep.setJumlah(Double.parseDouble(txtJumlah.getText().replace(",", ".")));
+            obatResep.setAturanPakai(txtAturanPakai.getText());
+            obatResep.setFlag(true);
+            obatResep.setEmbalase(0);
+            obatResep.setTuslah(0);
+            if (cekRacikan.isSelected()) {
+                if (racikanList.size() > 0) {
+                    ObatResep obatRacik = (ObatResep) cmbRacikan.getSelectedItem();
+                    if (obatRacik != null) {
+                        obatResep.setRacikan(obatRacik.getNamaObat());
+                        obatResep.setKodeRacikan(obatRacik.getKodeObat());
+                        obatResep.setJenisObat(Obat.OBAT_RACIKAN);
+                        obatResep.setKandungan(Double.parseDouble(txtKandungan.getText().replace(",", ".")));
+                        obatResep.setPembilang(Integer.parseInt(txtPembilang.getText()));
+                        obatResep.setPenyebut(Integer.parseInt(txtPenyebut.getText()));
+                        obatResep.setJmlRacik(obatRacik.getJumlah());
+
+                    }
+                }
+            } else {
+                obatResep.setRacikan("-");
+            }
+
+            clean();
+            dispose();
         }
-
-        clean();
-        dispose();
-
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void cmbRacikanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbRacikanActionPerformed
@@ -534,7 +538,7 @@ public class DialogAddQtyResepDokter extends javax.swing.JDialog {
     private void txtKandunganKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKandunganKeyReleased
         // TODO add your handling code here:
         if (!Utils.isBlank(txtKandungan.getText())) {
-            double hasilHitung = (Double.parseDouble(txtKandungan.getText().replace(",", ".")) / obatResep.getKapasitas()) * obatResep.getJmlRacik();            
+            double hasilHitung = (Double.parseDouble(txtKandungan.getText().replace(",", ".")) / obatResep.getKapasitas()) * obatResep.getJmlRacik();
             String hasilDecimal = Utils.format(hasilHitung, 2);
             txtJumlah.setText(hasilDecimal);
         }

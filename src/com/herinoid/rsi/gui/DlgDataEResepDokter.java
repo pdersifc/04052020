@@ -115,6 +115,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
     private DlgAturanPakai aturanpakai = new DlgAturanPakai(null, false);
     private double total = 0;
     private int baruAda = 0;
+    private String wsurl;
 
     /**
      * Creates new form DlgPenyakit
@@ -137,6 +138,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
             pro.loadFromXML(new FileInputStream("setting/database.xml"));
             rdoRajal.setSelected(true);
             kdBangsal = pro.getProperty("DEPOOBAT");
+            wsurl = pro.getProperty("WS_URL");
             btnEdit.setVisible(false);
             btnHapus.setVisible(false);
             btnHapusResep.setVisible(false);
@@ -1392,7 +1394,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                         request.setUser(SessionLogin.getInstance().getUser());
                                         request.setJenisRawat(jenisRawat);
                                         request.setObatResepList(newDetails);
-                                        BaseResponse response = RestFull.postResepValidasi(request);
+                                        BaseResponse response = RestFull.postResepValidasi(wsurl,request);
                                         System.out.println("response = "+response.getResponseMessage());
                                         JOptionPane.showMessageDialog(null, response.getResponseMessage());
                                         Sequel.saveTrace(SessionLogin.getInstance().getUser(), "simpan validasi dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());

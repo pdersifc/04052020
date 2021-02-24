@@ -94,6 +94,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
     private sekuel Sequel = new sekuel();
     private String kodePoli;
     private Properties pro = new Properties();
+    private String wsurl;
 
     /**
      * Creates new form DlgPenyakit
@@ -455,6 +456,7 @@ public final class DlgEResepDokter extends javax.swing.JDialog {
         } catch (IOException ex) {
             Logger.getLogger(DlgEResepDokter.class.getName()).log(Level.SEVERE, null, ex);
         }
+        wsurl = pro.getProperty("WS_URL");
     }
 
     public void setData(String kdDokter, String nmDokter, String kodeDepo, String kategoriObat, String jenisPasien, PemeriksaanRalan periksa) {
@@ -1238,7 +1240,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                     request.setObatResepDetail(biasas);
                     request.setObatResepRacikanDetail(racikans);
-                    BaseResponse response = RestFull.postSimpanResep(request);
+                    BaseResponse response = RestFull.postSimpanResep(wsurl,request);
                     if (response.getResponseCode().equalsIgnoreCase("200")) {
                         JOptionPane.showMessageDialog(null, "SUKSES SIMPAN RESEP", "SUKSES!", JOptionPane.INFORMATION_MESSAGE);
 //                        Sequel.saveTrace(SessionLogin.getInstance().getUser(), "create e-resep obat tunggal dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());

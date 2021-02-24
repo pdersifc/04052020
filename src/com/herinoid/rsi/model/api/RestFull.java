@@ -34,12 +34,12 @@ public class RestFull {
     private static String base_url = "http://localhost:8080/resep/";
     private static ObjectMapper mapper;
 
-    public static BaseResponse getValidasi() throws Exception {
+    public static BaseResponse getValidasi(String ipws) throws Exception {
         mapper = new ObjectMapper();
         BaseResponse response = null;
         try {
             System.out.println("validasi get");
-            URL url = new URL(base_url + "validasi");
+            URL url = new URL(ipws + "validasi");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -62,13 +62,13 @@ public class RestFull {
         return response;
     }
 
-    public static BaseResponse postSimpanResep(CreateResepRequest request) {
+    public static BaseResponse postSimpanResep(String ipws,CreateResepRequest request) {
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse response;
         try {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = ow.writeValueAsString(request);
-            HttpPost httpPost = new HttpPost(base_url + "desktop/new");
+            HttpPost httpPost = new HttpPost(ipws + "desktop/new");
             StringEntity params = null;
             params = new StringEntity(json);
             httpPost.addHeader("Authorization", "Basic " + BasicAuth.auth());
@@ -98,13 +98,13 @@ public class RestFull {
         return null;
     }
 
-    public static BaseResponse postResepValidasi(ResepValidasiRequest request) {
+    public static BaseResponse postResepValidasi(String ipws,ResepValidasiRequest request) {
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse response;
         try {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = ow.writeValueAsString(request);
-            HttpPost httpPost = new HttpPost(base_url + "validasi");
+            HttpPost httpPost = new HttpPost(ipws + "validasi");
             StringEntity params = null;
             params = new StringEntity(json);
             httpPost.addHeader("Authorization", "Basic " + BasicAuth.auth());
