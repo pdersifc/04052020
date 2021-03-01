@@ -360,5 +360,16 @@ public class Utils {
         String tanggalan = tgl + " " + Utils.monthName[month]+" "+year;
         return tanggalan;
     }
+    
+    
+    public static Date getTimeFromString(String strDate) {
+        Date tglLahirr = null;
+        try {
+            tglLahirr = new SimpleDateFormat(FORMAT_TIME).parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return tglLahirr;
+    }
 
 }

@@ -15,6 +15,10 @@ package inventory;
 import bridging.ApiPcare;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.herinoid.rsi.model.api.BaseResponse;
+import com.herinoid.rsi.model.api.CreateObatDetailRequest;
+import com.herinoid.rsi.model.api.RestFull;
+import com.herinoid.rsi.model.api.SingleDetailPemberianObat;
 import fungsi.WarnaTable2;
 import fungsi.batasInput;
 import fungsi.koneksiDB;
@@ -29,11 +33,19 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -83,6 +95,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
     private ApiPcare api=new ApiPcare();
     private String[] arrSplit;
     private boolean sukses=true;
+    private Properties pro = new Properties();
+    private String wsurl;
     
     /** Creates new form DlgPenyakit
      * @param parent
@@ -92,7 +106,14 @@ public final class DlgCariObat extends javax.swing.JDialog {
         initComponents();
         this.setLocation(10,2);
         setSize(656,250);
-
+        try {
+            pro.loadFromXML(new FileInputStream("setting/database.xml"));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DlgCariObat.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DlgCariObat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            wsurl = pro.getProperty("WS_URL");
         tabModeobat=new DefaultTableModel(null,new Object[]{
                 "K","Jumlah","Kode Barang","Nama Barang","Satuan",
                 "Kandungan","Harga(Rp)","Jenis Obat","Emb","Tsl",
@@ -1225,7 +1246,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
     }//GEN-LAST:event_BtnTambahActionPerformed
 
 private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
-        if(TNoRw.getText().trim().equals("")){
+    String viaWS = pro.getProperty("VIA_WS");    
+    if(TNoRw.getText().trim().equals("")){
             Valid.textKosong(TCari,"Data");
         }else if(kdgudang.getText().equals("")){
             Valid.textKosong(TCari,"Lokasi");
@@ -1235,8 +1257,42 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         }else{
             int reply = JOptionPane.showConfirmDialog(rootPane,"Eeiiiiiits, udah bener belum data yang mau disimpan..??","Konfirmasi",JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
-                try {  
-                    ChkJln.setSelected(false);
+                try { 
+                    if(viaWS.equals("1")){
+                        CreateObatDetailRequest rquest = new CreateObatDetailRequest();
+                        List<SingleDetailPemberianObat> detailObatList = new LinkedList<>();
+                        for(i=0;i<tbObat.getRowCount();i++){ 
+                        if(Valid.SetAngka(tbObat.getValueAt(i,1).toString())>0){                       
+                            
+                                SingleDetailPemberianObat single = new SingleDetailPemberianObat();
+                                single.setNoRawat(TNoRw.getText());
+                                single.setKodeBrng(tbObat.getValueAt(i,2).toString());
+                                single.setNoBatch(tbObat.getValueAt(i,16).toString());
+                                single.setNoFaktur(tbObat.getValueAt(i,17).toString());
+                                single.setEmbalase(Double.parseDouble(tbObat.getValueAt(i,8).toString()));
+                                single.setTuslah(Double.parseDouble(tbObat.getValueAt(i,9).toString()));                                
+                                single.sethBeli(Double.parseDouble(tbObat.getValueAt(i,13).toString()));
+                                single.setJml(Double.parseDouble(tbObat.getValueAt(i,1).toString()));                                
+                                single.setBiayaObat(Double.parseDouble(tbObat.getValueAt(i,6).toString()));
+                                double total = (single.getBiayaObat()*single.getJml())+single.getEmbalase()+single.getTuslah();
+                                single.setStatus("Ralan");
+                                single.setTotal(total);
+                                single.setKdBangsal(kdgudang.getText());
+                                detailObatList.add(single);
+                            }
+                       
+                        }
+                        rquest.setDetailPemberianObats(detailObatList);
+                        if(detailObatList.size()>0){
+                            BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
+                            JOptionPane.showMessageDialog(null, respon.getResponseMessage());
+                            dispose();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Tidak ada data obat yang mau disimpan");
+                        }
+                        
+                    }else{
+                        ChkJln.setSelected(false);
                     Sequel.AutoComitFalse();
                     sukses=true;
                     for(i=0;i<tbObat.getRowCount();i++){ 
@@ -1247,7 +1303,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                     pscarikapasitas.setString(1,tbObat.getValueAt(i,2).toString());
                                     carikapasitas=pscarikapasitas.executeQuery();
                                     if(carikapasitas.next()){ 
-                                        if(Sequel.menyimpantf2("detail_pemberian_obat","?,?,?,?,?,?,?,?,?,?,?,?,?,?","data",14,new String[]{
+                                        if(Sequel.menyimpantf2("detail_pemberian_obat","tgl,jam,norwat,kdbarang,hargabeli,biayaobat,jml,embalase,tuslah,total,status,kdbangsal,nobatch,nofaktur","data",14,new String[]{
                                             Valid.SetTgl(DTPTgl.getSelectedItem()+""),cmbJam.getSelectedItem()+":"+cmbMnt.getSelectedItem()+":"+cmbDtk.getSelectedItem(),TNoRw.getText(),tbObat.getValueAt(i,2).toString(),tbObat.getValueAt(i,13).toString(),
                                             tbObat.getValueAt(i,6).toString(),""+(Double.parseDouble(tbObat.getValueAt(i,1).toString())/carikapasitas.getDouble(1)),
                                             tbObat.getValueAt(i,8).toString(),tbObat.getValueAt(i,9).toString(),""+Valid.SetAngka2(Double.parseDouble(tbObat.getValueAt(i,8).toString())+
@@ -1548,6 +1604,8 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         }
                         dispose();
                     }
+                    }
+                    
                 } catch (Exception ex) {
                     System.out.println(ex);                
                 }

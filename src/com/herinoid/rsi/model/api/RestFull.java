@@ -20,6 +20,7 @@ import java.net.URL;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -102,6 +103,107 @@ public class RestFull {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = ow.writeValueAsString(request);
             HttpPost httpPost = new HttpPost(ipws + "validasi");
+            StringEntity params = null;
+            params = new StringEntity(json);
+            httpPost.addHeader("Authorization", "Basic " + BasicAuth.auth());
+            httpPost.addHeader("content-type", "application/json");
+            httpPost.setEntity(params);
+            response = httpClient.execute(httpPost);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuilder builder = new StringBuilder();
+            String str = "";
+            while ((str = rd.readLine()) != null) {
+                builder.append(str);
+            }
+            String text = builder.toString();
+            if (!Utils.isBlank(text)) {
+                System.out.println(text);
+                Gson gson = new Gson();
+                return gson.fromJson(text, BaseResponse.class);
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static BaseResponse deleteResepValidasi(String ipws,String noresep,String depo) {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpResponse response;
+        try {
+            String url = ipws + "delete/validasi/"+noresep+"/"+depo;
+            
+            HttpDelete httpDelete = new HttpDelete(url);
+            httpDelete.addHeader("Authorization", "Basic " + BasicAuth.auth());
+            httpDelete.addHeader("content-type", "application/json");
+            response = httpClient.execute(httpDelete);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuilder builder = new StringBuilder();
+            String str = "";
+            while ((str = rd.readLine()) != null) {
+                builder.append(str);
+            }
+            String text = builder.toString();
+            if (!Utils.isBlank(text)) {
+                System.out.println(text);
+                Gson gson = new Gson();
+                return gson.fromJson(text, BaseResponse.class);
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static BaseResponse deleteResep(String ipws,String noresep) {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpResponse response;
+        try {
+            HttpDelete httpDelete = new HttpDelete(ipws + "delete/"+noresep);
+            httpDelete.addHeader("Authorization", "Basic " + BasicAuth.auth());
+            httpDelete.addHeader("content-type", "application/json");
+            response = httpClient.execute(httpDelete);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuilder builder = new StringBuilder();
+            String str = "";
+            while ((str = rd.readLine()) != null) {
+                builder.append(str);
+            }
+            String text = builder.toString();
+            if (!Utils.isBlank(text)) {
+                System.out.println(text);
+                Gson gson = new Gson();
+                return gson.fromJson(text, BaseResponse.class);
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    
+    public static BaseResponse postDetailPemberianObat(String ipws,CreateObatDetailRequest request) {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpResponse response;
+        try {
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String json = ow.writeValueAsString(request);
+            HttpPost httpPost = new HttpPost(ipws + "detail-pemberian-obat");
             StringEntity params = null;
             params = new StringEntity(json);
             httpPost.addHeader("Authorization", "Basic " + BasicAuth.auth());

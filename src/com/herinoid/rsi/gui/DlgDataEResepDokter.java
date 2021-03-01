@@ -1394,15 +1394,15 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                                         request.setUser(SessionLogin.getInstance().getUser());
                                         request.setJenisRawat(jenisRawat);
                                         request.setObatResepList(newDetails);
-                                        BaseResponse response = RestFull.postResepValidasi(wsurl,request);
-                                        System.out.println("response = "+response.getResponseMessage());
+                                        BaseResponse response = RestFull.postResepValidasi(wsurl, request);
+                                        System.out.println("response = " + response.getResponseMessage());
                                         JOptionPane.showMessageDialog(null, response.getResponseMessage());
                                         Sequel.saveTrace(SessionLogin.getInstance().getUser(), "simpan validasi dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
                                         Poliklinik poli = (Poliklinik) cmbTarif.getItemAt(cmbTarif.getSelectedIndex());
                                         List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, poli.getKdPoli(), jenisPasien);
-                                       
+
                                         List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, poli.getKdPoli(), jenisPasien);
-                                      
+
                                         showResepData(dataList, dataRacikanList);
                                         System.out.println("Proses verifikasi selesai..");
                                     } else {
@@ -1544,7 +1544,7 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
                             jenisPasien = Konstan.PASIEN_RANAP;
                         }
                         Poliklinik poli = (Poliklinik) cmbTarif.getItemAt(cmbTarif.getSelectedIndex());
-                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo,poli.getKdPoli(), jenisPasien);
+                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, poli.getKdPoli(), jenisPasien);
                         List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), depo, poli.getKdPoli(), jenisPasien);
                         showResepData(dataList, dataRacikanList);
                     }
@@ -1707,72 +1707,81 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
+        String viaWS = pro.getProperty("VIA_WS");
         int baris = tblData.getSelectedRow();
         if (baris > -1) {
             int nguiknguik = JOptionPane.showConfirmDialog(null, "Apakah anda akan menghapus data validasi resep..?", "PERHATIAN", JOptionPane.YES_NO_OPTION);
             if (nguiknguik == 0) {
                 DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
                 if (resep.getStatus().equals(Resep.STATUS_SUDAH_VERIFIKASI)) {
-                    boolean isHapus = ResepDao.deleteDataObatValidasiFarmasi(resep.getNoResep());
-                    if (isHapus) {
+                    if (viaWS.equalsIgnoreCase("1")) {
+                        BaseResponse response = RestFull.deleteResepValidasi(wsurl, resep.getNoResep(),kdBangsal);
+                        JOptionPane.showMessageDialog(null, response.getResponseMessage());
                         Sequel.saveTrace(SessionLogin.getInstance().getUser(), "delete validasi e-resep dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
-                        boolean isDel = PemberianObatDetailDao.deleteDetailPemberianObat(resep.getNoResep());
-                        if (isDel) {
-                            // update gudang
-                            for (RincianResepVerifikasi r : modelFarmasi.getAll()) {
+                    } else {
+                        boolean isHapus = ResepDao.deleteDataObatValidasiFarmasi(resep.getNoResep());
+                        if (isHapus) {
+                            Sequel.saveTrace(SessionLogin.getInstance().getUser(), "delete validasi e-resep dengan no rawat : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+                            boolean isDel = PemberianObatDetailDao.deleteDetailPemberianObat(resep.getNoResep());
+                            if (isDel) {
+                                // update gudang
+                                for (RincianResepVerifikasi r : modelFarmasi.getAll()) {
 
-                                Obat obat = ObatDao.getObat(kdBangsal, r.getKodeObat());
-                                double stok = 0;
-                                double jumlah = 0;
-                                if (obat != null) {
-                                    stok = obat.getStok();
+                                    Obat obat = ObatDao.getObat(kdBangsal, r.getKodeObat());
+                                    double stok = 0;
+                                    double jumlah = 0;
+                                    if (obat != null) {
+                                        stok = obat.getStok();
+                                    }
+                                    if (r.getRincian().length() > 6) {
+                                        jumlah = Double.parseDouble(r.getRincian().substring(0, r.getRincian().indexOf("x")).replaceAll("\\s", ""));
+                                    } else {
+                                        jumlah = Double.parseDouble(r.getRincian().replaceAll("\\s", ""));
+                                    }
+                                    ResepDao.updateStokGudang(stok + jumlah, r.getKodeObat(), kdBangsal);
                                 }
-                                if (r.getRincian().length() > 6) {
-                                    jumlah = Double.parseDouble(r.getRincian().substring(0, r.getRincian().indexOf("x")).replaceAll("\\s", ""));
-                                } else {
-                                    jumlah = Double.parseDouble(r.getRincian().replaceAll("\\s", ""));
-                                }
-                                ResepDao.updateStokGudang(stok + jumlah, r.getKodeObat(), kdBangsal);
                             }
-                        }
-                        ResepDao.updateValidasiAfterHapus(resep.getNoResep());
-                        String jenisPasien = Konstan.PASIEN_RALAN;
-                        if (rdoRanap.isSelected()) {
-                            jenisPasien = Konstan.PASIEN_RANAP;
-                        }
-                        Poliklinik poli = (Poliklinik) cmbTarif.getItemAt(cmbTarif.getSelectedIndex());
-                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal,poli.getKdPoli() , jenisPasien);
-                        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, poli.getKdPoli(), jenisPasien);
-                        showResepData(dataList, dataRacikanList);
-                        panelSulapan.remove(panelResep);
-                        panelDetailTotal.setVisible(true);
-                        scrollDetail.setVisible(true);
-                        panelResep.setVisible(false);
-                        btnEdit.setVisible(false);
-                        btnHapus.setVisible(false);
-                        if (resep.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                            kategoriObat = "K01";
-                        } else {
-                            kategoriObat = "K02";
-                        }
-                        List<ObatResep> list = resep.getObatDetails();
-                        List<ObatResep> dataObats = getAllObatListByNoResep(list, resep.getNoResep());
-                        modelPilihan.removeAllElements();
-                        modelPilihan.add(dataObats);
-                        tblEditor.setModel(modelPilihan);
-                        total = 0;
-                        double ppn = 0;
-                        double totalPpn = 0;
+                            ResepDao.updateValidasiAfterHapus(resep.getNoResep());
 
-                        for (ObatResep o : dataObats) {
-                            total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
-                        }
-                        ppn = (total * 10) / 100;
-                        totalPpn = total + ppn;
-                        lblTotal.setText("Total : " + Utils.format(total, 0));
 //                        lblPpn.setText("PPN : " + Utils.format(ppn, 0));
 //                        lblTotalPpn.setText("Total + PPN : " + Utils.format(totalPpn, 0));
+                        }
                     }
+                    String jenisPasien = Konstan.PASIEN_RALAN;
+                    if (rdoRanap.isSelected()) {
+                        jenisPasien = Konstan.PASIEN_RANAP;
+                    }
+                    Poliklinik poli = (Poliklinik) cmbTarif.getItemAt(cmbTarif.getSelectedIndex());
+                    List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, poli.getKdPoli(), jenisPasien);
+                    List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, poli.getKdPoli(), jenisPasien);
+                    showResepData(dataList, dataRacikanList);
+                    panelSulapan.remove(panelResep);
+                    panelDetailTotal.setVisible(true);
+                    scrollDetail.setVisible(true);
+                    panelResep.setVisible(false);
+                    btnEdit.setVisible(false);
+                    btnHapus.setVisible(false);
+                    if (resep.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                        kategoriObat = "K01";
+                    } else {
+                        kategoriObat = "K02";
+                    }
+                    List<ObatResep> list = resep.getObatDetails();
+                    List<ObatResep> dataObats = getAllObatListByNoResep(list, resep.getNoResep());
+                    modelPilihan.removeAllElements();
+                    modelPilihan.add(dataObats);
+                    tblEditor.setModel(modelPilihan);
+                    total = 0;
+                    double ppn = 0;
+                    double totalPpn = 0;
+
+                    for (ObatResep o : dataObats) {
+                        total = total + (o.getHarga() * o.getJumlah()) + o.getEmbalase() + o.getTuslah();
+                    }
+                    ppn = (total * 10) / 100;
+                    totalPpn = total + ppn;
+                    lblTotal.setText("Total : " + Utils.format(total, 0));
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Hanya data resep yang sudah divalidasi yang bisa dihapus!");
                 }
@@ -2041,41 +2050,51 @@ public final class DlgDataEResepDokter extends javax.swing.JDialog {
 
     private void btnHapusResepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusResepActionPerformed
         // TODO add your handling code here:
+        String viaWS = pro.getProperty("VIA_WS");
         int baris = tblData.getSelectedRow();
         if (baris > -1) {
             int nguiknguik = JOptionPane.showConfirmDialog(null, "Apakah anda akan menghapus resep ini..?", "PERHATIAN", JOptionPane.YES_NO_OPTION);
             if (nguiknguik == 0) {
                 DataEResep resep = model.get(tblData.convertRowIndexToModel(baris));
                 if (resep.getStatus().equals(Resep.STATUS_BELUM_VERIFIKASI)) {
-                    boolean isHapusResep = ResepDao.deleteResepByNoResep(resep.getNoResep());
-                    boolean isHapusRacikan = ResepDao.deleteRacikanByNoResep(resep.getNoResep());
-                    if (isHapusResep || isHapusRacikan) {
+                    if (viaWS.equalsIgnoreCase("1")) {
+                        BaseResponse response = RestFull.deleteResep(wsurl, resep.getNoResep());
+                        JOptionPane.showMessageDialog(null, response.getResponseMessage());
                         Sequel.saveTrace(SessionLogin.getInstance().getUser(), "Hapus e-resep : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
-                        ResepDao.updateValidasiAfterHapus(resep.getNoResep());
-                        String jenisPasien = Konstan.PASIEN_RALAN;
-                        if (rdoRanap.isSelected()) {
-                            jenisPasien = Konstan.PASIEN_RANAP;
+                    } else {
+                        boolean isHapusResep = ResepDao.deleteResepByNoResep(resep.getNoResep());
+                        boolean isHapusRacikan = ResepDao.deleteRacikanByNoResep(resep.getNoResep());
+                        if (isHapusResep || isHapusRacikan) {
+                            Sequel.saveTrace(SessionLogin.getInstance().getUser(), "Hapus e-resep : " + resep.getNoRawat() + " dan no resep : " + resep.getNoResep());
+//                        ResepDao.updateValidasiAfterHapus(resep.getNoResep());
+
                         }
-                        Poliklinik poli = (Poliklinik) cmbTarif.getItemAt(cmbTarif.getSelectedIndex());
-                        List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, poli.getKdPoli(), jenisPasien);
-                        List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, poli.getKdPoli(), jenisPasien);
-                        showResepData(dataList, dataRacikanList);
-                        panelSulapan.remove(panelResep);
-                        panelDetailTotal.setVisible(true);
-                        scrollDetail.setVisible(true);
-                        panelResep.setVisible(false);
-                        btnEdit.setVisible(false);
-                        btnHapus.setVisible(false);
-                        if (resep.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
-                            kategoriObat = "K01";
-                        } else {
-                            kategoriObat = "K02";
-                        }
-                        lblTotal.setText("Total : 0.0");
-                        modelPilihan.removeAllElements();
-                        tblEditor.setModel(modelPilihan);
-                        btnHapusResep.setVisible(false);
                     }
+                    String jenisPasien = Konstan.PASIEN_RALAN;
+                    if (rdoRanap.isSelected()) {
+                        jenisPasien = Konstan.PASIEN_RANAP;
+                    }
+
+                    Poliklinik poli = (Poliklinik) cmbTarif.getItemAt(cmbTarif.getSelectedIndex());
+                    List<DataEResep> dataList = ResepDao.getResepByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, poli.getKdPoli(), jenisPasien);
+                    List<DataEResep> dataRacikanList = ResepDao.getResepRacikanByDateAndDepo(Utils.formatDb(cmbTanggalfrom.getDate()), Utils.formatDb(cmbTanggalTo.getDate()), kdBangsal, poli.getKdPoli(), jenisPasien);
+                    showResepData(dataList, dataRacikanList);
+                    panelSulapan.remove(panelResep);
+                    panelDetailTotal.setVisible(true);
+                    scrollDetail.setVisible(true);
+                    panelResep.setVisible(false);
+                    btnEdit.setVisible(false);
+                    btnHapus.setVisible(false);
+                    if (resep.getJaminan().equalsIgnoreCase(Konstan.PASIEN_BPJS_KESEHATAN)) {
+                        kategoriObat = "K01";
+                    } else {
+                        kategoriObat = "K02";
+                    }
+                    lblTotal.setText("Total : 0.0");
+                    modelPilihan.removeAllElements();
+                    tblEditor.setModel(modelPilihan);
+                    btnHapusResep.setVisible(false);
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Hanya data resep yang belum divalidasi yang bisa dihapus!");
                 }
