@@ -194,24 +194,6 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="widget.Button" name="BtnNota">
-                  <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/picture/Agenda-1-16x16.png"/>
-                    </Property>
-                    <Property name="mnemonic" type="int" value="83"/>
-                    <Property name="text" type="java.lang.String" value="Nota"/>
-                    <Property name="toolTipText" type="java.lang.String" value="Alt+S"/>
-                    <Property name="name" type="java.lang.String" value="BtnNota" noResource="true"/>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[100, 30]"/>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnNotaActionPerformed"/>
-                    <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="BtnNotaKeyPressed"/>
-                  </Events>
-                </Component>
                 <Component class="widget.Button" name="BtnSimpan">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -935,7 +917,7 @@
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="74" y="10" width="110" height="23"/>
+                  <AbsoluteConstraints x="74" y="10" width="150" height="23"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -1152,13 +1134,13 @@
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="240" y="10" width="120" height="23"/>
+                  <AbsoluteConstraints x="270" y="10" width="90" height="23"/>
                 </Constraint>
               </Constraints>
             </Component>
             <Component class="widget.Label" name="label12">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Jns.Jual :"/>
+                <Property name="text" type="java.lang.String" value="Jns.Jual:"/>
                 <Property name="name" type="java.lang.String" value="label12" noResource="true"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[70, 23]"/>
@@ -1166,7 +1148,7 @@
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="177" y="10" width="60" height="23"/>
+                  <AbsoluteConstraints x="210" y="10" width="60" height="23"/>
                 </Constraint>
               </Constraints>
             </Component>

@@ -55,14 +55,15 @@ public class DlgPiutang extends javax.swing.JDialog {
         }
 
         Object[] row={"Kode Barang","Nama Barang","Satuan","Harga(Rp)","Jml",
-                    "Subtotal(Rp)","Diskon(%)","Diskon(Rp)","Total(Rp)","No.Batch","No.Faktur","Aturan Pakai"};
+                    "Subtotal(Rp)","Diskon(%)","Diskon(Rp)","Total(Rp)",
+                    "No.Batch","No.Faktur","Aturan Pakai","No Rawat"};
         tabMode=new DefaultTableModel(null,row){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
               Class[] types = new Class[] {
                  java.lang.String.class,java.lang.String.class,java.lang.String.class,
                  java.lang.Double.class,java.lang.Double.class,java.lang.Double.class,
                  java.lang.Double.class,java.lang.Double.class,java.lang.Double.class,
-                 java.lang.String.class,java.lang.String.class,java.lang.String.class
+                 java.lang.String.class,java.lang.String.class,java.lang.String.class,java.lang.String.class
              };  
              @Override
              public Class getColumnClass(int columnIndex) {
@@ -74,7 +75,7 @@ public class DlgPiutang extends javax.swing.JDialog {
         tbDokter.setPreferredScrollableViewportSize(new Dimension(800,800));
         tbDokter.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 13; i++) {
             TableColumn column = tbDokter.getColumnModel().getColumn(i);
             if(i==0){
                 column.setPreferredWidth(90);
@@ -100,6 +101,8 @@ public class DlgPiutang extends javax.swing.JDialog {
                 column.setPreferredWidth(100);
             }else if(i==11){
                 column.setPreferredWidth(130);
+            }else if(i==12){
+                column.setPreferredWidth(140);
             }
         }
         tbDokter.setDefaultRenderer(Object.class, new WarnaTable());
@@ -402,7 +405,6 @@ public class DlgPiutang extends javax.swing.JDialog {
         BtnTambah = new widget.Button();
         BtnHapus = new widget.Button();
         label9 = new widget.Label();
-        BtnNota = new widget.Button();
         BtnSimpan = new widget.Button();
         BtnBatal = new widget.Button();
         BtnCari = new widget.Button();
@@ -571,24 +573,6 @@ public class DlgPiutang extends javax.swing.JDialog {
         label9.setName("label9"); // NOI18N
         label9.setPreferredSize(new java.awt.Dimension(70, 23));
         panelisi1.add(label9);
-
-        BtnNota.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Agenda-1-16x16.png"))); // NOI18N
-        BtnNota.setMnemonic('S');
-        BtnNota.setText("Nota");
-        BtnNota.setToolTipText("Alt+S");
-        BtnNota.setName("BtnNota"); // NOI18N
-        BtnNota.setPreferredSize(new java.awt.Dimension(100, 30));
-        BtnNota.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnNotaActionPerformed(evt);
-            }
-        });
-        BtnNota.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                BtnNotaKeyPressed(evt);
-            }
-        });
-        panelisi1.add(BtnNota);
 
         BtnSimpan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/save-16x16.png"))); // NOI18N
         BtnSimpan.setMnemonic('S');
@@ -978,7 +962,7 @@ public class DlgPiutang extends javax.swing.JDialog {
             }
         });
         panelisi3.add(NoNota);
-        NoNota.setBounds(74, 10, 110, 23);
+        NoNota.setBounds(74, 10, 150, 23);
 
         label11.setText("Tgl.Piutang :");
         label11.setName("label11"); // NOI18N
@@ -1091,13 +1075,13 @@ public class DlgPiutang extends javax.swing.JDialog {
             }
         });
         panelisi3.add(Jenisjual);
-        Jenisjual.setBounds(240, 10, 120, 23);
+        Jenisjual.setBounds(270, 10, 90, 23);
 
-        label12.setText("Jns.Jual :");
+        label12.setText("Jns.Jual:");
         label12.setName("label12"); // NOI18N
         label12.setPreferredSize(new java.awt.Dimension(70, 23));
         panelisi3.add(label12);
-        label12.setBounds(177, 10, 60, 23);
+        label12.setBounds(210, 10, 60, 23);
 
         label20.setText("Jatuh Tempo :");
         label20.setName("label20"); // NOI18N
@@ -1235,7 +1219,7 @@ public class DlgPiutang extends javax.swing.JDialog {
                     Jmljual.setText(""+stok);
                     JOptionPane.showMessageDialog(null,"Maaf, stok tidak mencukupi. Maksimal yang bisa diretur "+stok+" "+satuanbar.getText());
                 }else{
-                    if(Sequel.menyimpantf("tamppiutang","'"+kdbar.getText()+"','"+nmbar.getText()+"','"+satuanbar.getText()+"','"+HrgJual.getText()+"','"+HrgBeli.getText()+"','"+Jmljual.getText()+"','"+subtotal.getText()+"','"+Disc.getText()+"','"+Bsrdisc.getText()+"','"+Total.getText()+"','"+NoBatch.getText()+"','"+akses.getkode()+"','"+NoFaktur.getText()+"','"+Aturan.getText()+"'","Kode Barang, No.Batch, No.Faktur")==true){
+                    if(Sequel.menyimpantf("tamppiutang","'"+kdbar.getText()+"','"+nmbar.getText()+"','"+satuanbar.getText()+"','"+HrgJual.getText()+"','"+HrgBeli.getText()+"','"+Jmljual.getText()+"','"+subtotal.getText()+"','"+Disc.getText()+"','"+Bsrdisc.getText()+"','"+Total.getText()+"','"+NoBatch.getText()+"','"+akses.getkode()+"','"+NoFaktur.getText()+"','"+Aturan.getText()+"','"+NoNota.getText()+"'","Kode Barang, No.Batch, No.Faktur")==true){
                         emptTeks();            
                         tampil();
                     }
@@ -1259,7 +1243,7 @@ public class DlgPiutang extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null,"Maaf, Pilih dulu data yang akan Anda hapus dengan menklik data pada tabel...!!!");
             tbDokter.requestFocus();
         }else{
-            Valid.hapusTable(tabMode,kdbar,"tamppiutang","no_batch='"+NoBatch.getText()+"' and no_faktur='"+NoFaktur.getText()+"' and petugas='"+akses.getkode()+"' and kode_brng");
+            Valid.hapusTable(tabMode,kdbar,"tamppiutang","no_batch='"+NoBatch.getText()+"' and no_faktur='"+NoFaktur.getText()+"' and petugas='"+akses.getkode()+"' and nota_piutang='"+NoNota.getText()+"' and kode_brng");
             tampil();
             emptTeks();
         }
@@ -1372,13 +1356,13 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
                         "','Umum','"+Valid.SetTgl(TglTempo.getSelectedItem()+"")+"','"+kdgudang.getText()+"'","No.Nota")==true){
                     simpan();
                 }else{
-                    autoNomor();
+//                    autoNomor();
                     if(Sequel.menyimpantf2("piutang","'"+NoNota.getText()+"','"+Valid.SetTgl(TglJual.getSelectedItem()+"")+"','"+kdptg.getText()+"','"+kdpasien.getText()+
                             "','"+nmpasien.getText()+"','"+catatan.getText()+"','"+Jenisjual.getSelectedItem()+"','"+ongkir+"','"+uangmuka+"','"+(ttljual+ongkir-uangmuka)+
                             "','Umum','"+Valid.SetTgl(TglTempo.getSelectedItem()+"")+"','"+kdgudang.getText()+"'","No.Nota")==true){
                         simpan();
                     }else{
-                        autoNomor();
+//                        autoNomor();
                         sukses=false;
                     }
                 } 
@@ -1397,72 +1381,78 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
                     Sequel.RollBack();
                 }
                 Sequel.AutoComitTrue();
+//                if(sukses==true){
+//                    Map<String, Object> param = new HashMap<>();  
+//                    param.put("namars",akses.getnamars());
+//                    param.put("alamatrs",akses.getalamatrs());
+//                    param.put("kotars",akses.getkabupatenrs());
+//                    param.put("propinsirs",akses.getpropinsirs());
+//                    param.put("kontakrs",akses.getkontakrs());
+//                    param.put("emailrs",akses.getemailrs());   
+//                    param.put("logo",Sequel.cariGambar("select logo from setting"));
+//                    pilihanetiket = (String)JOptionPane.showInputDialog(null,"Silahkan pilih cetak aturan pakai..!!","Cetak Aturan Pakai",JOptionPane.QUESTION_MESSAGE,null,new Object[]{"Cetak Aturan Pakai Model 1","Cetak Aturan Pakai Model 2","Cetak Aturan Pakai Model 3"},"Cetak Aturan Pakai Model 1");
+//                    switch (pilihanetiket) {
+//                        case "Cetak Aturan Pakai Model 1": 
+//                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//                            if(Sequel.cariInteger(
+//                                    "select count(*) from detailpiutang where nota_piutang=? and aturan_pakai<>''",NoNota.getText())>0){
+//                                Valid.MyReportqry("rptItemResepPiutang.jasper","report","::[ Aturan Pakai Obat ]::",
+//                                    "select piutang.nota_piutang,piutang.tgl_piutang,pasien.tgl_lahir, "+
+//                                    "pasien.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng,"+
+//                                    "detailpiutang.aturan_pakai,detailpiutang.jumlah,kodesatuan.satuan "+
+//                                    "from piutang inner join detailpiutang on piutang.nota_piutang=detailpiutang.nota_piutang "+
+//                                    "inner join pasien on piutang.no_rkm_medis=pasien.no_rkm_medis "+
+//                                    "inner join databarang on detailpiutang.kode_brng=databarang.kode_brng "+
+//                                    "inner join kodesatuan on databarang.kode_sat=kodesatuan.kode_sat "+
+//                                    "where piutang.nota_piutang='"+NoNota.getText()+"' and detailpiutang.aturan_pakai<>''",param);
+//                            }            
+//                            this.setCursor(Cursor.getDefaultCursor());
+//                            break;
+//                        case "Cetak Aturan Pakai Model 2": 
+//                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//                            if(Sequel.cariInteger(
+//                                    "select count(*) from detailpiutang where nota_piutang=? and aturan_pakai<>''",NoNota.getText())>0){
+//                                Valid.MyReportqry("rptItemResepPiutang2.jasper","report","::[ Aturan Pakai Obat ]::",
+//                                    "select piutang.nota_piutang,piutang.tgl_piutang,pasien.tgl_lahir, "+
+//                                    "pasien.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng,"+
+//                                    "detailpiutang.aturan_pakai,detailpiutang.jumlah,kodesatuan.satuan,jenis.nama as jenis "+
+//                                    "from piutang inner join detailpiutang on piutang.nota_piutang=detailpiutang.nota_piutang "+
+//                                    "inner join pasien on piutang.no_rkm_medis=pasien.no_rkm_medis "+
+//                                    "inner join databarang on detailpiutang.kode_brng=databarang.kode_brng "+
+//                                    "inner join kodesatuan on databarang.kode_sat=kodesatuan.kode_sat "+
+//                                    "inner join jenis on databarang.kdjns=jenis.kdjns "+
+//                                    "where piutang.nota_piutang='"+NoNota.getText()+"' and detailpiutang.aturan_pakai<>''",param);
+//                            }               
+//                            this.setCursor(Cursor.getDefaultCursor());
+//                            break;
+//                        case "Cetak Aturan Pakai Model 3": 
+//                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//                            if(Sequel.cariInteger(
+//                                    "select count(*) from detailpiutang where nota_piutang=? and aturan_pakai<>''",NoNota.getText())>0){
+//                                Valid.MyReportqry("rptItemResepPiutang3.jasper","report","::[ Aturan Pakai Obat ]::",
+//                                    "select piutang.nota_piutang,piutang.tgl_piutang,pasien.tgl_lahir, "+
+//                                    "pasien.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng,"+
+//                                    "detailpiutang.aturan_pakai,detailpiutang.jumlah,kodesatuan.satuan "+
+//                                    "from piutang inner join detailpiutang on piutang.nota_piutang=detailpiutang.nota_piutang "+
+//                                    "inner join pasien on piutang.no_rkm_medis=pasien.no_rkm_medis "+
+//                                    "inner join databarang on detailpiutang.kode_brng=databarang.kode_brng "+
+//                                    "inner join kodesatuan on databarang.kode_sat=kodesatuan.kode_sat "+
+//                                    "where piutang.nota_piutang='"+NoNota.getText()+"' and detailpiutang.aturan_pakai<>''",param);
+//                            }              
+//                            this.setCursor(Cursor.getDefaultCursor());
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                    BtnBatalActionPerformed(evt);
+//                }
+//                autoNomor();
                 if(sukses==true){
-                    Map<String, Object> param = new HashMap<>();  
-                    param.put("namars",akses.getnamars());
-                    param.put("alamatrs",akses.getalamatrs());
-                    param.put("kotars",akses.getkabupatenrs());
-                    param.put("propinsirs",akses.getpropinsirs());
-                    param.put("kontakrs",akses.getkontakrs());
-                    param.put("emailrs",akses.getemailrs());   
-                    param.put("logo",Sequel.cariGambar("select logo from setting"));
-                    pilihanetiket = (String)JOptionPane.showInputDialog(null,"Silahkan pilih cetak aturan pakai..!!","Cetak Aturan Pakai",JOptionPane.QUESTION_MESSAGE,null,new Object[]{"Cetak Aturan Pakai Model 1","Cetak Aturan Pakai Model 2","Cetak Aturan Pakai Model 3"},"Cetak Aturan Pakai Model 1");
-                    switch (pilihanetiket) {
-                        case "Cetak Aturan Pakai Model 1": 
-                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                            if(Sequel.cariInteger(
-                                    "select count(*) from detailpiutang where nota_piutang=? and aturan_pakai<>''",NoNota.getText())>0){
-                                Valid.MyReportqry("rptItemResepPiutang.jasper","report","::[ Aturan Pakai Obat ]::",
-                                    "select piutang.nota_piutang,piutang.tgl_piutang,pasien.tgl_lahir, "+
-                                    "pasien.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng,"+
-                                    "detailpiutang.aturan_pakai,detailpiutang.jumlah,kodesatuan.satuan "+
-                                    "from piutang inner join detailpiutang on piutang.nota_piutang=detailpiutang.nota_piutang "+
-                                    "inner join pasien on piutang.no_rkm_medis=pasien.no_rkm_medis "+
-                                    "inner join databarang on detailpiutang.kode_brng=databarang.kode_brng "+
-                                    "inner join kodesatuan on databarang.kode_sat=kodesatuan.kode_sat "+
-                                    "where piutang.nota_piutang='"+NoNota.getText()+"' and detailpiutang.aturan_pakai<>''",param);
-                            }            
-                            this.setCursor(Cursor.getDefaultCursor());
-                            break;
-                        case "Cetak Aturan Pakai Model 2": 
-                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                            if(Sequel.cariInteger(
-                                    "select count(*) from detailpiutang where nota_piutang=? and aturan_pakai<>''",NoNota.getText())>0){
-                                Valid.MyReportqry("rptItemResepPiutang2.jasper","report","::[ Aturan Pakai Obat ]::",
-                                    "select piutang.nota_piutang,piutang.tgl_piutang,pasien.tgl_lahir, "+
-                                    "pasien.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng,"+
-                                    "detailpiutang.aturan_pakai,detailpiutang.jumlah,kodesatuan.satuan,jenis.nama as jenis "+
-                                    "from piutang inner join detailpiutang on piutang.nota_piutang=detailpiutang.nota_piutang "+
-                                    "inner join pasien on piutang.no_rkm_medis=pasien.no_rkm_medis "+
-                                    "inner join databarang on detailpiutang.kode_brng=databarang.kode_brng "+
-                                    "inner join kodesatuan on databarang.kode_sat=kodesatuan.kode_sat "+
-                                    "inner join jenis on databarang.kdjns=jenis.kdjns "+
-                                    "where piutang.nota_piutang='"+NoNota.getText()+"' and detailpiutang.aturan_pakai<>''",param);
-                            }               
-                            this.setCursor(Cursor.getDefaultCursor());
-                            break;
-                        case "Cetak Aturan Pakai Model 3": 
-                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                            if(Sequel.cariInteger(
-                                    "select count(*) from detailpiutang where nota_piutang=? and aturan_pakai<>''",NoNota.getText())>0){
-                                Valid.MyReportqry("rptItemResepPiutang3.jasper","report","::[ Aturan Pakai Obat ]::",
-                                    "select piutang.nota_piutang,piutang.tgl_piutang,pasien.tgl_lahir, "+
-                                    "pasien.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng,"+
-                                    "detailpiutang.aturan_pakai,detailpiutang.jumlah,kodesatuan.satuan "+
-                                    "from piutang inner join detailpiutang on piutang.nota_piutang=detailpiutang.nota_piutang "+
-                                    "inner join pasien on piutang.no_rkm_medis=pasien.no_rkm_medis "+
-                                    "inner join databarang on detailpiutang.kode_brng=databarang.kode_brng "+
-                                    "inner join kodesatuan on databarang.kode_sat=kodesatuan.kode_sat "+
-                                    "where piutang.nota_piutang='"+NoNota.getText()+"' and detailpiutang.aturan_pakai<>''",param);
-                            }              
-                            this.setCursor(Cursor.getDefaultCursor());
-                            break;
-                        default:
-                            break;
-                    }
-                    BtnBatalActionPerformed(evt);
+                    Sequel.queryu("delete from tamppiutang where petugas='"+akses.getkode()+"' and nota_piutang='"+NoNota.getText()+"'");
+                    tampil();
+                    Ongkir.setText("0");
+                    UangMuka.setText("0");
                 }
-                autoNomor();
             }
         }
     }//GEN-LAST:event_BtnSimpanActionPerformed
@@ -1476,7 +1466,7 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
     }//GEN-LAST:event_BtnSimpanKeyPressed
 
     private void BtnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBatalActionPerformed
-        Sequel.queryu("delete from tamppiutang where petugas='"+akses.getkode()+"'");
+        Sequel.queryu("delete from tamppiutang where petugas='"+akses.getkode()+"' and nota_piutang='"+NoNota.getText()+"'");
         tampil();
         Ongkir.setText("0");
         UangMuka.setText("0");        
@@ -1549,27 +1539,6 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
     private void JenisjualItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_JenisjualItemStateChanged
          cariBatch();  
     }//GEN-LAST:event_JenisjualItemStateChanged
-
-    private void BtnNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNotaActionPerformed
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        if(NoNota.getText().trim().equals("")){
-            Valid.textKosong(NoNota,"No.Nota");
-        }else if(nmpasien.getText().trim().equals("")){
-            Valid.textKosong(kdpasien,"Pasien");
-        }else if(nmptg.getText().trim().equals("")){
-            Valid.textKosong(kdptg,"Petugas");
-        }else if(tabMode.getRowCount()==0){
-            JOptionPane.showMessageDialog(null,"Maaf, data sudah habis...!!!!");
-            kdbar.requestFocus();
-        }else {
-            Valid.panggilUrl("billing/NotaApotek3.php?nonota="+NoNota.getText()+"&kdptg="+kdptg.getText()+"&muka="+UangMuka.getText()+"&ongkir="+Ongkir.getText()+"&tanggal="+Valid.SetTgl(TglJual.getSelectedItem()+"")+"&nm_member="+nmpasien.getText().replaceAll(" ","_")+"&tgltempo="+Valid.SetTgl(TglTempo.getSelectedItem()+"")+"&catatan="+catatan.getText().replaceAll(" ","_"));                                           
-        }
-        this.setCursor(Cursor.getDefaultCursor());
-    }//GEN-LAST:event_BtnNotaActionPerformed
-
-    private void BtnNotaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnNotaKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BtnNotaKeyPressed
 
     private void TglTempoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TglTempoKeyPressed
         // TODO add your handling code here:
@@ -1651,7 +1620,6 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     private widget.Button BtnGudang;
     private widget.Button BtnHapus;
     private widget.Button BtnKeluar;
-    private widget.Button BtnNota;
     private widget.Button BtnPasien;
     private widget.Button BtnPtg;
     private widget.Button BtnSimpan;
@@ -1725,7 +1693,7 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     private void tampil() {
         Valid.tabelKosong(tabMode);
         try{
-            ps=koneksi.prepareStatement("select kode_brng,nama_brng,satuan,h_jual,jumlah,subtotal,dis,bsr_dis,total,no_batch,no_faktur,aturan_pakai from tamppiutang where petugas=?");
+            ps=koneksi.prepareStatement("select kode_brng,nama_brng,satuan,h_jual,jumlah,subtotal,dis,bsr_dis,total,no_batch,no_faktur,aturan_pakai,nota_piutang from tamppiutang where petugas=? and nota_piutang='"+NoNota.getText()+"'");
             try {
                 ps.setString(1,akses.getkode());
                 rs=ps.executeQuery();
@@ -1736,7 +1704,7 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         rs.getString(1),rs.getString(2),rs.getString(3),
                         rs.getDouble(4),rs.getDouble(5),rs.getDouble(6),
                         rs.getDouble(7),rs.getDouble(8),rs.getDouble(9),
-                        rs.getString(10),rs.getString(11),rs.getString(12)
+                        rs.getString(10),rs.getString(11),rs.getString(12),rs.getString(13)
                     });
                 }                
                 LTotal.setText(Valid.SetAngka(ttljual));
@@ -1881,7 +1849,7 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     }
    
     public void isCek(){
-        autoNomor();
+//        autoNomor();
         Ongkir.setText("0");
         UangMuka.setText("0");
         Sequel.cariIsi("select kd_bangsal from set_lokasi",kdgudang);
@@ -1957,10 +1925,10 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         nmpasien.setText(pasien);
     }
 
-    private void autoNomor() {
-        Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(nota_piutang,3),signed)),0) from piutang where tgl_piutang='"+Valid.SetTgl(TglJual.getSelectedItem()+"")+"' ",
-                "PD"+TglJual.getSelectedItem().toString().substring(8,10)+TglJual.getSelectedItem().toString().substring(3,5)+TglJual.getSelectedItem().toString().substring(0,2),3,NoNota); 
-    }
+//    private void autoNomor() {
+//        Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(nota_piutang,3),signed)),0) from piutang where tgl_piutang='"+Valid.SetTgl(TglJual.getSelectedItem()+"")+"' ",
+//                "PD"+TglJual.getSelectedItem().toString().substring(8,10)+TglJual.getSelectedItem().toString().substring(3,5)+TglJual.getSelectedItem().toString().substring(0,2),3,NoNota); 
+//    }
 
     private void simpan() {
         try {
