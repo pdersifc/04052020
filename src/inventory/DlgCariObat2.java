@@ -1234,6 +1234,21 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         if(detailObatList.size()>0){
                             BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
                             JOptionPane.showMessageDialog(null, respon.getResponseMessage());
+                            if(respon.getResponseCode().equals("201")){
+                                if(ChkNoResep.isSelected()){
+                                    DlgResepObat resep=new DlgResepObat(null,false);
+                                    resep.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
+                                    resep.setLocationRelativeTo(internalFrame1);
+                                    resep.emptTeks(); 
+                                    resep.isCek();
+                                    resep.setNoRm(TNoRw.getText(),DTPTgl.getDate(),DTPTgl.getDate(),cmbJam.getSelectedItem().toString(),cmbMnt.getSelectedItem().toString(),cmbDtk.getSelectedItem().toString(),"ranap");
+                                    resep.tampil();
+                                    //resep.setAlwaysOnTop(true);
+                                    resep.dokter.setAlwaysOnTop(true);
+                                    resep.setVisible(true);
+                                }
+                            }
+                            
                             dispose();
                         }else{
                             JOptionPane.showMessageDialog(null, "Tidak ada data obat yang mau disimpan");
