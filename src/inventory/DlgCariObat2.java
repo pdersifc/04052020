@@ -1211,8 +1211,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         CreateObatDetailRequest rquest = new CreateObatDetailRequest();
                         List<SingleDetailPemberianObat> detailObatList = new LinkedList<>();
                         for(i=0;i<tbObat.getRowCount();i++){ 
-                        if(Valid.SetAngka(tbObat.getValueAt(i,1).toString())>0){               
-                            
+                        if(Valid.SetAngka(tbObat.getValueAt(i,1).toString())>0){
                                 SingleDetailPemberianObat single = new SingleDetailPemberianObat();
                                 single.setNoRawat(TNoRw.getText());
                                 single.setKodeBrng(tbObat.getValueAt(i,2).toString());
@@ -1220,7 +1219,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 single.setNoFaktur(tbObat.getValueAt(i,17).toString());
                                 single.setEmbalase(Double.parseDouble(tbObat.getValueAt(i,8).toString()));
                                 single.setTuslah(Double.parseDouble(tbObat.getValueAt(i,9).toString()));                                
-                                single.sethBeli(Double.parseDouble(tbObat.getValueAt(i,13).toString()));
+                                single.sethBeli(Double.parseDouble(tbObat.getValueAt(i,12).toString()));
                                 single.setJml(Double.parseDouble(tbObat.getValueAt(i,1).toString()));                                
                                 single.setBiayaObat(Double.parseDouble(tbObat.getValueAt(i,6).toString()));
                                 double total = (single.getBiayaObat()*single.getJml())+single.getEmbalase()+single.getTuslah();
@@ -1588,6 +1587,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                     }
                                         
                 } catch (Exception ex) {
+                   ex.printStackTrace();
                     System.out.println(ex);
                     JOptionPane.showMessageDialog(null,"Maaf, gagal menyimpan data. Kemungkinan ada data yang sama dimasukkan sebelumnya?\nKapasitas belum dimasukkan...!");
                 }
