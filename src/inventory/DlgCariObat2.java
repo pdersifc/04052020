@@ -19,6 +19,7 @@ import com.herinoid.rsi.model.api.BaseResponse;
 import com.herinoid.rsi.model.api.CreateObatDetailRequest;
 import com.herinoid.rsi.model.api.RestFull;
 import com.herinoid.rsi.model.api.SingleDetailPemberianObat;
+import com.herinoid.rsi.util.Utils;
 import fungsi.WarnaTable2;
 import fungsi.batasInput;
 import fungsi.koneksiDB;
@@ -1213,6 +1214,8 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         for(i=0;i<tbObat.getRowCount();i++){ 
                         if(Valid.SetAngka(tbObat.getValueAt(i,1).toString())>0){
                                 SingleDetailPemberianObat single = new SingleDetailPemberianObat();
+                                single.setJam(Utils.getTimeFromString(cmbJam.getSelectedItem()+":"+cmbMnt.getSelectedItem()+":"+cmbDtk.getSelectedItem()));
+                                single.setTglPerawatan(DTPTgl.getDate());
                                 single.setNoRawat(TNoRw.getText());
                                 single.setKodeBrng(tbObat.getValueAt(i,2).toString());
                                 single.setNoBatch(tbObat.getValueAt(i,16).toString());
