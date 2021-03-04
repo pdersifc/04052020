@@ -1209,6 +1209,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             if (reply == JOptionPane.YES_OPTION) {
                 try {  
                     if(viaWS.equals("1")){
+                        ChkJln.setSelected(false);
                         CreateObatDetailRequest rquest = new CreateObatDetailRequest();
                         List<SingleDetailPemberianObat> detailObatList = new LinkedList<>();
                         for(i=0;i<tbObat.getRowCount();i++){ 
