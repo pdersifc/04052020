@@ -648,7 +648,7 @@ public class DlgUpdateUser extends javax.swing.JDialog {
                         "toko_pengadaan_barang,toko_hutang,toko_bayar_pemesanan,toko_member,toko_penjualan,registrasi_poli_per_tanggal,"+
                         "toko_piutang,toko_retur_beli,ipsrs_returbeli,ipsrs_riwayat_barang,pasien_corona,toko_pendapatan_harian,"+
                         "diagnosa_pasien_corona,perawatan_pasien_corona,penilaian_awal_keperawatan_gigi,master_masalah_keperawatan_gigi,"+
-                        "toko_bayar_piutang,toko_piutang_harian,toko_penjualan_harian,deteksi_corona from user where id_user=AES_ENCRYPT(?,'nur')");
+                        "toko_bayar_piutang,toko_piutang_harian,toko_penjualan_harian,deteksi_corona,klaim_inacbg_corona,toko_sirkulasi from user where id_user=AES_ENCRYPT(?,'nur')");
             try {
                 ps.setString(1,user);
                 rs=ps.executeQuery();
