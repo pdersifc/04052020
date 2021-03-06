@@ -791,6 +791,7 @@ public final class akses {
                     akses.toko_piutang_harian = true;
                     akses.toko_penjualan_harian = true;
                     akses.deteksi_corona = true;
+                    akses.klaim_inacbg_corona = true;
                     akses.bor_los_report = true;
                     akses.toko_retur_jual = true;
                     akses.toko_retur_piutang = true;
@@ -1451,6 +1452,7 @@ public final class akses {
                     akses.toko_piutang_harian = rs2.getBoolean("toko_piutang_harian");
                     akses.toko_penjualan_harian = rs2.getBoolean("toko_penjualan_harian");
                     akses.deteksi_corona = rs2.getBoolean("deteksi_corona");
+                    akses.klaim_inacbg_corona = true;
                     akses.bor_los_report = true;
                     akses.toko_sirkulasi = rs2.getBoolean("toko_sirkulasi");
                     akses.toko_retur_jual = rs2.getBoolean("toko_retur_jual");
@@ -2110,6 +2112,7 @@ public final class akses {
                     akses.toko_piutang_harian = false;
                     akses.toko_penjualan_harian = false;
                     akses.deteksi_corona = false;
+                    akses.klaim_inacbg_corona = false;
                     akses.bor_los_report = false;
                     akses.toko_sirkulasi = false;
                     akses.toko_retur_jual = false;
@@ -4785,6 +4788,10 @@ public final class akses {
     public static boolean getdeteksi_corona() {
         return akses.deteksi_corona;
     }
+    
+//    public static boolean getklaim_inacbg_corona() {
+//        return akses.klaim_inacbg_corona;
+//    }
 
     public static boolean getBorlos_montly_report() {
         return akses.bor_los_report;
