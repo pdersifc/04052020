@@ -1061,7 +1061,7 @@ public class DlgPiutang extends javax.swing.JDialog {
         panelisi3.add(catatan);
         catatan.setBounds(74, 40, 286, 23);
 
-        Jenisjual.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Jual Bebas", "Harga Beli", "Karyawan", "Beli Luar", "Rawat Jalan", "Kelas 1", "Kelas 2", "Kelas 3", "Utama", "VIP", "VVIP" }));
+        Jenisjual.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Rawat Jalan", "Kelas 1", "Kelas 2", "Kelas 3", "Utama", "VIP", "VVIP", "Jual Bebas", "Harga Beli", "Karyawan", "Beli Luar" }));
         Jenisjual.setName("Jenisjual"); // NOI18N
         Jenisjual.setPreferredSize(new java.awt.Dimension(45, 23));
         Jenisjual.addItemListener(new java.awt.event.ItemListener() {
@@ -1732,7 +1732,7 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         HrgJual.setText("0");        
         Tambah.setText("0");       
         Kurang.setText("0"); 
-        Jmljual.setText("0");  
+        Jmljual.setText("23");  
         subtotal.setText("0");
         Disc.setText("0");
         Bsrdisc.setText("0");
@@ -1923,6 +1923,8 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         NoNota.setText(norawat);
         kdpasien.setText(norm);
         nmpasien.setText(pasien);
+        catatan.setText("PROLANIS");
+        Jmljual.setText("23");
     }
 
 //    private void autoNomor() {
