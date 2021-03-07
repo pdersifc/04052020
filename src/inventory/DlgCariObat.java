@@ -1277,7 +1277,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 single.setTuslah(Double.parseDouble(tbObat.getValueAt(i,9).toString()));                                
                                 single.sethBeli(Double.parseDouble(tbObat.getValueAt(i,13).toString()));
                                 single.setJml(Double.parseDouble(tbObat.getValueAt(i,1).toString()));                                
-                                single.setBiayaObat(Double.parseDouble(tbObat.getValueAt(i,6).toString()));
+                                single.setBiayaObat(Double.parseDouble(tbObat.getValueAt(i,6).toString()));                                
                                 double total = (single.getBiayaObat()*single.getJml())+single.getEmbalase()+single.getTuslah();
                                 single.setStatus("Ralan");
                                 single.setTotal(total);
@@ -1291,6 +1291,11 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                             BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
                             JOptionPane.showMessageDialog(null, respon.getResponseMessage());
                             if(respon.getResponseCode().equals("201")){
+                                if(!tbObat.getValueAt(i,11).toString().equals("")){
+                                        Sequel.menyimpan("aturan_pakai","?,?,?,?,?",5,new String[]{
+                                            Valid.SetTgl(DTPTgl.getSelectedItem()+""),cmbJam.getSelectedItem()+":"+cmbMnt.getSelectedItem()+":"+cmbDtk.getSelectedItem(),TNoRw.getText(),tbObat.getValueAt(i,2).toString(),tbObat.getValueAt(i,11).toString()
+                                    });  
+                                }   
                                 if(ChkNoResep.isSelected()){
                                     DlgResepObat resep=new DlgResepObat(null,false);
                                     resep.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());

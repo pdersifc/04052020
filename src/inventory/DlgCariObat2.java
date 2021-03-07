@@ -1239,6 +1239,11 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                             BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
                             JOptionPane.showMessageDialog(null, respon.getResponseMessage());
                             if(respon.getResponseCode().equals("201")){
+                                if(!tbObat.getValueAt(i,13).toString().equals("")){
+                                        Sequel.menyimpan("aturan_pakai","?,?,?,?,?",5,new String[]{
+                                            Valid.SetTgl(DTPTgl.getSelectedItem()+""),cmbJam.getSelectedItem()+":"+cmbMnt.getSelectedItem()+":"+cmbDtk.getSelectedItem(),TNoRw.getText(),tbObat.getValueAt(i,2).toString(),tbObat.getValueAt(i,13).toString()
+                                    });
+                               }   
                                 if(ChkNoResep.isSelected()){
                                     DlgResepObat resep=new DlgResepObat(null,false);
                                     resep.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
