@@ -1282,6 +1282,9 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 single.setStatus("Ralan");
                                 single.setTotal(total);
                                 single.setKdBangsal(kdgudang.getText());
+                                if(!tbObat.getValueAt(i,11).toString().equals("")){
+                                    single.setAturanPakai(tbObat.getValueAt(i,11).toString());
+                                }
                                 detailObatList.add(single);
                             }
                        
@@ -1290,12 +1293,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         if(detailObatList.size()>0){
                             BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
                             JOptionPane.showMessageDialog(null, respon.getResponseMessage());
-                            if(respon.getResponseCode().equals("201")){
-                                if(!tbObat.getValueAt(i,11).toString().equals("")){
-                                        Sequel.menyimpan("aturan_pakai","?,?,?,?,?",5,new String[]{
-                                            Valid.SetTgl(DTPTgl.getSelectedItem()+""),cmbJam.getSelectedItem()+":"+cmbMnt.getSelectedItem()+":"+cmbDtk.getSelectedItem(),TNoRw.getText(),tbObat.getValueAt(i,2).toString(),tbObat.getValueAt(i,11).toString()
-                                    });  
-                                }   
+                            if(respon.getResponseCode().equals("201")){                                
                                 if(ChkNoResep.isSelected()){
                                     DlgResepObat resep=new DlgResepObat(null,false);
                                     resep.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
