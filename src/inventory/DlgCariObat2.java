@@ -2764,6 +2764,7 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     public void setPasien(String norawat,String norm,String nama){
         LblNoRM.setText(norm);
         LblNamaPasien.setText(nama);
+        LblNoRawat.setText(norawat);
         TNoRw.setText(norawat);
     }
     public void setNoRm(String norwt,Date tanggal,String jam,String menit,String detik,boolean status) {        
