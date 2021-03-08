@@ -104,7 +104,7 @@ public class ObatDao {
                     + "FROM databarang INNER JOIN jenis INNER JOIN industrifarmasi INNER JOIN gudangbarang INNER JOIN kategori_barang INNER JOIN kodesatuan "
                     + "ON databarang.kdjns=jenis.kdjns AND databarang.kode_brng=gudangbarang.kode_brng AND databarang.kode_kategori=kategori_barang.kode AND databarang.kode_sat=kodesatuan.kode_sat "
                     + "AND industrifarmasi.kode_industri=databarang.kode_industri "
-                    + "WHERE  databarang.status='1' AND gudangbarang.kd_bangsal=? ORDER BY databarang.nama_brng");
+                    + "WHERE  databarang.status='1' AND gudangbarang.kd_bangsal=? and databarang.kode_kategori<>'-' ORDER BY databarang.nama_brng");
             ps.setString(1, kdBangsal);
             rs = ps.executeQuery();
             while (rs.next()) {
