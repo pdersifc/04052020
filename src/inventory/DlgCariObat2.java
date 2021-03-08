@@ -1230,8 +1230,8 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 single.setStatus("Ranap");
                                 single.setTotal(total);
                                 single.setKdBangsal(kdgudang.getText());
-                                if(!tbObat.getValueAt(i,11).toString().equals("")){
-                                    single.setAturanPakai(tbObat.getValueAt(i,11).toString());
+                                if(!tbObat.getValueAt(i,13).toString().equals("")){
+                                    single.setAturanPakai(tbObat.getValueAt(i,13).toString());
                                 }
                                 detailObatList.add(single);
                             
