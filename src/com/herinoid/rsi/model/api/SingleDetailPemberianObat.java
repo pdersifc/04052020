@@ -27,6 +27,7 @@ public class SingleDetailPemberianObat implements Serializable {
     private double total;
     private String status;
     private String kdBangsal;
+    private String aturanPakai;
     
     public SingleDetailPemberianObat(){}
 
@@ -141,4 +142,20 @@ public class SingleDetailPemberianObat implements Serializable {
     public void setKdBangsal(String kdBangsal) {
         this.kdBangsal = kdBangsal;
     }
+
+    /**
+     * @return the aturanPakai
+     */
+    public String getAturanPakai() {
+        return aturanPakai;
+    }
+
+    /**
+     * @param aturanPakai the aturanPakai to set
+     */
+    public void setAturanPakai(String aturanPakai) {
+        this.aturanPakai = aturanPakai;
+    }
+    
+    
 }
