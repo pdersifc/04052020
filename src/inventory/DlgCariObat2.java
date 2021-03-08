@@ -1241,7 +1241,12 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         if(detailObatList.size()>0){
                             BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
                             JOptionPane.showMessageDialog(null, respon.getResponseMessage());
-                            if(respon.getResponseCode().equals("201")){                                 
+                            if(respon.getResponseCode().equals("201")){  
+                                for(i=0;i<tbObat.getRowCount();i++){
+                                    tbObat.setValueAt("",i,1);
+                                }
+                                Valid.tabelKosong(tabModeObatRacikan);
+                                Valid.tabelKosong(tabModeDetailObatRacikan);
                                 if(ChkNoResep.isSelected()){
                                     DlgResepObat resep=new DlgResepObat(null,false);
                                     resep.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
