@@ -2761,9 +2761,10 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             BtnGudang.setEnabled(true);
         }
     }
-    public void setPasien(String norm,String nama){
+    public void setPasien(String norawat,String norm,String nama){
         LblNoRM.setText(norm);
         LblNamaPasien.setText(nama);
+        TNoRw.setText(norawat);
     }
     public void setNoRm(String norwt,Date tanggal,String jam,String menit,String detik,boolean status) {        
         aktifpcare="no";
