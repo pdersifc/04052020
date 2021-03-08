@@ -825,7 +825,7 @@ public final class DlgCariObat extends javax.swing.JDialog {
         jLabel8.setBounds(4, 40, 65, 23);
 
         DTPTgl.setForeground(new java.awt.Color(50, 70, 50));
-        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "15-05-2020" }));
+        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-03-2021" }));
         DTPTgl.setDisplayFormat("dd-MM-yyyy");
         DTPTgl.setName("DTPTgl"); // NOI18N
         DTPTgl.setOpaque(false);
@@ -944,7 +944,7 @@ public final class DlgCariObat extends javax.swing.JDialog {
         LblNamaPasien.setName("LblNamaPasien"); // NOI18N
         LblNamaPasien.setPreferredSize(new java.awt.Dimension(207, 23));
         FormInput.add(LblNamaPasien);
-        LblNamaPasien.setBounds(448, 10, 237, 23);
+        LblNamaPasien.setBounds(448, 10, 420, 23);
 
         LblNoRM.setEditable(false);
         LblNoRM.setName("LblNoRM"); // NOI18N
