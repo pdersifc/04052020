@@ -1211,7 +1211,9 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                     if(viaWS.equals("1")){
                         ChkJln.setSelected(false);
                         CreateObatDetailRequest rquest = new CreateObatDetailRequest();
+                        CreateObatDetailRequest rquestRacikan = new CreateObatDetailRequest();
                         List<SingleDetailPemberianObat> detailObatList = new LinkedList<>();
+                        List<SingleDetailPemberianObat> detailObatRacikanList = new LinkedList<>();
                         for(i=0;i<tbObat.getRowCount();i++){ 
                         if(Valid.SetAngka(tbObat.getValueAt(i,1).toString())>0){
                                 SingleDetailPemberianObat single = new SingleDetailPemberianObat();
@@ -1238,6 +1240,54 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         }
                         }
                         rquest.setDetailPemberianObats(detailObatList);
+                        for(i=0;i<tbObatRacikan.getRowCount();i++){ 
+                        if(Valid.SetAngka(tbObatRacikan.getValueAt(i,4).toString())>0){ 
+                                if(Sequel.menyimpantf2("obat_racikan","?,?,?,?,?,?,?,?,?","Obat Racikan",9,new String[]{
+                                   Valid.SetTgl(DTPTgl.getSelectedItem()+""),cmbJam.getSelectedItem()+":"+cmbMnt.getSelectedItem()+":"+cmbDtk.getSelectedItem(),TNoRw.getText(),
+                                   tbObatRacikan.getValueAt(i,0).toString(),tbObatRacikan.getValueAt(i,1).toString(),
+                                   tbObatRacikan.getValueAt(i,2).toString(),tbObatRacikan.getValueAt(i,4).toString(),
+                                   tbObatRacikan.getValueAt(i,5).toString(),tbObatRacikan.getValueAt(i,6).toString()
+                                })==false){
+                                    sukses=false;
+                                }
+                            }
+                        }
+
+                    for(i=0;i<tbDetailObatRacikan.getRowCount();i++){
+                        if(Valid.SetAngka(tbDetailObatRacikan.getValueAt(i,10).toString())>0){
+                            if(Sequel.menyimpantf2("detail_obat_racikan","?,?,?,?,?","Data",5,new String[]{
+                               Valid.SetTgl(DTPTgl.getSelectedItem()+""),cmbJam.getSelectedItem()+":"+cmbMnt.getSelectedItem()+":"+cmbDtk.getSelectedItem(),TNoRw.getText(),
+                               tbDetailObatRacikan.getValueAt(i,0).toString(),tbDetailObatRacikan.getValueAt(i,1).toString()
+                            })==true){
+                                SingleDetailPemberianObat single = new SingleDetailPemberianObat();
+                                single.setJam(Utils.getTimeFromString(cmbJam.getSelectedItem()+":"+cmbMnt.getSelectedItem()+":"+cmbDtk.getSelectedItem()));
+                                single.setTglPerawatan(DTPTgl.getDate());
+                                single.setNoRawat(TNoRw.getText());
+                                single.setKodeBrng(tbDetailObatRacikan.getValueAt(i,1).toString());
+                                single.setNoBatch(tbDetailObatRacikan.getValueAt(i,16).toString());
+                                single.setNoFaktur(tbDetailObatRacikan.getValueAt(i,17).toString());
+                                single.setEmbalase(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,8).toString()));
+                                single.setTuslah(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,9).toString()));                                
+                                single.sethBeli(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,13).toString()));
+                                single.setJml(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,10).toString()));                                
+                                single.setBiayaObat(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,4).toString()));                                
+                                double total = (single.getBiayaObat()*single.getJml())+single.getEmbalase()+single.getTuslah();
+                                single.setStatus("Ranap");
+                                single.setTotal(total);
+                                single.setKdBangsal(kdgudang.getText());
+                                if(!tbDetailObatRacikan.getValueAt(i,11).toString().equals("")){
+                                    single.setAturanPakai("");
+                                }
+                                detailObatRacikanList.add(single);
+                                
+                            } 
+                        }
+                    }
+                    rquestRacikan.setDetailPemberianObats(detailObatRacikanList);
+                    if(detailObatRacikanList.size()>0){
+                        BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquestRacikan);
+                        System.out.println("Obat Racikan : "+respon.getResponseMessage());
+                    }
                         if(detailObatList.size()>0){
                             BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
                             JOptionPane.showMessageDialog(null, respon.getResponseMessage());
