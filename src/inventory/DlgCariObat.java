@@ -1285,7 +1285,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 single.setTotal(total);
                                 single.setKdBangsal(kdgudang.getText());
                                 if(!tbObat.getValueAt(i,11).toString().equals("")){
-                                    single.setAturanPakai(tbObat.getValueAt(i,11).toString()==null?"":tbObat.getValueAt(i,11).toString());
+                                    single.setAturanPakai(Utils.isBlank(tbObat.getValueAt(i,11).toString())?"":tbObat.getValueAt(i,11).toString());
                                 }
                                 detailObatList.add(single);
                             }
