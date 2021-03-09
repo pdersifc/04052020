@@ -1266,9 +1266,9 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 single.setKodeBrng(tbDetailObatRacikan.getValueAt(i,1).toString());
                                 single.setNoBatch(tbDetailObatRacikan.getValueAt(i,16).toString());
                                 single.setNoFaktur(tbDetailObatRacikan.getValueAt(i,17).toString());
-                                single.setEmbalase(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,8).toString()));
-                                single.setTuslah(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,9).toString()));                                
-                                single.sethBeli(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,13).toString()));
+                                single.setEmbalase(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,11).toString()));
+                                single.setTuslah(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,12).toString()));                                
+                                single.sethBeli(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,5).toString()));
                                 single.setJml(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,10).toString()));                                
                                 single.setBiayaObat(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,4).toString()));                                
                                 double total = (single.getBiayaObat()*single.getJml())+single.getEmbalase()+single.getTuslah();
@@ -1284,15 +1284,25 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         }
                     }
                     rquestRacikan.setDetailPemberianObats(detailObatRacikanList);
-                    if(detailObatRacikanList.size()>0){
-                        BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquestRacikan);
-                        System.out.println("Obat Racikan : "+respon.getResponseMessage());
-                    }
+                    boolean suk = false;
+                    String message = "";
+                        if(detailObatRacikanList.size()>0){
+                            BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquestRacikan);
+                                message = respon.getResponseMessage();
+                                suk = true;
+                        }
+                        if(detailObatList.size()>0){
+                            BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
+                            suk = true;
+                            message = respon.getResponseMessage();
+                        }
+                    
                         if(detailObatList.size()>0){
                             BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
                             JOptionPane.showMessageDialog(null, respon.getResponseMessage());
-                            if(respon.getResponseCode().equals("201")){  
-                                for(i=0;i<tbObat.getRowCount();i++){
+                        }
+                        if(suk){
+                            for(i=0;i<tbObat.getRowCount();i++){
                                     tbObat.setValueAt("",i,1);
                                 }
                                 Valid.tabelKosong(tabModeObatRacikan);
@@ -1308,14 +1318,13 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                     //resep.setAlwaysOnTop(true);
                                     resep.dokter.setAlwaysOnTop(true);
                                     resep.setVisible(true);
-                                }
-                            }
-                            
+                                } 
                             dispose();
                         }else{
-                            JOptionPane.showMessageDialog(null, "Tidak ada data obat yang mau disimpan");
+                            JOptionPane.showMessageDialog(null, "Obat gagal disimpan");
                         }
-                        
+                            
+                            
                     }else{
                         ChkJln.setSelected(false);
                     Sequel.AutoComitFalse();
