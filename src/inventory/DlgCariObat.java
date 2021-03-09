@@ -245,6 +245,7 @@ public final class DlgCariObat extends javax.swing.JDialog {
                 "No","Kode Barang","Nama Barang","Satuan","Harga(Rp)","H.Beli",
                 "Jenis Obat","Stok","Kps","Kandungan","Jml",
                 "Emb","Tsl","I.F.","Kategori","Golongan","No.Batch","No.Faktur","Kadaluarsa"
+                   
             }){
              @Override public boolean isCellEditable(int rowIndex, int colIndex){
                 boolean a = false;
@@ -1274,9 +1275,9 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 single.setKodeBrng(tbObat.getValueAt(i,2).toString());
                                 single.setNoBatch(tbObat.getValueAt(i,16).toString());
                                 single.setNoFaktur(tbObat.getValueAt(i,17).toString());
-                                single.setEmbalase(Double.parseDouble(tbObat.getValueAt(i,11).toString()));
-                                single.setTuslah(Double.parseDouble(tbObat.getValueAt(i,12).toString()));                                
-                                single.sethBeli(Double.parseDouble(tbObat.getValueAt(i,5).toString()));
+                                single.setEmbalase(Double.parseDouble(tbObat.getValueAt(i,8).toString()));
+                                single.setTuslah(Double.parseDouble(tbObat.getValueAt(i,9).toString()));                                
+                                single.sethBeli(Double.parseDouble(tbObat.getValueAt(i,13).toString()));
                                 single.setJml(Double.parseDouble(tbObat.getValueAt(i,10).toString()));                                
                                 single.setBiayaObat(Double.parseDouble(tbObat.getValueAt(i,6).toString()));                                
                                 double total = (single.getBiayaObat()*single.getJml())+single.getEmbalase()+single.getTuslah();
@@ -1317,9 +1318,9 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 single.setKodeBrng(tbDetailObatRacikan.getValueAt(i,1).toString());
                                 single.setNoBatch(tbDetailObatRacikan.getValueAt(i,16).toString());
                                 single.setNoFaktur(tbDetailObatRacikan.getValueAt(i,17).toString());
-                                single.setEmbalase(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,8).toString()));
-                                single.setTuslah(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,9).toString()));                                
-                                single.sethBeli(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,13).toString()));
+                                single.setEmbalase(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,11).toString()));
+                                single.setTuslah(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,12).toString()));                                
+                                single.sethBeli(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,5).toString()));
                                 single.setJml(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,10).toString()));                                
                                 single.setBiayaObat(Double.parseDouble(tbDetailObatRacikan.getValueAt(i,4).toString()));                                
                                 double total = (single.getBiayaObat()*single.getJml())+single.getEmbalase()+single.getTuslah();
@@ -1334,15 +1335,24 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                             } 
                         }
                     }
+                    
                     rquestRacikan.setDetailPemberianObats(detailObatRacikanList);
-                    if(detailObatRacikanList.size()>0){
-                        BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquestRacikan);
-                        System.out.println("Obat Racikan : "+respon.getResponseMessage());
-                    }
+                    boolean suk = false;
+                    String message = "";
+                        if(detailObatRacikanList.size()>0){
+                            BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquestRacikan);
+                                message = respon.getResponseMessage();
+                                suk = true;
+
+                        }
                         if(detailObatList.size()>0){
                             BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
-                            JOptionPane.showMessageDialog(null, respon.getResponseMessage());
-                                if(respon.getResponseCode().equals("201")){                                     
+                            suk = true;
+                            message = respon.getResponseMessage();
+                                
+                        }
+                        if(suk){   
+                            JOptionPane.showMessageDialog(null, message);
                                 for(i=0;i<tbObat.getRowCount();i++){
                                     tbObat.setValueAt("",i,1);
                                 }
@@ -1365,12 +1375,12 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                     }
                                     resep.tampil();
                                     resep.setVisible(true);
-                                }
-                            }
-                            dispose();
+                               }
+                               dispose();
                         }else{
-                            JOptionPane.showMessageDialog(null, "Tidak ada data obat yang mau disimpan");
+                            JOptionPane.showMessageDialog(null, "Obat gagal disimpan");
                         }
+                            
                         
                     }else{
                         ChkJln.setSelected(false);
