@@ -1278,14 +1278,14 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 single.setEmbalase(Double.parseDouble(tbObat.getValueAt(i,8).toString()));
                                 single.setTuslah(Double.parseDouble(tbObat.getValueAt(i,9).toString()));                                
                                 single.sethBeli(Double.parseDouble(tbObat.getValueAt(i,13).toString()));
-                                single.setJml(Double.parseDouble(tbObat.getValueAt(i,10).toString()));                                
+                                single.setJml(Double.parseDouble(tbObat.getValueAt(i,1).toString()));                                
                                 single.setBiayaObat(Double.parseDouble(tbObat.getValueAt(i,6).toString()));                                
                                 double total = (single.getBiayaObat()*single.getJml())+single.getEmbalase()+single.getTuslah();
                                 single.setStatus("Ralan");
                                 single.setTotal(total);
                                 single.setKdBangsal(kdgudang.getText());
                                 if(!tbObat.getValueAt(i,11).toString().equals("")){
-                                    single.setAturanPakai(tbObat.getValueAt(i,11).toString());
+                                    single.setAturanPakai(tbObat.getValueAt(i,11).toString()==null?"":tbObat.getValueAt(i,11).toString());
                                 }
                                 detailObatList.add(single);
                             }
