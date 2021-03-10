@@ -1592,7 +1592,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         tanggal.setEditable(false);
         tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "17/02/2021" }));
+        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10/03/2021" }));
         tanggal.setDisplayFormat("dd/MM/yyyy");
         tanggal.setName("tanggal"); // NOI18N
         tanggal.setOpaque(false);
@@ -7108,10 +7108,12 @@ public class frmUtama extends javax.swing.JFrame {
 
         PanelWall.add(panelJudul, java.awt.BorderLayout.PAGE_END);
 
+        FlayMenu.setAlpha(1.0F);
         FlayMenu.setBackground(new java.awt.Color(255, 255, 255));
         FlayMenu.setOpaqueImage(false);
         FlayMenu.setPreferredSize(new java.awt.Dimension(200, 110));
         FlayMenu.setRound(false);
+        FlayMenu.setWarna(new java.awt.Color(0, 204, 51));
         FlayMenu.setLayout(new java.awt.GridLayout(1, 0, 4, 5));
         PanelWall.add(FlayMenu, java.awt.BorderLayout.PAGE_START);
 

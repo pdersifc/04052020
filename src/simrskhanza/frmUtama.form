@@ -9790,6 +9790,7 @@
                 </Container>
                 <Container class="usu.widget.glass.PanelGlass" name="FlayMenu">
                   <Properties>
+                    <Property name="alpha" type="float" value="1.0"/>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
@@ -9798,6 +9799,9 @@
                       <Dimension value="[200, 110]"/>
                     </Property>
                     <Property name="round" type="boolean" value="false"/>
+                    <Property name="warna" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="33" green="cc" red="0" type="rgb"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
