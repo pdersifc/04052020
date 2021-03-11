@@ -1296,12 +1296,9 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                             suk = true;
                             message = respon.getResponseMessage();
                         }
-                    
-                        if(detailObatList.size()>0){
-                            BaseResponse respon = RestFull.postDetailPemberianObat(wsurl,rquest);
-                            JOptionPane.showMessageDialog(null, respon.getResponseMessage());
-                        }
+                        
                         if(suk){
+                            JOptionPane.showMessageDialog(null, message);
                             for(i=0;i<tbObat.getRowCount();i++){
                                     tbObat.setValueAt("",i,1);
                                 }
