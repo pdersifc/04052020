@@ -1389,6 +1389,7 @@ public class frmUtama extends javax.swing.JFrame {
         jSeparator13 = new javax.swing.JPopupMenu.Separator();
         MnRekapHadir6 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
 
         DlgLogin.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         DlgLogin.setName("DlgLogin"); // NOI18N
@@ -1591,7 +1592,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         tanggal.setEditable(false);
         tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "17/02/2021" }));
+        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10/03/2021" }));
         tanggal.setDisplayFormat("dd/MM/yyyy");
         tanggal.setName("tanggal"); // NOI18N
         tanggal.setOpaque(false);
@@ -7049,7 +7050,7 @@ public class frmUtama extends javax.swing.JFrame {
         jLabel9.setForeground(new java.awt.Color(50, 50, 50));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); // NOI18N
-        jLabel9.setText("PDE.RSIFC Update 17/02/2021 (NEW NORMAL)");
+        jLabel9.setText("PDE.RSIFC Update 09/03/2021 (DETAIL WS VERSION)");
         jLabel9.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jLabel9.setIconTextGap(3);
         jLabel9.setName("jLabel9"); // NOI18N
@@ -7107,10 +7108,12 @@ public class frmUtama extends javax.swing.JFrame {
 
         PanelWall.add(panelJudul, java.awt.BorderLayout.PAGE_END);
 
+        FlayMenu.setAlpha(1.0F);
         FlayMenu.setBackground(new java.awt.Color(255, 255, 255));
         FlayMenu.setOpaqueImage(false);
         FlayMenu.setPreferredSize(new java.awt.Dimension(200, 110));
         FlayMenu.setRound(false);
+        FlayMenu.setWarna(new java.awt.Color(0, 204, 51));
         FlayMenu.setLayout(new java.awt.GridLayout(1, 0, 4, 5));
         PanelWall.add(FlayMenu, java.awt.BorderLayout.PAGE_START);
 
@@ -7725,6 +7728,10 @@ public class frmUtama extends javax.swing.JFrame {
             }
         });
         MenuBar.add(jMenu4);
+
+        jMenu2.setText("Update 09/03/2021 New WS");
+        jMenu2.setName("jMenu2"); // NOI18N
+        MenuBar.add(jMenu2);
 
         setJMenuBar(MenuBar);
 
@@ -16549,6 +16556,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
